@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio — Works</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Portfolio</p>
+        <h1 id="page-title">Работы, которые говорят визуальным языком бренда.</h1>
+        <p class="hero__lead">
+          Подборка проектов с акцентом на композицию, фактуру и понятную презентацию результата.
+        </p>
+      </section>
+
+      <section class="works" id="works" aria-labelledby="works-title">
+        <div class="works__header">
+          <div>
+            <p class="eyebrow">Selected works</p>
+            <h2 id="works-title">Works</h2>
+          </div>
+          <p class="works__intro">
+            Реальные изображения из папки <code>public/works</code> отображаются в адаптивной сетке
+            с подписями и категориями. Первые две карточки крупнее, чтобы создать ритм галереи.
+          </p>
+        </div>
+
+        <div class="works-grid" data-works-grid aria-live="polite"></div>
+      </section>
+    </main>
+
+    <template id="work-card-template">
+      <article class="work-card">
+        <a class="work-card__link" href="#" aria-label="Открыть проект">
+          <figure class="work-card__figure">
+            <img class="work-card__image" src="" alt="" loading="lazy" />
+            <figcaption class="work-card__caption">
+              <span class="work-card__category"></span>
+              <strong class="work-card__title"></strong>
+              <span class="work-card__description"></span>
+            </figcaption>
+          </figure>
+        </a>
+      </article>
+    </template>
+
+    <script type="module" src="src/works.js"></script>
+  </body>
+</html>
