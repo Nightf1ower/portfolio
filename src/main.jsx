@@ -159,8 +159,51 @@ const translations = {
     aboutText:
       'Ярослав — графический дизайнер, работающий с брендами, артистами, обложками, мерчем, постерами, логотипами и нейроиллюстрациями высокого уровня. Его визуальный язык соединяет минимализм, андеграундную типографику и точную арт-дирекцию для проектов, которым нужен сильный узнаваемый образ.',
     servicesEyebrow: 'Услуги',
-    servicesTitle: 'Дизайн для артистов, брендов и культуры',
-    services: ['Логотипы', 'Постеры', 'Обложки', 'Графика для мерча', 'Бренд-визуалы', 'AI-иллюстрации'],
+    servicesTitle: 'ДИЗАЙН ДЛЯ АРТИСТОВ, БРЕНДОВ И КУЛЬТУРЫ',
+    services: [
+      {
+        title: 'ЛОГОТИПЫ',
+        paragraphs: [
+          'Разработка логотипа с нуля для бренда, проекта, артиста или события. Работаю с идеей, визуальным направлением, формой, типографикой и характером знака, чтобы логотип не просто выглядел красиво, а отражал суть проекта.',
+          'Также могу доработать уже существующий логотип: обновить форму, изменить пропорции, адаптировать под новый стиль, сделать более современную версию или собрать логотип в единую визуальную систему.',
+        ],
+      },
+      {
+        title: 'ПОСТЕРЫ',
+        paragraphs: [
+          'Разработка постеров для мероприятий, музыкальных проектов, вечеринок, выставок, социальных кампаний и культурных событий. Постер может быть громким, минималистичным, экспериментальным, агрессивным или более чистым — в зависимости от задачи.',
+          'Работаю не только с картинкой, но и с настроением: визуальный ритм, типографика, композиция, цвет и смысл должны работать вместе и быстро цеплять внимание.',
+        ],
+      },
+      {
+        title: 'ОБЛОЖКИ',
+        paragraphs: [
+          'Создание обложек для музыкальных релизов, синглов, альбомов, подкастов и других digital-проектов. Могу работать с уже готовой идеей или разработать визуальную концепцию на основе музыки, текста, настроения и референсов.',
+          'Главная задача — сделать обложку, которая передает атмосферу релиза и выглядит цельно на стриминговых платформах, в соцсетях и промо-материалах.',
+        ],
+      },
+      {
+        title: 'ГРАФИКА ДЛЯ МЕРЧА',
+        paragraphs: [
+          'Разработка графики для одежды, аксессуаров и брендового мерча. Работаю с принтами, типографикой, символами, персонажами, текстурами и визуальными концепциями.',
+          'Можно прийти с готовыми референсами, мудбордом или просто общей идеей — я помогу собрать это в полноценный дизайн, который будет смотреться не как случайная картинка, а как часть бренда или коллекции.',
+        ],
+      },
+      {
+        title: 'БРЕНД-ВИЗУАЛЫ',
+        paragraphs: [
+          'Создание визуального языка для брендов, артистов, проектов и культурных инициатив. Это может быть система графики для соцсетей, афиш, обложек, промо, презентаций, мерча и digital-коммуникации.',
+          'Помогаю собрать единый визуальный стиль: цвета, типографику, графические приемы, настроение, композицию и общий характер бренда. Чтобы все материалы выглядели цельно, узнаваемо и работали в одном направлении.',
+        ],
+      },
+      {
+        title: 'AI-ИЛЛЮСТРАЦИИ',
+        paragraphs: [
+          'Создание AI-иллюстраций и визуалов для проектов, обложек, постеров, соцсетей, мерча и презентаций. Работаю с генерацией, промтами, референсами, стилистикой и последующей доработкой изображения.',
+          'AI используется не как случайная картинка, а как инструмент для быстрого поиска визуального языка, создания необычных образов и разработки идей, которые можно адаптировать под конкретную задачу и финальный дизайн.',
+        ],
+      },
+    ],
     contactsEyebrow: 'Контакты',
     contactsTitle: 'Открыт к сильным визуальным системам',
     footer: '© 2026 Ярослав — графический дизайнер. No backend. Just taste.',
@@ -187,8 +230,51 @@ const translations = {
     aboutText:
       'Yaroslav is a graphic designer working with brands, artists, covers, merch, posters, logos and high-level AI illustrations. His visual language combines minimalism, underground typography and precise art direction for projects that need a strong recognizable image.',
     servicesEyebrow: 'Services',
-    servicesTitle: 'Design objects for artists, brands and culture',
-    services: ['Logo design', 'Posters', 'Album covers', 'Merch graphics', 'Brand visuals', 'AI illustrations'],
+    servicesTitle: 'DESIGN FOR ARTISTS, BRANDS AND CULTURE',
+    services: [
+      {
+        title: 'LOGOS',
+        paragraphs: [
+          'Logo design from scratch for a brand, project, artist or event. I work with the idea, visual direction, shape, typography and character of the mark, so the logo does not just look good but reflects the core of the project.',
+          'I can also refine an existing logo: update the shape, change proportions, adapt it to a new style, make a more contemporary version or build it into a complete visual system.',
+        ],
+      },
+      {
+        title: 'POSTERS',
+        paragraphs: [
+          'Poster design for events, music projects, parties, exhibitions, social campaigns and cultural moments. A poster can be loud, minimal, experimental, aggressive or clean depending on the task.',
+          'I work not only with the image but with the mood: visual rhythm, typography, composition, color and meaning should work together and catch attention quickly.',
+        ],
+      },
+      {
+        title: 'COVERS',
+        paragraphs: [
+          'Cover artwork for music releases, singles, albums, podcasts and other digital projects. I can work with an existing idea or develop a visual concept based on music, text, mood and references.',
+          'The main goal is to create a cover that communicates the atmosphere of the release and looks complete on streaming platforms, social media and promo materials.',
+        ],
+      },
+      {
+        title: 'MERCH GRAPHICS',
+        paragraphs: [
+          'Graphics for clothing, accessories and branded merch. I work with prints, typography, symbols, characters, textures and visual concepts.',
+          'You can come with references, a moodboard or just a general idea — I will help turn it into a complete design that feels like part of a brand or collection, not a random image.',
+        ],
+      },
+      {
+        title: 'BRAND VISUALS',
+        paragraphs: [
+          'A visual language for brands, artists, projects and cultural initiatives. This can include graphics for social media, posters, covers, promo, presentations, merch and digital communication.',
+          'I help build a unified visual style: colors, typography, graphic techniques, mood, composition and overall brand character, so every material feels consistent, recognizable and directed.',
+        ],
+      },
+      {
+        title: 'AI ILLUSTRATIONS',
+        paragraphs: [
+          'AI illustrations and visuals for projects, covers, posters, social media, merch and presentations. I work with generation, prompts, references, style direction and post-production.',
+          'AI is used not as a random picture, but as a tool for quickly searching for a visual language, creating unusual images and developing ideas that can be adapted to a specific task and final design.',
+        ],
+      },
+    ],
     contactsEyebrow: 'Contacts',
     contactsTitle: 'Open for sharp visual systems',
     footer: '© 2026 Yaroslav — Graphic Designer. No backend. Just taste.',
@@ -499,17 +585,40 @@ function About({ t }) {
 }
 
 function Services({ t }) {
+  const [activeService, setActiveService] = useState(null);
+
   return (
     <section id="services" className="border-y border-ink px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-7xl">
         <SectionTitle eyebrow={t.servicesEyebrow} title={t.servicesTitle} />
         <div className="mt-10 grid border-t border-ink">
-          {t.services.map((service) => (
-            <div key={service} className="group flex items-center justify-between border-b border-ink py-5 transition-colors duration-300 hover:bg-acid">
-              <span className="text-3xl font-black uppercase tracking-[-0.06em] md:text-7xl">{service}</span>
-              <span className="text-3xl transition-transform duration-300 group-hover:rotate-45">+</span>
-            </div>
-          ))}
+          {t.services.map((service, index) => {
+            const isActive = activeService === index;
+
+            return (
+              <div key={service.title} className="border-b border-ink">
+                <button
+                  type="button"
+                  onClick={() => setActiveService(isActive ? null : index)}
+                  className="group flex w-full items-center justify-between py-5 text-left transition-colors duration-300 hover:bg-acid"
+                  aria-expanded={isActive}
+                >
+                  <span className="text-3xl font-black uppercase tracking-[-0.06em] md:text-7xl">{service.title}</span>
+                  <span className={`text-3xl transition-transform duration-300 ${isActive ? 'rotate-45' : 'group-hover:rotate-45'}`}>+</span>
+                </button>
+                {isActive && (
+                  <div className="grid gap-4 pb-8 md:grid-cols-[12rem_1fr]">
+                    <span className="hidden text-xs font-black uppercase tracking-[0.35em] text-ink/45 md:block">Info</span>
+                    <div className="max-w-4xl space-y-4 text-lg font-semibold leading-tight tracking-[-0.03em] text-ink/75 md:text-2xl">
+                      {service.paragraphs.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
