@@ -13,6 +13,37 @@ const works = [
   { title: 'AI Illustrations', type: 'Neural art direction', mark: '08', tone: 'from-stone-300 to-white' },
 ];
 
+
+const pinkPunkWorks = [
+  {
+    title: 'Pink Punk 01',
+    type: 'Flat / worn poster',
+    mark: 'PP 01',
+    flat: '/works/pink-punk/- pink-punk-01-flat.jpg',
+    worn: '/works/pink-punk/- pink-punk-01-worn.jpg',
+  },
+  {
+    title: 'Pink Punk 02',
+    type: 'Flat / worn poster',
+    mark: 'PP 02',
+    flat: '/works/pink-punk/- pink-punk-02-flat.jpg',
+    worn: '/works/pink-punk/- pink-punk-02-worn.jpg',
+  },
+  {
+    title: 'Pink Punk 03',
+    type: 'Flat / worn poster',
+    mark: 'PP 03',
+    flat: '/works/pink-punk/- pink-punk-03-flat.jpg',
+    worn: '/works/pink-punk/- pink-punk-03-worn.jpg',
+  },
+  { title: 'PP Alphabet', type: 'Typography asset', mark: 'PP 04', src: '/works/pink-punk/PP_ALPHABET.jpg' },
+  { title: 'PP Man', type: 'Character graphic', mark: 'PP 05', src: '/works/pink-punk/PP_MAN.jpg' },
+  { title: 'Not Dead', type: 'Poster graphic', mark: 'PP 06', src: '/works/pink-punk/PP_NOT_DEAD.jpg' },
+  { title: 'PP Mark', type: 'Logo graphic', mark: 'PP 07', src: '/works/pink-punk/PP_PP.jpg' },
+  { title: 'PP Punk', type: 'Type graphic', mark: 'PP 08', src: '/works/pink-punk/PP_PUNK.jpg' },
+  { title: 'PP Punk 2', type: 'Type graphic', mark: 'PP 09', src: '/works/pink-punk/PP_PUNK_2.jpg' },
+];
+
 const services = [
   'Logo design',
   'Posters',
@@ -129,8 +160,52 @@ function Works() {
             </article>
           ))}
         </div>
+        <div className="mt-16">
+          <SectionTitle eyebrow="Pink Punk" title="Already uploaded poster system / hover wear tests" />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {pinkPunkWorks.map((work) => (
+              <PinkPunkCard key={work.title} work={work} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
+  );
+}
+
+
+function PinkPunkCard({ work }) {
+  const isHoverPair = Boolean(work.flat && work.worn);
+
+  return (
+    <article className="group min-h-[28rem] border border-ink bg-fog p-4 transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal">
+      <div className="flex h-full flex-col justify-between overflow-hidden border border-ink/20 bg-white/60 p-4 backdrop-blur-sm">
+        <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]">
+          <span>{work.mark}</span>
+          <span>{isHoverPair ? 'Hover' : 'Static'}</span>
+        </div>
+        <figure className={`pink-punk-frame my-6 ${isHoverPair ? 'pink-punk-frame--hover' : ''}`}>
+          <img
+            className="pink-punk-image pink-punk-image--base"
+            src={isHoverPair ? work.flat : work.src}
+            alt={`${work.title} ${isHoverPair ? 'flat artwork' : 'artwork'}`}
+            loading="lazy"
+          />
+          {isHoverPair && (
+            <img
+              className="pink-punk-image pink-punk-image--worn"
+              src={work.worn}
+              alt={`${work.title} worn artwork`}
+              loading="lazy"
+            />
+          )}
+        </figure>
+        <div>
+          <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{work.title}</h3>
+          <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{work.type}</p>
+        </div>
+      </div>
+    </article>
   );
 }
 
