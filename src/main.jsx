@@ -189,6 +189,8 @@ function WorkCardContent({ work }) {
 }
 
 function PinkPunkModal({ onClose }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+
   return (
     <div className="fixed inset-0 z-[100] overflow-y-auto bg-white/95 px-4 py-6 backdrop-blur-md md:px-8 md:py-8">
       <div className="mx-auto max-w-7xl">
@@ -205,19 +207,25 @@ function PinkPunkModal({ onClose }) {
 
         <div className="pink-punk-gallery">
           {pinkPunkImages.map((image) => (
-            <PinkPunkImage key={image.id} image={image} />
+            <PinkPunkImage key={image.id} image={image} onSelect={setSelectedImage} />
           ))}
         </div>
       </div>
+      {selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} />}
     </div>
   );
 }
 
-function PinkPunkImage({ image }) {
+function PinkPunkImage({ image, onSelect }) {
   const hasHover = Boolean(image.flat && image.worn);
 
   return (
-    <figure className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`}>
+    <button
+      type="button"
+      className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`}
+      onClick={() => onSelect(image)}
+      aria-label="Open image fullscreen"
+    >
       <img
         className="pink-punk-image pink-punk-image--base"
         src={hasHover ? image.flat : image.src}
@@ -232,7 +240,42 @@ function PinkPunkImage({ image }) {
           loading="lazy"
         />
       )}
-    </figure>
+    </button>
+  );
+}
+
+function ImageLightbox({ image, onClose }) {
+  const hasHover = Boolean(image.flat && image.worn);
+
+  return (
+    <div
+      className="fixed inset-0 z-[150] flex items-center justify-center bg-ink/90 px-4 py-6 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute right-4 top-4 z-10 border border-white bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-ink transition-all duration-300 hover:bg-acid"
+      >
+        Close
+      </button>
+      <div className={`pink-punk-lightbox-frame ${hasHover ? 'pink-punk-lightbox-frame--hover' : ''}`} onClick={(event) => event.stopPropagation()}>
+        <img
+          className="pink-punk-lightbox-image pink-punk-lightbox-image--base"
+          src={hasHover ? image.flat : image.src}
+          alt={image.alt}
+        />
+        {hasHover && (
+          <img
+            className="pink-punk-lightbox-image pink-punk-lightbox-image--worn"
+            src={image.worn}
+            alt={`${image.alt} on body`}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
