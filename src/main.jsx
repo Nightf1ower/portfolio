@@ -4,13 +4,13 @@ import './styles.css';
 
 const works = [
   { title: 'ZNY', type: { ru: 'Айдентика бренда', en: 'Brand identity' }, mark: '01', tone: 'from-zinc-100 to-zinc-300' },
-  { title: 'F|ABLE', type: { ru: 'Логотип и система', en: 'Logo system' }, mark: '02', tone: 'from-neutral-200 to-white' },
-  { title: 'Pink Punk', type: { ru: 'Серия постеров', en: 'Poster series' }, mark: '03', tone: 'from-stone-100 to-zinc-400' },
-  { title: 'Blandetto', type: { ru: 'Мерч-капсула', en: 'Merch capsule' }, mark: '04', tone: 'from-zinc-300 to-neutral-100' },
-  { title: { ru: 'Обложки', en: 'Album Covers' }, type: { ru: 'Музыкальные визуалы', en: 'Music visuals' }, mark: '05', tone: 'from-white to-zinc-300' },
-  { title: { ru: 'Постеры', en: 'Posters' }, type: { ru: 'Редакционный принт', en: 'Editorial print' }, mark: '06', tone: 'from-neutral-100 to-stone-300' },
-  { title: { ru: 'Мерч', en: 'Merch' }, type: { ru: 'Текстильная графика', en: 'Textile graphics' }, mark: '07', tone: 'from-zinc-200 to-zinc-50' },
-  { title: { ru: 'AI-иллюстрации', en: 'AI Illustrations' }, type: { ru: 'Нейро-артдирекшн', en: 'Neural art direction' }, mark: '08', tone: 'from-stone-300 to-white' },
+  { title: 'F | ABLE', type: { ru: 'Логотип и визуальная система', en: 'Logo and visual system' }, mark: '02', tone: 'from-neutral-200 to-white' },
+  { slug: 'pink-punk', title: 'PINK PUNK', type: { ru: 'Постеры / мерч-система', en: 'Posters / merch system' }, mark: '03', tone: 'from-stone-100 to-zinc-400' },
+  { title: 'CARNIVAL RECORDS', type: { ru: 'Визуалы музыкального лейбла', en: 'Music label visuals' }, mark: '04', tone: 'from-white to-zinc-300' },
+  { title: 'BLANDETTO', type: { ru: 'Мерч-капсула', en: 'Merch capsule' }, mark: '05', tone: 'from-zinc-300 to-neutral-100' },
+  { title: 'POSTERS', type: { ru: 'Постер-дизайн', en: 'Poster design' }, mark: '06', tone: 'from-neutral-100 to-stone-300' },
+  { title: 'MERCH', type: { ru: 'Текстильная графика', en: 'Textile graphics' }, mark: '07', tone: 'from-zinc-200 to-zinc-50' },
+  { title: '90.06', type: { ru: 'Визуальная система', en: 'Visual system' }, mark: '08', tone: 'from-stone-300 to-white' },
 ];
 
 const pinkPunkBase = 'https://raw.githubusercontent.com/Nightf1ower/portfolio/main/works/pink-punk';
@@ -80,7 +80,7 @@ const translations = {
     worksTitle: 'Избранные проекты / rough luxury сетка',
     openProject: 'Открыть проект',
     placeholder: 'Визуальный плейсхолдер',
-    pinkPunk: 'Pink Punk',
+    pinkPunk: 'PINK PUNK',
     close: 'Закрыть',
     aboutEyebrow: 'Обо мне',
     aboutTitle: 'Контрастный вкус, музыкальная энергия, fashion-дисциплина',
@@ -95,7 +95,7 @@ const translations = {
     languageButton: 'EN',
     languageLabel: 'Switch site to English',
     homeLabel: 'Портфолио Ярослава',
-    openPinkPunkLabel: 'Открыть галерею проекта Pink Punk',
+    openPinkPunkLabel: 'Открыть галерею проекта PINK PUNK',
     openImageLabel: 'Открыть изображение крупно',
   },
   en: {
@@ -108,7 +108,7 @@ const translations = {
     worksTitle: 'Selected projects / rough luxury grid',
     openProject: 'Open project',
     placeholder: 'Placeholder visual',
-    pinkPunk: 'Pink Punk',
+    pinkPunk: 'PINK PUNK',
     close: 'Close',
     aboutEyebrow: 'About',
     aboutTitle: 'High contrast taste, music energy, fashion discipline',
@@ -123,7 +123,7 @@ const translations = {
     languageButton: 'RU',
     languageLabel: 'Переключить сайт на русский',
     homeLabel: 'Yaroslav portfolio home',
-    openPinkPunkLabel: 'Open Pink Punk project gallery',
+    openPinkPunkLabel: 'Open PINK PUNK project gallery',
     openImageLabel: 'Open image fullscreen',
   },
 };
@@ -254,7 +254,7 @@ function Works({ language, t }) {
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {works.map((work, index) => {
             const title = getText(work.title, language);
-            const isPinkPunk = title === 'Pink Punk';
+            const isPinkPunk = work.slug === 'pink-punk';
             const className = `group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''} ${isPinkPunk ? 'cursor-pointer' : ''}`;
 
             if (isPinkPunk) {
@@ -298,7 +298,7 @@ function WorkCardContent({ work, language, t }) {
           <div className="absolute inset-4 bg-ink" />
           <div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" />
           <div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">
-            {title === 'Pink Punk' ? t.openProject : t.placeholder}
+            {work.slug === 'pink-punk' ? t.openProject : t.placeholder}
           </div>
         </div>
       </div>
