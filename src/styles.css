@@ -30,16 +30,13 @@
   .nav-link:hover::after {
     @apply w-full;
   }
-}
 
-@layer components {
-  .pink-punk-frame {
-    @apply relative aspect-[4/5] overflow-hidden border border-ink bg-white shadow-[inset_0_0_0_1px_rgba(5,5,5,0.08)];
+  .pink-punk-gallery {
+    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
   }
 
-  .pink-punk-frame::after {
-    content: '';
-    @apply pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.24)_0_1px,transparent_1px_18px)] mix-blend-overlay;
+  .pink-punk-frame {
+    @apply relative aspect-[4/5] overflow-hidden border border-ink bg-white;
   }
 
   .pink-punk-image {
@@ -47,20 +44,18 @@
   }
 
   .pink-punk-image--base {
-    @apply opacity-100 grayscale-0;
+    @apply opacity-100;
   }
 
   .pink-punk-image--worn {
-    @apply opacity-0 saturate-150;
+    @apply opacity-0;
   }
 
-  .pink-punk-frame--hover:hover .pink-punk-image--base,
-  .group:hover .pink-punk-frame--hover .pink-punk-image--base {
+  .pink-punk-frame--hover:hover .pink-punk-image--base {
     @apply scale-105 opacity-0;
   }
 
-  .pink-punk-frame--hover:hover .pink-punk-image--worn,
-  .group:hover .pink-punk-frame--hover .pink-punk-image--worn {
+  .pink-punk-frame--hover:hover .pink-punk-image--worn {
     @apply scale-105 opacity-100;
   }
 }
