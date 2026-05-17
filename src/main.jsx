@@ -51,6 +51,12 @@ const services = [
   'AI illustrations',
 ];
 
+const contacts = [
+  { label: 'Instagram', href: 'https://www.instagram.com/nightflovver/' },
+  { label: 'Telegram', href: 'https://t.me/nightflower' },
+  { label: 'Nightf1ower@yandex.ru', href: 'mailto:Nightf1ower@yandex.ru' },
+];
+
 function App() {
   return (
     <main className="min-h-screen bg-white text-ink selection:bg-acid selection:text-ink">
@@ -318,13 +324,15 @@ function Contacts() {
       <div className="mx-auto max-w-7xl">
         <SectionTitle eyebrow="Contacts" title="Open for sharp visual systems" />
         <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          {['Instagram', 'Telegram', 'Email'].map((contact) => (
+          {contacts.map((contact) => (
             <a
-              key={contact}
-              href={contact === 'Email' ? 'mailto:hello@yaroslav.design' : '#'}
+              key={contact.label}
+              href={contact.href}
+              target="_blank"
+              rel="noreferrer"
               className="group flex min-h-36 items-end justify-between border border-ink bg-fog p-5 text-2xl font-black uppercase tracking-[-0.05em] transition-all duration-300 hover:-translate-y-2 hover:bg-ink hover:text-white hover:shadow-brutal md:text-4xl"
             >
-              {contact}
+              {contact.label}
               <span className="text-acid transition-transform duration-300 group-hover:-translate-y-2 group-hover:translate-x-2">↗</span>
             </a>
           ))}
