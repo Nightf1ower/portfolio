@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
@@ -13,35 +13,31 @@ const works = [
   { title: 'AI Illustrations', type: 'Neural art direction', mark: '08', tone: 'from-stone-300 to-white' },
 ];
 
-
-const pinkPunkWorks = [
+const pinkPunkImages = [
   {
-    title: 'Pink Punk 01',
-    type: 'Flat / worn poster',
-    mark: 'PP 01',
-    flat: '/works/pink-punk/- pink-punk-01-flat.jpg',
-    worn: '/works/pink-punk/- pink-punk-01-worn.jpg',
+    id: '01',
+    flat: '/works/pink-punk/pink-punk-01-flat.jpg',
+    worn: '/works/pink-punk/pink-punk-01-worn.jpg',
+    alt: 'Pink Punk artwork 01',
   },
   {
-    title: 'Pink Punk 02',
-    type: 'Flat / worn poster',
-    mark: 'PP 02',
-    flat: '/works/pink-punk/- pink-punk-02-flat.jpg',
-    worn: '/works/pink-punk/- pink-punk-02-worn.jpg',
+    id: '02',
+    flat: '/works/pink-punk/pink-punk-02-flat.jpg',
+    worn: '/works/pink-punk/pink-punk-02-worn.jpg',
+    alt: 'Pink Punk artwork 02',
   },
   {
-    title: 'Pink Punk 03',
-    type: 'Flat / worn poster',
-    mark: 'PP 03',
-    flat: '/works/pink-punk/- pink-punk-03-flat.jpg',
-    worn: '/works/pink-punk/- pink-punk-03-worn.jpg',
+    id: '03',
+    flat: '/works/pink-punk/pink-punk-03-flat.jpg',
+    worn: '/works/pink-punk/pink-punk-03-worn.jpg',
+    alt: 'Pink Punk artwork 03',
   },
-  { title: 'PP Alphabet', type: 'Typography asset', mark: 'PP 04', src: '/works/pink-punk/PP_ALPHABET.jpg' },
-  { title: 'PP Man', type: 'Character graphic', mark: 'PP 05', src: '/works/pink-punk/PP_MAN.jpg' },
-  { title: 'Not Dead', type: 'Poster graphic', mark: 'PP 06', src: '/works/pink-punk/PP_NOT_DEAD.jpg' },
-  { title: 'PP Mark', type: 'Logo graphic', mark: 'PP 07', src: '/works/pink-punk/PP_PP.jpg' },
-  { title: 'PP Punk', type: 'Type graphic', mark: 'PP 08', src: '/works/pink-punk/PP_PUNK.jpg' },
-  { title: 'PP Punk 2', type: 'Type graphic', mark: 'PP 09', src: '/works/pink-punk/PP_PUNK_2.jpg' },
+  { id: '04', src: '/works/pink-punk/PP_ALPHABET.jpg', alt: 'Pink Punk alphabet artwork' },
+  { id: '05', src: '/works/pink-punk/PP_MAN.jpg', alt: 'Pink Punk man artwork' },
+  { id: '06', src: '/works/pink-punk/PP_NOT_DEAD.jpg', alt: 'Pink Punk not dead artwork' },
+  { id: '07', src: '/works/pink-punk/PP_PP.jpg', alt: 'Pink Punk PP artwork' },
+  { id: '08', src: '/works/pink-punk/PP_PUNK.jpg', alt: 'Pink Punk artwork' },
+  { id: '09', src: '/works/pink-punk/PP_PUNK_2.jpg', alt: 'Pink Punk artwork 2' },
 ];
 
 const services = [
@@ -128,84 +124,113 @@ function Hero() {
 }
 
 function Works() {
+  const [activeProject, setActiveProject] = useState(null);
+
   return (
     <section id="works" className="border-t border-ink px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-7xl">
         <SectionTitle eyebrow="Works" title="Selected projects / rough luxury grid" />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {works.map((work, index) => (
-            <article
-              key={work.title}
-              className={`group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''}`}
-            >
-              <div className="flex h-full flex-col justify-between overflow-hidden border border-ink/20 bg-white/35 p-4 backdrop-blur-sm">
-                <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]">
-                  <span>{work.mark}</span>
-                  <span className="h-3 w-3 rounded-full bg-acid opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                </div>
-                <div className="my-10 flex flex-1 items-center justify-center">
-                  <div className="relative aspect-square w-44 max-w-full border border-ink bg-white transition-transform duration-500 group-hover:rotate-3 group-hover:scale-105">
-                    <div className="absolute inset-4 bg-ink" />
-                    <div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" />
-                    <div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">
-                      Placeholder visual
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{work.title}</h3>
-                  <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{work.type}</p>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-        <div className="mt-16">
-          <SectionTitle eyebrow="Pink Punk" title="Already uploaded poster system / hover wear tests" />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {pinkPunkWorks.map((work) => (
-              <PinkPunkCard key={work.title} work={work} />
-            ))}
-          </div>
+          {works.map((work, index) => {
+            const isPinkPunk = work.title === 'Pink Punk';
+            const className = `group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''} ${isPinkPunk ? 'cursor-pointer' : ''}`;
+
+            if (isPinkPunk) {
+              return (
+                <button
+                  key={work.title}
+                  type="button"
+                  className={className}
+                  onClick={() => setActiveProject('pink-punk')}
+                  aria-label="Open Pink Punk project gallery"
+                >
+                  <WorkCardContent work={work} />
+                </button>
+              );
+            }
+
+            return (
+              <article key={work.title} className={className}>
+                <WorkCardContent work={work} />
+              </article>
+            );
+          })}
         </div>
       </div>
+      {activeProject === 'pink-punk' && <PinkPunkModal onClose={() => setActiveProject(null)} />}
     </section>
   );
 }
 
-
-function PinkPunkCard({ work }) {
-  const isHoverPair = Boolean(work.flat && work.worn);
-
+function WorkCardContent({ work }) {
   return (
-    <article className="group min-h-[28rem] border border-ink bg-fog p-4 transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal">
-      <div className="flex h-full flex-col justify-between overflow-hidden border border-ink/20 bg-white/60 p-4 backdrop-blur-sm">
-        <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]">
-          <span>{work.mark}</span>
-          <span>{isHoverPair ? 'Hover' : 'Static'}</span>
-        </div>
-        <figure className={`pink-punk-frame my-6 ${isHoverPair ? 'pink-punk-frame--hover' : ''}`}>
-          <img
-            className="pink-punk-image pink-punk-image--base"
-            src={isHoverPair ? work.flat : work.src}
-            alt={`${work.title} ${isHoverPair ? 'flat artwork' : 'artwork'}`}
-            loading="lazy"
-          />
-          {isHoverPair && (
-            <img
-              className="pink-punk-image pink-punk-image--worn"
-              src={work.worn}
-              alt={`${work.title} worn artwork`}
-              loading="lazy"
-            />
-          )}
-        </figure>
-        <div>
-          <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{work.title}</h3>
-          <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{work.type}</p>
+    <div className="flex h-full flex-col justify-between overflow-hidden border border-ink/20 bg-white/35 p-4 backdrop-blur-sm">
+      <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]">
+        <span>{work.mark}</span>
+        <span className="h-3 w-3 rounded-full bg-acid opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      </div>
+      <div className="my-10 flex flex-1 items-center justify-center">
+        <div className="relative aspect-square w-44 max-w-full border border-ink bg-white transition-transform duration-500 group-hover:rotate-3 group-hover:scale-105">
+          <div className="absolute inset-4 bg-ink" />
+          <div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" />
+          <div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">
+            {work.title === 'Pink Punk' ? 'Open project' : 'Placeholder visual'}
+          </div>
         </div>
       </div>
-    </article>
+      <div>
+        <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{work.title}</h3>
+        <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{work.type}</p>
+      </div>
+    </div>
+  );
+}
+
+function PinkPunkModal({ onClose }) {
+  return (
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-white/95 px-4 py-6 backdrop-blur-md md:px-8 md:py-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-ink pb-4">
+          <p className="bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">Pink Punk</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="border border-ink bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white"
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="pink-punk-gallery">
+          {pinkPunkImages.map((image) => (
+            <PinkPunkImage key={image.id} image={image} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PinkPunkImage({ image }) {
+  const hasHover = Boolean(image.flat && image.worn);
+
+  return (
+    <figure className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`}>
+      <img
+        className="pink-punk-image pink-punk-image--base"
+        src={hasHover ? image.flat : image.src}
+        alt={image.alt}
+        loading="lazy"
+      />
+      {hasHover && (
+        <img
+          className="pink-punk-image pink-punk-image--worn"
+          src={image.worn}
+          alt={`${image.alt} on body`}
+          loading="lazy"
+        />
+      )}
+    </figure>
   );
 }
 
