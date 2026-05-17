@@ -3,14 +3,86 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const works = [
-  { title: 'ZNY', type: { ru: 'Айдентика бренда', en: 'Brand identity' }, mark: '01', tone: 'from-zinc-100 to-zinc-300' },
-  { title: 'F | ABLE', type: { ru: 'Логотип и визуальная система', en: 'Logo and visual system' }, mark: '02', tone: 'from-neutral-200 to-white' },
-  { slug: 'pink-punk', title: 'PINK PUNK', type: { ru: 'Постеры / мерч-система', en: 'Posters / merch system' }, mark: '03', tone: 'from-stone-100 to-zinc-400' },
-  { title: 'CARNIVAL RECORDS', type: { ru: 'Визуалы музыкального лейбла', en: 'Music label visuals' }, mark: '04', tone: 'from-white to-zinc-300' },
-  { title: 'BLANDETTO', type: { ru: 'Мерч-капсула', en: 'Merch capsule' }, mark: '05', tone: 'from-zinc-300 to-neutral-100' },
-  { title: 'POSTERS', type: { ru: 'Постер-дизайн', en: 'Poster design' }, mark: '06', tone: 'from-neutral-100 to-stone-300' },
-  { title: 'MERCH', type: { ru: 'Текстильная графика', en: 'Textile graphics' }, mark: '07', tone: 'from-zinc-200 to-zinc-50' },
-  { title: '90.06', type: { ru: 'Визуальная система', en: 'Visual system' }, mark: '08', tone: 'from-stone-300 to-white' },
+  {
+    title: 'ZNY',
+    type: { ru: 'Айдентика и графическая система', en: 'Identity and graphic system' },
+    mark: '01',
+    tone: 'from-zinc-100 to-zinc-300',
+    subcategories: ['DESIGNS', 'INFOGRAPHICS', 'STICKERS'],
+  },
+  {
+    title: 'F | ABLE',
+    type: { ru: 'Логотип и визуальная система', en: 'Logo and visual system' },
+    mark: '02',
+    tone: 'from-neutral-200 to-white',
+  },
+  {
+    slug: 'pink-punk',
+    title: 'PINK PUNK',
+    type: { ru: 'Постеры / мерч-система', en: 'Posters / merch system' },
+    mark: '03',
+    tone: 'from-stone-100 to-zinc-400',
+  },
+  {
+    title: 'CARNIVAL RECORDS',
+    type: { ru: 'Визуалы музыкального лейбла', en: 'Music label visuals' },
+    mark: '04',
+    tone: 'from-white to-zinc-300',
+    subcategories: ['DESIGNS', 'ALBUM COVER'],
+  },
+  {
+    title: 'BLANDETTO',
+    type: { ru: 'Мерч-капсула', en: 'Merch capsule' },
+    mark: '05',
+    tone: 'from-zinc-300 to-neutral-100',
+  },
+  {
+    title: '90.06',
+    type: { ru: 'Визуальная система', en: 'Visual system' },
+    mark: '06',
+    tone: 'from-stone-300 to-white',
+    subcategories: ['MERCH', 'ACCESSORY', 'PHOTOSHOOT', 'POSTERS'],
+  },
+  {
+    title: 'POSTERS',
+    type: { ru: 'Постер-дизайн', en: 'Poster design' },
+    mark: '07',
+    tone: 'from-neutral-100 to-stone-300',
+    subcategories: ['EVENTS', 'ART', 'INFOGRAPHICS'],
+  },
+  {
+    title: 'MERCH',
+    type: { ru: 'Текстильная графика', en: 'Textile graphics' },
+    mark: '08',
+    tone: 'from-zinc-200 to-zinc-50',
+    subcategories: ['NIGHTFLOWER', 'YABLOCHKO ZELENOE'],
+  },
+  {
+    title: 'STICKERS',
+    type: { ru: 'Стикерпаки и графика', en: 'Sticker packs and graphics' },
+    mark: '09',
+    tone: 'from-zinc-100 to-white',
+    subcategories: ['MNU', 'NIGHTFLOWER', 'ZNY'],
+  },
+  {
+    title: 'LOGOS',
+    type: { ru: 'Знаки и логотипы', en: 'Marks and logos' },
+    mark: '10',
+    tone: 'from-neutral-200 to-zinc-100',
+    subcategories: ['BRANDS', 'COMPANIES'],
+  },
+  {
+    title: 'ALBUM COVERS',
+    type: { ru: 'Обложки для музыки', en: 'Music cover artworks' },
+    mark: '11',
+    tone: 'from-white to-zinc-200',
+  },
+  {
+    title: 'STAY UGLY',
+    type: { ru: 'Авторский визуальный проект', en: 'Personal visual project' },
+    mark: '12',
+    tone: 'from-stone-200 to-white',
+  },
 ];
 
 const pinkPunkBase = 'https://raw.githubusercontent.com/Nightf1ower/portfolio/main/works/pink-punk';
@@ -305,6 +377,18 @@ function WorkCardContent({ work, language, t }) {
       <div>
         <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{title}</h3>
         <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{getText(work.type, language)}</p>
+        {work.subcategories?.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {work.subcategories.map((subcategory) => (
+              <span
+                key={subcategory}
+                className="border border-ink/35 bg-white/60 px-2 py-1 text-[0.58rem] font-black uppercase tracking-[0.2em] text-ink/80 transition-colors duration-300 group-hover:border-ink group-hover:bg-acid group-hover:text-ink"
+              >
+                {subcategory}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
