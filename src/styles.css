@@ -32,30 +32,46 @@
   }
 
   .pink-punk-gallery {
-    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
+    column-count: 1;
+    column-gap: 1rem;
+  }
+
+  @screen sm {
+    .pink-punk-gallery {
+      column-count: 2;
+    }
+  }
+
+  @screen lg {
+    .pink-punk-gallery {
+      column-count: 3;
+    }
   }
 
   .pink-punk-frame {
-    @apply relative aspect-[4/5] overflow-hidden border border-ink bg-white;
+    @apply relative mb-4 inline-block w-full overflow-hidden bg-white align-top;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .pink-punk-image {
-    @apply absolute inset-0 h-full w-full object-cover transition-all duration-500 ease-out;
+    @apply block h-auto w-full transition-all duration-500 ease-out;
   }
 
   .pink-punk-image--base {
-    @apply opacity-100;
+    @apply relative opacity-100;
   }
 
   .pink-punk-image--worn {
-    @apply opacity-0;
+    @apply absolute inset-0 h-full w-full object-contain opacity-0;
   }
 
   .pink-punk-frame--hover:hover .pink-punk-image--base {
-    @apply scale-105 opacity-0;
+    @apply opacity-0;
   }
 
   .pink-punk-frame--hover:hover .pink-punk-image--worn {
-    @apply scale-105 opacity-100;
+    @apply opacity-100;
   }
 }
