@@ -13,31 +13,33 @@ const works = [
   { title: 'AI Illustrations', type: 'Neural art direction', mark: '08', tone: 'from-stone-300 to-white' },
 ];
 
+const pinkPunkBase = 'https://raw.githubusercontent.com/Nightf1ower/portfolio/main/works/pink-punk';
+
 const pinkPunkImages = [
   {
     id: '01',
-    flat: '/works/pink-punk/pink-punk-01-flat.jpg',
-    worn: '/works/pink-punk/pink-punk-01-worn.jpg',
+    flat: `${pinkPunkBase}/-%20pink-punk-01-flat.jpg`,
+    worn: `${pinkPunkBase}/-%20pink-punk-01-worn.jpg`,
     alt: 'Pink Punk artwork 01',
   },
   {
     id: '02',
-    flat: '/works/pink-punk/pink-punk-02-flat.jpg',
-    worn: '/works/pink-punk/pink-punk-02-worn.jpg',
+    flat: `${pinkPunkBase}/-%20pink-punk-02-flat.jpg`,
+    worn: `${pinkPunkBase}/-%20pink-punk-02-worn.jpg`,
     alt: 'Pink Punk artwork 02',
   },
   {
     id: '03',
-    flat: '/works/pink-punk/pink-punk-03-flat.jpg',
-    worn: '/works/pink-punk/pink-punk-03-worn.jpg',
+    flat: `${pinkPunkBase}/-%20pink-punk-03-flat.jpg`,
+    worn: `${pinkPunkBase}/-%20pink-punk-03-worn.jpg`,
     alt: 'Pink Punk artwork 03',
   },
-  { id: '04', src: '/works/pink-punk/PP_ALPHABET.jpg', alt: 'Pink Punk alphabet artwork' },
-  { id: '05', src: '/works/pink-punk/PP_MAN.jpg', alt: 'Pink Punk man artwork' },
-  { id: '06', src: '/works/pink-punk/PP_NOT_DEAD.jpg', alt: 'Pink Punk not dead artwork' },
-  { id: '07', src: '/works/pink-punk/PP_PP.jpg', alt: 'Pink Punk PP artwork' },
-  { id: '08', src: '/works/pink-punk/PP_PUNK.jpg', alt: 'Pink Punk artwork' },
-  { id: '09', src: '/works/pink-punk/PP_PUNK_2.jpg', alt: 'Pink Punk artwork 2' },
+  { id: '04', src: `${pinkPunkBase}/PP_ALPHABET.jpg`, alt: 'Pink Punk alphabet artwork' },
+  { id: '05', src: `${pinkPunkBase}/PP_MAN.jpg`, alt: 'Pink Punk man artwork' },
+  { id: '06', src: `${pinkPunkBase}/PP_NOT_DEAD.jpg`, alt: 'Pink Punk not dead artwork' },
+  { id: '07', src: `${pinkPunkBase}/PP_PP.jpg`, alt: 'Pink Punk PP artwork' },
+  { id: '08', src: `${pinkPunkBase}/PP_PUNK.jpg`, alt: 'Pink Punk artwork' },
+  { id: '09', src: `${pinkPunkBase}/PP_PUNK_2.jpg`, alt: 'Pink Punk artwork 2' },
 ];
 
 const services = [
