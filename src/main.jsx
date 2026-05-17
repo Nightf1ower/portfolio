@@ -145,7 +145,7 @@ const translations = {
   ru: {
     nav: { works: 'Работы', about: 'Обо мне', services: 'Услуги', contacts: 'Контакты' },
     heroKicker: 'Постеры / Обложки / Мерч / Логотипы / AI-визуалы',
-    profession: 'Графический дизайнер',
+    profession: 'Ярослав — графический дизайнер',
     viewWorks: 'Смотреть работы',
     visualNoise: 'Визуальный шум',
     worksEyebrow: 'Работы',
@@ -173,7 +173,7 @@ const translations = {
   en: {
     nav: { works: 'Works', about: 'About', services: 'Services', contacts: 'Contacts' },
     heroKicker: 'Posters / Covers / Merch / Logos / AI Visuals',
-    profession: 'Graphic Designer',
+    profession: 'Yaroslav — Graphic Designer',
     viewWorks: 'View works',
     visualNoise: 'Selected visual noise',
     worksEyebrow: 'Works',
@@ -283,8 +283,8 @@ function Hero({ t }) {
           <p className="mb-4 inline-flex border border-ink px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.42em]">
             {t.heroKicker}
           </p>
-          <h1 className="font-display text-[clamp(4.8rem,18vw,17rem)] font-black uppercase leading-[0.75] tracking-editorial">
-            Ярослав
+          <h1 className="font-display text-[clamp(3.3rem,12vw,10.5rem)] font-black uppercase leading-[0.82] tracking-[-0.09em]">
+            NIGHTFLOWER
           </h1>
           <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-xl text-3xl font-semibold uppercase leading-none tracking-[-0.05em] md:text-6xl">
