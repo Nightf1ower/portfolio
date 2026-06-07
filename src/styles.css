@@ -118,8 +118,12 @@
 @layer utilities {
   .z-\[100\].fixed.inset-0 {
     padding-top: 0 !important;
-    animation: project-theme-in 0.45s ease both;
+    animation: project-theme-in 0.35s ease both;
     transition: background-color 0.75s ease, color 0.75s ease;
+    transform: none !important;
+    filter: none !important;
+    perspective: none !important;
+    contain: none !important;
   }
 
   .z-\[100\].fixed.inset-0 > div > .sticky {
@@ -128,7 +132,7 @@
     padding-top: 0.9rem !important;
     padding-bottom: 0.9rem !important;
     box-shadow: none !important;
-    backdrop-filter: blur(18px);
+    backdrop-filter: none !important;
   }
 
   .z-\[100\].fixed.inset-0 > div > .sticky::after {
@@ -147,27 +151,38 @@
 
   .z-\[150\].fixed.inset-0 {
     position: fixed !important;
-    inset: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
     height: 100dvh !important;
     width: 100vw !important;
     overflow: hidden !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    z-index: 999999 !important;
+    background: rgba(5, 5, 5, 0.94) !important;
+    transform: none !important;
+    filter: none !important;
   }
 
-  body:has(.z-\[150\].fixed.inset-0) {
+  .z-\[150\].fixed.inset-0 .pink-punk-lightbox-frame {
+    margin: auto !important;
+  }
+
+  body:has(.z-\[150\].fixed.inset-0),
+  body:has(.z-\[100\].fixed.inset-0) {
     overflow: hidden !important;
   }
 
   @keyframes project-theme-in {
     from {
       opacity: 0;
-      filter: saturate(0.75) brightness(1.03);
     }
     to {
       opacity: 1;
-      filter: saturate(1) brightness(1);
     }
   }
 }
