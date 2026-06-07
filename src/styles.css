@@ -48,6 +48,7 @@
   .pink-punk-gallery {
     column-count: 1;
     column-gap: 1rem;
+    padding-top: 0.75rem;
   }
 
   @screen sm {
@@ -111,5 +112,36 @@
 
   .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn {
     @apply opacity-100;
+  }
+}
+
+@layer utilities {
+  .z-\[100\].fixed.inset-0 {
+    padding-top: 0 !important;
+    animation: project-theme-in 0.45s ease both;
+    transition: background-color 0.7s ease, color 0.7s ease;
+  }
+
+  .z-\[100\].fixed.inset-0 > div > .sticky {
+    top: 0 !important;
+    margin-bottom: 1.5rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.18);
+  }
+
+  .z-\[100\].fixed.inset-0 > div > .pink-punk-gallery {
+    margin-top: 0.5rem;
+  }
+
+  @keyframes project-theme-in {
+    from {
+      opacity: 0;
+      filter: saturate(0.65) brightness(1.08);
+    }
+    to {
+      opacity: 1;
+      filter: saturate(1) brightness(1);
+    }
   }
 }
