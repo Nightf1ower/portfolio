@@ -37,11 +37,12 @@ const works = [
     tone: 'from-zinc-300 to-neutral-100',
   },
   {
+    slug: '90-06',
     title: '90.06',
     type: { ru: 'Визуальная система', en: 'Visual system' },
     mark: '06',
     tone: 'from-stone-300 to-white',
-    subcategories: ['MERCH', 'ACCESSORY', 'PHOTOSHOOT', 'POSTERS'],
+    subcategories: ['LOGO VARIATIONS', 'MERCH', 'PHOTOSHOOT', 'POSTERS'],
   },
   {
     title: 'POSTERS',
@@ -114,6 +115,55 @@ const pinkPunkImages = [
   { id: '09', src: `${pinkPunkBase}/PP_PUNK_2.jpg`, alt: 'Pink Punk artwork 2' },
 ];
 
+const project9006Sections = [
+  {
+    id: 'logo-variations',
+    title: 'LOGO VARIATIONS',
+    mode: 'switch',
+    images: [
+      { src: '/works/90-06/logo-variations/LOGO%201.jpg', alt: '90.06 logo variation 1' },
+      { src: '/works/90-06/logo-variations/LOGO%202.jpg', alt: '90.06 logo variation 2' },
+      { src: '/works/90-06/logo-variations/LOGO%203.jpg', alt: '90.06 logo variation 3' },
+      { src: '/works/90-06/logo-variations/LOGO%204.jpg', alt: '90.06 logo variation 4' },
+    ],
+  },
+  {
+    id: 'merch',
+    title: 'MERCH',
+    mode: 'switch',
+    images: [
+      { src: '/works/90-06/merch/merch1.png', alt: '90.06 merch 1' },
+      { src: '/works/90-06/merch/merch2.png', alt: '90.06 merch 2' },
+      { src: '/works/90-06/merch/merch3.png', alt: '90.06 merch 3' },
+      { src: '/works/90-06/merch/merch4.png', alt: '90.06 merch 4' },
+      { src: '/works/90-06/merch/merch5.jpg', alt: '90.06 merch 5' },
+    ],
+  },
+  {
+    id: 'photoshoot',
+    title: 'PHOTOSHOOT',
+    mode: 'gallery',
+    images: [
+      { src: '/works/90-06/photoshoot/photoshoot1.jpg', alt: '90.06 photoshoot 1' },
+      { src: '/works/90-06/photoshoot/photoshoot2.png', alt: '90.06 photoshoot 2' },
+      { src: '/works/90-06/photoshoot/photoshoot3.jpg', alt: '90.06 photoshoot 3' },
+    ],
+  },
+  {
+    id: 'posters',
+    title: 'POSTERS',
+    mode: 'switch',
+    images: [
+      { src: '/works/90-06/posters/nzc1.jpg', alt: '90.06 poster 1' },
+      { src: '/works/90-06/posters/nzc2.jpg', alt: '90.06 poster 2' },
+      { src: '/works/90-06/posters/nzc3.jpg', alt: '90.06 poster 3' },
+      { src: '/works/90-06/posters/nzc4.jpg', alt: '90.06 poster 4' },
+      { src: '/works/90-06/posters/nzc5.jpg', alt: '90.06 poster 5' },
+      { src: '/works/90-06/posters/nzc6.jpg', alt: '90.06 poster 6' },
+    ],
+  },
+];
+
 const contacts = [
   { label: 'Instagram', href: 'https://www.instagram.com/nightflovver/' },
   { label: 'Telegram', href: 'https://t.me/nightflower' },
@@ -154,6 +204,8 @@ const translations = {
     placeholder: 'Визуальный плейсхолдер',
     pinkPunk: 'PINK PUNK',
     close: 'Закрыть',
+    expand: 'Увеличить',
+    nextImage: 'Следующий вариант',
     aboutEyebrow: 'Обо мне',
     aboutTitle: 'Контрастный вкус, музыкальная энергия, fashion-дисциплина',
     aboutText:
@@ -211,6 +263,7 @@ const translations = {
     languageLabel: 'Switch site to English',
     homeLabel: 'Портфолио Ярослава',
     openPinkPunkLabel: 'Открыть галерею проекта PINK PUNK',
+    open9006Label: 'Открыть проект 90.06',
     openImageLabel: 'Открыть изображение крупно',
   },
   en: {
@@ -225,6 +278,8 @@ const translations = {
     placeholder: 'Placeholder visual',
     pinkPunk: 'PINK PUNK',
     close: 'Close',
+    expand: 'Expand',
+    nextImage: 'Next variant',
     aboutEyebrow: 'About',
     aboutTitle: 'High contrast taste, music energy, fashion discipline',
     aboutText:
@@ -282,6 +337,7 @@ const translations = {
     languageLabel: 'Переключить сайт на русский',
     homeLabel: 'Yaroslav portfolio home',
     openPinkPunkLabel: 'Open PINK PUNK project gallery',
+    open9006Label: 'Open 90.06 project',
     openImageLabel: 'Open image fullscreen',
   },
 };
@@ -412,17 +468,17 @@ function Works({ language, t }) {
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {works.map((work, index) => {
             const title = getText(work.title, language);
-            const isPinkPunk = work.slug === 'pink-punk';
-            const className = `group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''} ${isPinkPunk ? 'cursor-pointer' : ''}`;
+            const isClickable = work.slug === 'pink-punk' || work.slug === '90-06';
+            const className = `group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''} ${isClickable ? 'cursor-pointer' : ''}`;
 
-            if (isPinkPunk) {
+            if (isClickable) {
               return (
                 <button
                   key={title}
                   type="button"
                   className={className}
-                  onClick={() => setActiveProject('pink-punk')}
-                  aria-label={t.openPinkPunkLabel}
+                  onClick={() => setActiveProject(work.slug)}
+                  aria-label={work.slug === 'pink-punk' ? t.openPinkPunkLabel : t.open9006Label}
                 >
                   <WorkCardContent work={work} language={language} t={t} />
                 </button>
@@ -438,6 +494,7 @@ function Works({ language, t }) {
         </div>
       </div>
       {activeProject === 'pink-punk' && <PinkPunkModal onClose={() => setActiveProject(null)} t={t} />}
+      {activeProject === '90-06' && <Project9006Modal onClose={() => setActiveProject(null)} t={t} />}
     </section>
   );
 }
@@ -456,7 +513,7 @@ function WorkCardContent({ work, language, t }) {
           <div className="absolute inset-4 bg-ink" />
           <div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" />
           <div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">
-            {work.slug === 'pink-punk' ? t.openProject : t.placeholder}
+            {work.slug === 'pink-punk' || work.slug === '90-06' ? t.openProject : t.placeholder}
           </div>
         </div>
       </div>
@@ -533,6 +590,102 @@ function PinkPunkImage({ image, onSelect, t }) {
         />
       )}
     </button>
+  );
+}
+
+function Project9006Modal({ onClose, t }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  return (
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-white/95 px-4 py-6 backdrop-blur-md md:px-8 md:py-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-6 flex items-center justify-between gap-4 border-b border-ink pb-4">
+          <p className="bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">90.06</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="border border-ink bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white"
+          >
+            {t.close}
+          </button>
+        </div>
+
+        <div className="space-y-12">
+          {project9006Sections.map((section) => (
+            <Project9006Section key={section.id} section={section} onSelect={setSelectedImage} t={t} />
+          ))}
+        </div>
+      </div>
+      {selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}
+    </div>
+  );
+}
+
+function Project9006Section({ section, onSelect, t }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeImage = section.images[activeIndex];
+
+  if (section.mode === 'switch') {
+    return (
+      <section className="border-t border-ink pt-5">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
+          <p className="text-xs font-black uppercase tracking-[0.25em] text-ink/45">
+            {activeIndex + 1} / {section.images.length}
+          </p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-[1fr_14rem]">
+          <button
+            type="button"
+            className="group flex min-h-[22rem] items-center justify-center overflow-hidden border border-ink bg-white p-0"
+            onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)}
+            aria-label={t.nextImage}
+          >
+            <img
+              className="max-h-[78vh] w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
+              src={activeImage.src}
+              alt={activeImage.alt}
+              loading="lazy"
+            />
+          </button>
+          <div className="grid gap-3 md:block">
+            <button
+              type="button"
+              className="w-full border border-ink bg-ink px-4 py-4 text-xs font-black uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-acid hover:text-ink"
+              onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)}
+            >
+              {t.nextImage}
+            </button>
+            <button
+              type="button"
+              className="w-full border border-ink bg-white px-4 py-4 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white md:mt-3"
+              onClick={() => onSelect(activeImage)}
+            >
+              {t.expand}
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="border-t border-ink pt-5">
+      <h3 className="mb-4 font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
+      <div className="pink-punk-gallery">
+        {section.images.map((image) => (
+          <button
+            key={image.src}
+            type="button"
+            className="pink-punk-frame"
+            onClick={() => onSelect(image)}
+            aria-label={t.openImageLabel}
+          >
+            <img className="pink-punk-image pink-punk-image--base" src={image.src} alt={image.alt} loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
