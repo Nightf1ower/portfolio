@@ -48,7 +48,7 @@
   .pink-punk-gallery {
     column-count: 1;
     column-gap: 1rem;
-    padding-top: 0.75rem;
+    padding-top: 2.25rem;
   }
 
   @screen sm {
@@ -119,25 +119,51 @@
   .z-\[100\].fixed.inset-0 {
     padding-top: 0 !important;
     animation: project-theme-in 0.45s ease both;
-    transition: background-color 0.7s ease, color 0.7s ease;
+    transition: background-color 0.75s ease, color 0.75s ease;
   }
 
   .z-\[100\].fixed.inset-0 > div > .sticky {
     top: 0 !important;
-    margin-bottom: 1.5rem !important;
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.18);
+    margin-bottom: 0 !important;
+    padding-top: 0.9rem !important;
+    padding-bottom: 0.9rem !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(18px);
+  }
+
+  .z-\[100\].fixed.inset-0 > div > .sticky::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1.7rem;
+    height: 1.7rem;
+    pointer-events: none;
   }
 
   .z-\[100\].fixed.inset-0 > div > .pink-punk-gallery {
-    margin-top: 0.5rem;
+    margin-top: 0 !important;
+  }
+
+  .z-\[150\].fixed.inset-0 {
+    position: fixed !important;
+    inset: 0 !important;
+    height: 100dvh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  body:has(.z-\[150\].fixed.inset-0) {
+    overflow: hidden !important;
   }
 
   @keyframes project-theme-in {
     from {
       opacity: 0;
-      filter: saturate(0.65) brightness(1.08);
+      filter: saturate(0.75) brightness(1.03);
     }
     to {
       opacity: 1;
