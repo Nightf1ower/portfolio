@@ -122,10 +122,14 @@ const project9006Sections = [
     mode: 'switch',
     images: [
       { src: '/works/90-06/logo-variations/LOGO%201.jpg', alt: '90.06 logo variation 1' },
-      { src: '/works/90-06/logo-variations/LOGO%202.jpg', alt: '90.06 logo variation 2' },
       { src: '/works/90-06/logo-variations/LOGO%203.jpg', alt: '90.06 logo variation 3' },
-      { src: '/works/90-06/logo-variations/LOGO%204.jpg', alt: '90.06 logo variation 4' },
     ],
+  },
+  {
+    id: 'logo-sheet',
+    title: 'LOGO SHEET',
+    mode: 'single',
+    images: [{ src: '/works/90-06/logo-variations/LOGO%204.jpg', alt: '90.06 logo sheet' }],
   },
   {
     id: 'merch',
@@ -142,7 +146,11 @@ const project9006Sections = [
   {
     id: 'photoshoot',
     title: 'PHOTOSHOOT',
-    mode: 'gallery',
+    mode: 'feature-gallery',
+    description: {
+      ru: 'Фотосет для бренда 90.06. В этом проекте я выступал не только как дизайнер и автор обработки, но и как модель. Серия собрана вокруг темного образа, маскированной фигуры, грубой фактуры, шума и ощущения внутреннего хаоса. Обработка, коллажирование и визуальная сборка — мои.',
+      en: 'A photoshoot for the 90.06 brand. In this project I worked not only as the designer and post-production author, but also as the model. The series is built around a dark figure, masking, rough texture, noise and inner chaos. Editing, collage work and visual assembly are mine.',
+    },
     images: [
       { src: '/works/90-06/photoshoot/photoshoot1.jpg', alt: '90.06 photoshoot 1' },
       { src: '/works/90-06/photoshoot/photoshoot2.png', alt: '90.06 photoshoot 2' },
@@ -213,48 +221,12 @@ const translations = {
     servicesEyebrow: 'Услуги',
     servicesTitle: 'ДИЗАЙН ДЛЯ АРТИСТОВ, БРЕНДОВ И КУЛЬТУРЫ',
     services: [
-      {
-        title: 'ЛОГОТИПЫ',
-        paragraphs: [
-          'Разработка логотипа с нуля для бренда, проекта, артиста или события. Работаю с идеей, визуальным направлением, формой, типографикой и характером знака, чтобы логотип не просто выглядел красиво, а отражал суть проекта.',
-          'Также могу доработать уже существующий логотип: обновить форму, изменить пропорции, адаптировать под новый стиль, сделать более современную версию или собрать логотип в единую визуальную систему.',
-        ],
-      },
-      {
-        title: 'ПОСТЕРЫ',
-        paragraphs: [
-          'Разработка постеров для мероприятий, музыкальных проектов, вечеринок, выставок, социальных кампаний и культурных событий. Постер может быть громким, минималистичным, экспериментальным, агрессивным или более чистым — в зависимости от задачи.',
-          'Работаю не только с картинкой, но и с настроением: визуальный ритм, типографика, композиция, цвет и смысл должны работать вместе и быстро цеплять внимание.',
-        ],
-      },
-      {
-        title: 'ОБЛОЖКИ',
-        paragraphs: [
-          'Создание обложек для музыкальных релизов, синглов, альбомов, подкастов и других digital-проектов. Могу работать с уже готовой идеей или разработать визуальную концепцию на основе музыки, текста, настроения и референсов.',
-          'Главная задача — сделать обложку, которая передает атмосферу релиза и выглядит цельно на стриминговых платформах, в соцсетях и промо-материалах.',
-        ],
-      },
-      {
-        title: 'ГРАФИКА ДЛЯ МЕРЧА',
-        paragraphs: [
-          'Разработка графики для одежды, аксессуаров и брендового мерча. Работаю с принтами, типографикой, символами, персонажами, текстурами и визуальными концепциями.',
-          'Можно прийти с готовыми референсами, мудбордом или просто общей идеей — я помогу собрать это в полноценный дизайн, который будет смотреться не как случайная картинка, а как часть бренда или коллекции.',
-        ],
-      },
-      {
-        title: 'БРЕНД-ВИЗУАЛЫ',
-        paragraphs: [
-          'Создание визуального языка для брендов, артистов, проектов и культурных инициатив. Это может быть система графики для соцсетей, афиш, обложек, промо, презентаций, мерча и digital-коммуникации.',
-          'Помогаю собрать единый визуальный стиль: цвета, типографику, графические приемы, настроение, композицию и общий характер бренда. Чтобы все материалы выглядели цельно, узнаваемо и работали в одном направлении.',
-        ],
-      },
-      {
-        title: 'AI-ИЛЛЮСТРАЦИИ',
-        paragraphs: [
-          'Создание AI-иллюстраций и визуалов для проектов, обложек, постеров, соцсетей, мерча и презентаций. Работаю с генерацией, промтами, референсами, стилистикой и последующей доработкой изображения.',
-          'AI используется не как случайная картинка, а как инструмент для быстрого поиска визуального языка, создания необычных образов и разработки идей, которые можно адаптировать под конкретную задачу и финальный дизайн.',
-        ],
-      },
+      { title: 'ЛОГОТИПЫ', paragraphs: ['Разработка логотипа с нуля для бренда, проекта, артиста или события. Работаю с идеей, визуальным направлением, формой, типографикой и характером знака, чтобы логотип не просто выглядел красиво, а отражал суть проекта.', 'Также могу доработать уже существующий логотип: обновить форму, изменить пропорции, адаптировать под новый стиль, сделать более современную версию или собрать логотип в единую визуальную систему.'] },
+      { title: 'ПОСТЕРЫ', paragraphs: ['Разработка постеров для мероприятий, музыкальных проектов, вечеринок, выставок, социальных кампаний и культурных событий. Постер может быть громким, минималистичным, экспериментальным, агрессивным или более чистым — в зависимости от задачи.', 'Работаю не только с картинкой, но и с настроением: визуальный ритм, типографика, композиция, цвет и смысл должны работать вместе и быстро цеплять внимание.'] },
+      { title: 'ОБЛОЖКИ', paragraphs: ['Создание обложек для музыкальных релизов, синглов, альбомов, подкастов и других digital-проектов. Могу работать с уже готовой идеей или разработать визуальную концепцию на основе музыки, текста, настроения и референсов.', 'Главная задача — сделать обложку, которая передает атмосферу релиза и выглядит цельно на стриминговых платформах, в соцсетях и промо-материалах.'] },
+      { title: 'ГРАФИКА ДЛЯ МЕРЧА', paragraphs: ['Разработка графики для одежды, аксессуаров и брендового мерча. Работаю с принтами, типографикой, символами, персонажами, текстурами и визуальными концепциями.', 'Можно прийти с готовыми референсами, мудбордом или просто общей идеей — я помогу собрать это в полноценный дизайн, который будет смотреться не как случайная картинка, а как часть бренда или коллекции.'] },
+      { title: 'БРЕНД-ВИЗУАЛЫ', paragraphs: ['Создание визуального языка для брендов, артистов, проектов и культурных инициатив. Это может быть система графики для соцсетей, афиш, обложек, промо, презентаций, мерча и digital-коммуникации.', 'Помогаю собрать единый визуальный стиль: цвета, типографику, графические приемы, настроение, композицию и общий характер бренда. Чтобы все материалы выглядели цельно, узнаваемо и работали в одном направлении.'] },
+      { title: 'AI-ИЛЛЮСТРАЦИИ', paragraphs: ['Создание AI-иллюстраций и визуалов для проектов, обложек, постеров, соцсетей, мерча и презентаций. Работаю с генерацией, промтами, референсами, стилистикой и последующей доработкой изображения.', 'AI используется не как случайная картинка, а как инструмент для быстрого поиска визуального языка, создания необычных образов и разработки идей, которые можно адаптировать под конкретную задачу и финальный дизайн.'] },
     ],
     contactsEyebrow: 'Контакты',
     contactsTitle: 'Открыт к сильным визуальным системам',
@@ -282,53 +254,16 @@ const translations = {
     nextImage: 'Next variant',
     aboutEyebrow: 'About',
     aboutTitle: 'High contrast taste, music energy, fashion discipline',
-    aboutText:
-      'Yaroslav is a graphic designer working with brands, artists, covers, merch, posters, logos and high-level AI illustrations. His visual language combines minimalism, underground typography and precise art direction for projects that need a strong recognizable image.',
+    aboutText: 'Yaroslav is a graphic designer working with brands, artists, covers, merch, posters, logos and high-level AI illustrations. His visual language combines minimalism, underground typography and precise art direction for projects that need a strong recognizable image.',
     servicesEyebrow: 'Services',
     servicesTitle: 'DESIGN FOR ARTISTS, BRANDS AND CULTURE',
     services: [
-      {
-        title: 'LOGOS',
-        paragraphs: [
-          'Logo design from scratch for a brand, project, artist or event. I work with the idea, visual direction, shape, typography and character of the mark, so the logo does not just look good but reflects the core of the project.',
-          'I can also refine an existing logo: update the shape, change proportions, adapt it to a new style, make a more contemporary version or build it into a complete visual system.',
-        ],
-      },
-      {
-        title: 'POSTERS',
-        paragraphs: [
-          'Poster design for events, music projects, parties, exhibitions, social campaigns and cultural moments. A poster can be loud, minimal, experimental, aggressive or clean depending on the task.',
-          'I work not only with the image but with the mood: visual rhythm, typography, composition, color and meaning should work together and catch attention quickly.',
-        ],
-      },
-      {
-        title: 'COVERS',
-        paragraphs: [
-          'Cover artwork for music releases, singles, albums, podcasts and other digital projects. I can work with an existing idea or develop a visual concept based on music, text, mood and references.',
-          'The main goal is to create a cover that communicates the atmosphere of the release and looks complete on streaming platforms, social media and promo materials.',
-        ],
-      },
-      {
-        title: 'MERCH GRAPHICS',
-        paragraphs: [
-          'Graphics for clothing, accessories and branded merch. I work with prints, typography, symbols, characters, textures and visual concepts.',
-          'You can come with references, a moodboard or just a general idea — I will help turn it into a complete design that feels like part of a brand or collection, not a random image.',
-        ],
-      },
-      {
-        title: 'BRAND VISUALS',
-        paragraphs: [
-          'A visual language for brands, artists, projects and cultural initiatives. This can include graphics for social media, posters, covers, promo, presentations, merch and digital communication.',
-          'I help build a unified visual style: colors, typography, graphic techniques, mood, composition and overall brand character, so every material feels consistent, recognizable and directed.',
-        ],
-      },
-      {
-        title: 'AI ILLUSTRATIONS',
-        paragraphs: [
-          'AI illustrations and visuals for projects, covers, posters, social media, merch and presentations. I work with generation, prompts, references, style direction and post-production.',
-          'AI is used not as a random picture, but as a tool for quickly searching for a visual language, creating unusual images and developing ideas that can be adapted to a specific task and final design.',
-        ],
-      },
+      { title: 'LOGOS', paragraphs: ['Logo design from scratch for a brand, project, artist or event. I work with the idea, visual direction, shape, typography and character of the mark, so the logo does not just look good but reflects the core of the project.', 'I can also refine an existing logo: update the shape, change proportions, adapt it to a new style, make a more contemporary version or build it into a complete visual system.'] },
+      { title: 'POSTERS', paragraphs: ['Poster design for events, music projects, parties, exhibitions, social campaigns and cultural moments. A poster can be loud, minimal, experimental, aggressive or clean depending on the task.', 'I work not only with the image but with the mood: visual rhythm, typography, composition, color and meaning should work together and catch attention quickly.'] },
+      { title: 'COVERS', paragraphs: ['Cover artwork for music releases, singles, albums, podcasts and other digital projects. I can work with an existing idea or develop a visual concept based on music, text, mood and references.', 'The main goal is to create a cover that communicates the atmosphere of the release and looks complete on streaming platforms, social media and promo materials.'] },
+      { title: 'MERCH GRAPHICS', paragraphs: ['Graphics for clothing, accessories and branded merch. I work with prints, typography, symbols, characters, textures and visual concepts.', 'You can come with references, a moodboard or just a general idea — I will help turn it into a complete design that feels like part of a brand or collection, not a random image.'] },
+      { title: 'BRAND VISUALS', paragraphs: ['A visual language for brands, artists, projects and cultural initiatives. This can include graphics for social media, posters, covers, promo, presentations, merch and digital communication.', 'I help build a unified visual style: colors, typography, graphic techniques, mood, composition and overall brand character, so every material feels consistent, recognizable and directed.'] },
+      { title: 'AI ILLUSTRATIONS', paragraphs: ['AI illustrations and visuals for projects, covers, posters, social media, merch and presentations. I work with generation, prompts, references, style direction and post-production.', 'AI is used not as a random picture, but as a tool for quickly searching for a visual language, creating unusual images and developing ideas that can be adapted to a specific task and final design.'] },
     ],
     contactsEyebrow: 'Contacts',
     contactsTitle: 'Open for sharp visual systems',
@@ -347,20 +282,13 @@ function getText(value, lang) {
 }
 
 function getInitialLanguage() {
-  if (typeof window === 'undefined') {
-    return 'en';
-  }
-
+  if (typeof window === 'undefined') return 'en';
   const savedLanguage = window.localStorage.getItem('site-language');
-  if (savedLanguage === 'ru' || savedLanguage === 'en') {
-    return savedLanguage;
-  }
-
+  if (savedLanguage === 'ru' || savedLanguage === 'en') return savedLanguage;
   const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
   const hasRussianLanguage = browserLanguages.some((language) => language?.toLowerCase().startsWith('ru'));
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const hasRussianTimeZone = russianTimeZones.has(timeZone);
-
   return hasRussianLanguage || hasRussianTimeZone ? 'ru' : 'en';
 }
 
@@ -402,12 +330,7 @@ function Header({ language, onToggleLanguage, t }) {
             <a className="nav-link" href="#services">{t.nav.services}</a>
             <a className="nav-link" href="#contacts">{t.nav.contacts}</a>
           </div>
-          <button
-            type="button"
-            onClick={onToggleLanguage}
-            aria-label={t.languageLabel}
-            className="border border-ink bg-white px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.22em] transition-all duration-300 hover:bg-ink hover:text-white"
-          >
+          <button type="button" onClick={onToggleLanguage} aria-label={t.languageLabel} className="border border-ink bg-white px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.22em] transition-all duration-300 hover:bg-ink hover:text-white">
             {language} / {t.languageButton}
           </button>
         </div>
@@ -422,35 +345,19 @@ function Hero({ t }) {
       <div className="absolute right-[-16rem] top-20 h-[34rem] w-[34rem] rounded-full bg-acid/25 blur-3xl" />
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
         <div className="relative z-10">
-          <p className="mb-4 inline-flex border border-ink px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.42em]">
-            {t.heroKicker}
-          </p>
-          <h1 className="font-display text-[clamp(3.3rem,12vw,10.5rem)] font-black uppercase leading-[0.82] tracking-[-0.09em]">
-            NIGHTFLOWER
-          </h1>
+          <p className="mb-4 inline-flex border border-ink px-3 py-1 text-[0.62rem] font-bold uppercase tracking-[0.42em]">{t.heroKicker}</p>
+          <h1 className="font-display text-[clamp(3.3rem,12vw,10.5rem)] font-black uppercase leading-[0.82] tracking-[-0.09em]">NIGHTFLOWER</h1>
           <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="max-w-xl text-3xl font-semibold uppercase leading-none tracking-[-0.05em] md:text-6xl">
-              {t.profession}
-            </p>
-            <a
-              href="#works"
-              className="group inline-flex w-fit items-center gap-3 border-2 border-ink bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-1 hover:bg-acid hover:text-ink hover:shadow-brutal"
-            >
-              {t.viewWorks}
-              <span className="transition-transform duration-300 group-hover:translate-x-2">↘</span>
+            <p className="max-w-xl text-3xl font-semibold uppercase leading-none tracking-[-0.05em] md:text-6xl">{t.profession}</p>
+            <a href="#works" className="group inline-flex w-fit items-center gap-3 border-2 border-ink bg-ink px-6 py-4 text-sm font-black uppercase tracking-[0.24em] text-white transition-all duration-300 hover:-translate-y-1 hover:bg-acid hover:text-ink hover:shadow-brutal">
+              {t.viewWorks}<span className="transition-transform duration-300 group-hover:translate-x-2">↘</span>
             </a>
           </div>
         </div>
         <div className="relative z-10 min-h-[24rem] border border-ink bg-fog p-4 md:min-h-[34rem]">
           <div className="flex h-full flex-col justify-between bg-[linear-gradient(135deg,#050505_0_1px,transparent_1px_22px)] p-5">
             <span className="w-fit bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.3em]">{t.visualNoise}</span>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="h-28 bg-ink" />
-              <div className="h-28 bg-concrete" />
-              <div className="h-28 bg-acid" />
-              <div className="col-span-2 h-28 bg-white outline outline-1 outline-ink" />
-              <div className="h-28 bg-ink/10 outline outline-1 outline-ink" />
-            </div>
+            <div className="grid grid-cols-3 gap-3"><div className="h-28 bg-ink" /><div className="h-28 bg-concrete" /><div className="h-28 bg-acid" /><div className="col-span-2 h-28 bg-white outline outline-1 outline-ink" /><div className="h-28 bg-ink/10 outline outline-1 outline-ink" /></div>
           </div>
         </div>
       </div>
@@ -461,6 +368,13 @@ function Hero({ t }) {
 function Works({ language, t }) {
   const [activeProject, setActiveProject] = useState(null);
 
+  useEffect(() => {
+    if (!activeProject) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [activeProject]);
+
   return (
     <section id="works" className="border-t border-ink px-4 py-16 md:px-8 md:py-24">
       <div className="mx-auto max-w-7xl">
@@ -470,68 +384,29 @@ function Works({ language, t }) {
             const title = getText(work.title, language);
             const isClickable = work.slug === 'pink-punk' || work.slug === '90-06';
             const className = `group min-h-[23rem] border border-ink bg-gradient-to-br ${work.tone} p-4 text-left transition-all duration-300 hover:-translate-y-2 hover:shadow-brutal ${index % 5 === 0 ? 'sm:col-span-2' : ''} ${isClickable ? 'cursor-pointer' : ''}`;
-
             if (isClickable) {
-              return (
-                <button
-                  key={title}
-                  type="button"
-                  className={className}
-                  onClick={() => setActiveProject(work.slug)}
-                  aria-label={work.slug === 'pink-punk' ? t.openPinkPunkLabel : t.open9006Label}
-                >
-                  <WorkCardContent work={work} language={language} t={t} />
-                </button>
-              );
+              return <button key={title} type="button" className={className} onClick={() => setActiveProject(work.slug)} aria-label={work.slug === 'pink-punk' ? t.openPinkPunkLabel : t.open9006Label}><WorkCardContent work={work} language={language} t={t} /></button>;
             }
-
-            return (
-              <article key={title} className={className}>
-                <WorkCardContent work={work} language={language} t={t} />
-              </article>
-            );
+            return <article key={title} className={className}><WorkCardContent work={work} language={language} t={t} /></article>;
           })}
         </div>
       </div>
       {activeProject === 'pink-punk' && <PinkPunkModal onClose={() => setActiveProject(null)} t={t} />}
-      {activeProject === '90-06' && <Project9006Modal onClose={() => setActiveProject(null)} t={t} />}
+      {activeProject === '90-06' && <Project9006Modal onClose={() => setActiveProject(null)} t={t} language={language} />}
     </section>
   );
 }
 
 function WorkCardContent({ work, language, t }) {
   const title = getText(work.title, language);
-
   return (
     <div className="flex h-full flex-col justify-between overflow-hidden border border-ink/20 bg-white/35 p-4 backdrop-blur-sm">
-      <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]">
-        <span>{work.mark}</span>
-        <span className="h-3 w-3 rounded-full bg-acid opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </div>
-      <div className="my-10 flex flex-1 items-center justify-center">
-        <div className="relative aspect-square w-44 max-w-full border border-ink bg-white transition-transform duration-500 group-hover:rotate-3 group-hover:scale-105">
-          <div className="absolute inset-4 bg-ink" />
-          <div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" />
-          <div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">
-            {work.slug === 'pink-punk' || work.slug === '90-06' ? t.openProject : t.placeholder}
-          </div>
-        </div>
-      </div>
+      <div className="flex items-start justify-between text-xs font-black uppercase tracking-[0.3em]"><span>{work.mark}</span><span className="h-3 w-3 rounded-full bg-acid opacity-0 transition-opacity duration-300 group-hover:opacity-100" /></div>
+      <div className="my-10 flex flex-1 items-center justify-center"><div className="relative aspect-square w-44 max-w-full border border-ink bg-white transition-transform duration-500 group-hover:rotate-3 group-hover:scale-105"><div className="absolute inset-4 bg-ink" /><div className="absolute inset-x-8 top-10 h-16 bg-acid mix-blend-difference" /><div className="absolute bottom-6 left-6 right-6 border-t border-white pt-2 text-center text-[0.55rem] font-black uppercase tracking-[0.24em] text-white">{work.slug === 'pink-punk' || work.slug === '90-06' ? t.openProject : t.placeholder}</div></div></div>
       <div>
         <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-5xl">{title}</h3>
         <p className="mt-2 text-sm uppercase tracking-[0.18em] text-ink/60">{getText(work.type, language)}</p>
-        {work.subcategories?.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {work.subcategories.map((subcategory) => (
-              <span
-                key={subcategory}
-                className="border border-ink/35 bg-white/60 px-2 py-1 text-[0.58rem] font-black uppercase tracking-[0.2em] text-ink/80 transition-colors duration-300 group-hover:border-ink group-hover:bg-acid group-hover:text-ink"
-              >
-                {subcategory}
-              </span>
-            ))}
-          </div>
-        )}
+        {work.subcategories?.length > 0 && <div className="mt-4 flex flex-wrap gap-2">{work.subcategories.map((subcategory) => <span key={subcategory} className="border border-ink/35 bg-white/60 px-2 py-1 text-[0.58rem] font-black uppercase tracking-[0.2em] text-ink/80 transition-colors duration-300 group-hover:border-ink group-hover:bg-acid group-hover:text-ink">{subcategory}</span>)}</div>}
       </div>
     </div>
   );
@@ -539,281 +414,130 @@ function WorkCardContent({ work, language, t }) {
 
 function PinkPunkModal({ onClose, t }) {
   const [selectedImage, setSelectedImage] = useState(null);
+  return <ProjectModalShell title={t.pinkPunk} onClose={onClose} t={t}>{<><div className="pink-punk-gallery">{pinkPunkImages.map((image) => <PinkPunkImage key={image.id} image={image} onSelect={setSelectedImage} t={t} />)}</div>{selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}</>}</ProjectModalShell>;
+}
 
+function ProjectModalShell({ title, onClose, children, t }) {
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-white/95 px-4 py-6 backdrop-blur-md md:px-8 md:py-8">
+    <div className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain bg-white px-4 py-6 md:px-8 md:py-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-ink pb-4">
-          <p className="bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">{t.pinkPunk}</p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="border border-ink bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white"
-          >
-            {t.close}
-          </button>
+        <div className="sticky top-0 z-20 mb-6 flex items-center justify-between gap-4 border-b border-ink bg-white/95 pb-4 pt-1 backdrop-blur">
+          <p className="bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">{title}</p>
+          <button type="button" onClick={onClose} className="border border-ink bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white">{t.close}</button>
         </div>
-
-        <div className="pink-punk-gallery">
-          {pinkPunkImages.map((image) => (
-            <PinkPunkImage key={image.id} image={image} onSelect={setSelectedImage} t={t} />
-          ))}
-        </div>
+        {children}
       </div>
-      {selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}
     </div>
   );
 }
 
 function PinkPunkImage({ image, onSelect, t }) {
   const hasHover = Boolean(image.flat && image.worn);
-
   return (
-    <button
-      type="button"
-      className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`}
-      onClick={() => onSelect(image)}
-      aria-label={t.openImageLabel}
-    >
-      <img
-        className="pink-punk-image pink-punk-image--base"
-        src={hasHover ? image.flat : image.src}
-        alt={image.alt}
-        loading="lazy"
-      />
-      {hasHover && (
-        <img
-          className="pink-punk-image pink-punk-image--worn"
-          src={image.worn}
-          alt={`${image.alt} on body`}
-          loading="lazy"
-        />
-      )}
+    <button type="button" className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`} onClick={() => onSelect(image)} aria-label={t.openImageLabel}>
+      <img className="pink-punk-image pink-punk-image--base" src={hasHover ? image.flat : image.src} alt={image.alt} loading="lazy" />
+      {hasHover && <img className="pink-punk-image pink-punk-image--worn" src={image.worn} alt={`${image.alt} on body`} loading="lazy" />}
     </button>
   );
 }
 
-function Project9006Modal({ onClose, t }) {
+function Project9006Modal({ onClose, t, language }) {
   const [selectedImage, setSelectedImage] = useState(null);
-
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto bg-white/95 px-4 py-6 backdrop-blur-md md:px-8 md:py-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex items-center justify-between gap-4 border-b border-ink pb-4">
-          <p className="bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">90.06</p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="border border-ink bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white"
-          >
-            {t.close}
-          </button>
-        </div>
-
-        <div className="space-y-12">
-          {project9006Sections.map((section) => (
-            <Project9006Section key={section.id} section={section} onSelect={setSelectedImage} t={t} />
-          ))}
-        </div>
-      </div>
+    <ProjectModalShell title="90.06" onClose={onClose} t={t}>
+      <div className="space-y-20 pb-10">{project9006Sections.map((section) => <Project9006Section key={section.id} section={section} onSelect={setSelectedImage} t={t} language={language} />)}</div>
       {selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}
-    </div>
+    </ProjectModalShell>
   );
 }
 
-function Project9006Section({ section, onSelect, t }) {
+function Project9006Section({ section, onSelect, t, language }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeImage = section.images[activeIndex];
 
   if (section.mode === 'switch') {
     return (
       <section className="border-t border-ink pt-5">
-        <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="mb-5 flex items-center justify-between gap-4">
           <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
-          <p className="text-xs font-black uppercase tracking-[0.25em] text-ink/45">
-            {activeIndex + 1} / {section.images.length}
-          </p>
+          <p className="text-xs font-black uppercase tracking-[0.25em] text-ink/45">{activeIndex + 1} / {section.images.length}</p>
         </div>
-        <div className="grid gap-3 md:grid-cols-[1fr_14rem]">
-          <button
-            type="button"
-            className="group flex min-h-[22rem] items-center justify-center overflow-hidden border border-ink bg-white p-0"
-            onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)}
-            aria-label={t.nextImage}
-          >
-            <img
-              className="max-h-[78vh] w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]"
-              src={activeImage.src}
-              alt={activeImage.alt}
-              loading="lazy"
-            />
+        <div className="grid gap-4 md:grid-cols-[1fr_14rem]">
+          <button type="button" className="group flex min-h-[22rem] items-center justify-center bg-transparent p-0" onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)} aria-label={t.nextImage}>
+            <img className="mx-auto max-h-[82vh] max-w-full object-contain transition-transform duration-500 group-hover:scale-[1.01]" src={activeImage.src} alt={activeImage.alt} loading="lazy" />
           </button>
-          <div className="grid gap-3 md:block">
-            <button
-              type="button"
-              className="w-full border border-ink bg-ink px-4 py-4 text-xs font-black uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-acid hover:text-ink"
-              onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)}
-            >
-              {t.nextImage}
-            </button>
-            <button
-              type="button"
-              className="w-full border border-ink bg-white px-4 py-4 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white md:mt-3"
-              onClick={() => onSelect(activeImage)}
-            >
-              {t.expand}
-            </button>
+          <div className="grid content-start gap-3">
+            <button type="button" className="w-full border border-ink bg-ink px-4 py-4 text-xs font-black uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-acid hover:text-ink" onClick={() => setActiveIndex((current) => (current + 1) % section.images.length)}>{t.nextImage}</button>
+            <button type="button" className="w-full border border-ink bg-white px-4 py-4 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 hover:bg-ink hover:text-white" onClick={() => onSelect(activeImage)}>{t.expand}</button>
           </div>
         </div>
       </section>
     );
   }
 
-  return (
-    <section className="border-t border-ink pt-5">
-      <h3 className="mb-4 font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
-      <div className="pink-punk-gallery">
-        {section.images.map((image) => (
-          <button
-            key={image.src}
-            type="button"
-            className="pink-punk-frame"
-            onClick={() => onSelect(image)}
-            aria-label={t.openImageLabel}
-          >
-            <img className="pink-punk-image pink-punk-image--base" src={image.src} alt={image.alt} loading="lazy" />
-          </button>
-        ))}
-      </div>
-    </section>
-  );
+  if (section.mode === 'single') {
+    const image = section.images[0];
+    return (
+      <section className="border-t border-ink pt-5">
+        <h3 className="mb-5 font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
+        <button type="button" className="block w-full cursor-zoom-in" onClick={() => onSelect(image)} aria-label={t.openImageLabel}>
+          <img className="mx-auto max-h-[88vh] max-w-full object-contain" src={image.src} alt={image.alt} loading="lazy" />
+        </button>
+      </section>
+    );
+  }
+
+  if (section.mode === 'feature-gallery') {
+    return (
+      <section className="border-t border-ink pt-5">
+        <div className="mb-6 grid gap-6 md:grid-cols-[0.8fr_1.2fr]">
+          <h3 className="font-display text-4xl font-black uppercase tracking-[-0.08em] md:text-6xl">{section.title}</h3>
+          <p className="max-w-3xl text-lg font-semibold leading-tight tracking-[-0.03em] text-ink/70 md:text-2xl">{section.description[language]}</p>
+        </div>
+        <div className="space-y-6">
+          {section.images.map((image) => (
+            <button key={image.src} type="button" className="block w-full cursor-zoom-in" onClick={() => onSelect(image)} aria-label={t.openImageLabel}>
+              <img className="w-full object-contain" src={image.src} alt={image.alt} loading="lazy" />
+            </button>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return null;
 }
 
 function ImageLightbox({ image, onClose, t }) {
   const hasHover = Boolean(image.flat && image.worn);
-
   return (
-    <div
-      className="fixed inset-0 z-[150] flex items-center justify-center bg-ink/90 px-4 py-6 backdrop-blur-md"
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-    >
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute right-4 top-4 z-10 border border-white bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-ink transition-all duration-300 hover:bg-acid"
-      >
-        {t.close}
-      </button>
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-ink/90 px-4 py-6 backdrop-blur-md" role="dialog" aria-modal="true" onClick={onClose}>
+      <button type="button" onClick={onClose} className="absolute right-4 top-4 z-10 border border-white bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.25em] text-ink transition-all duration-300 hover:bg-acid">{t.close}</button>
       <div className={`pink-punk-lightbox-frame ${hasHover ? 'pink-punk-lightbox-frame--hover' : ''}`} onClick={(event) => event.stopPropagation()}>
-        <img
-          className="pink-punk-lightbox-image pink-punk-lightbox-image--base"
-          src={hasHover ? image.flat : image.src}
-          alt={image.alt}
-        />
-        {hasHover && (
-          <img
-            className="pink-punk-lightbox-image pink-punk-lightbox-image--worn"
-            src={image.worn}
-            alt={`${image.alt} on body`}
-          />
-        )}
+        <img className="pink-punk-lightbox-image pink-punk-lightbox-image--base" src={hasHover ? image.flat : image.src} alt={image.alt} />
+        {hasHover && <img className="pink-punk-lightbox-image pink-punk-lightbox-image--worn" src={image.worn} alt={`${image.alt} on body`} />}
       </div>
     </div>
   );
 }
 
 function About({ t }) {
-  return (
-    <section id="about" className="bg-fog px-4 py-16 md:px-8 md:py-24">
-      <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.8fr_1.2fr]">
-        <SectionTitle eyebrow={t.aboutEyebrow} title={t.aboutTitle} />
-        <p className="text-2xl font-semibold leading-tight tracking-[-0.04em] md:text-5xl">
-          {t.aboutText}
-        </p>
-      </div>
-    </section>
-  );
+  return <section id="about" className="bg-fog px-4 py-16 md:px-8 md:py-24"><div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.8fr_1.2fr]"><SectionTitle eyebrow={t.aboutEyebrow} title={t.aboutTitle} /><p className="text-2xl font-semibold leading-tight tracking-[-0.04em] md:text-5xl">{t.aboutText}</p></div></section>;
 }
 
 function Services({ t }) {
   const [activeService, setActiveService] = useState(null);
-
   return (
-    <section id="services" className="border-y border-ink px-4 py-16 md:px-8 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionTitle eyebrow={t.servicesEyebrow} title={t.servicesTitle} />
-        <div className="mt-10 grid border-t border-ink">
-          {t.services.map((service, index) => {
-            const isActive = activeService === index;
-
-            return (
-              <div key={service.title} className="border-b border-ink">
-                <button
-                  type="button"
-                  onClick={() => setActiveService(isActive ? null : index)}
-                  className="group flex w-full items-center justify-between py-5 text-left transition-colors duration-300 hover:bg-acid"
-                  aria-expanded={isActive}
-                >
-                  <span className="text-3xl font-black uppercase tracking-[-0.06em] md:text-7xl">{service.title}</span>
-                  <span className={`text-3xl transition-transform duration-300 ${isActive ? 'rotate-45' : 'group-hover:rotate-45'}`}>+</span>
-                </button>
-                {isActive && (
-                  <div className="grid gap-4 pb-8 md:grid-cols-[12rem_1fr]">
-                    <span className="hidden text-xs font-black uppercase tracking-[0.35em] text-ink/45 md:block">Info</span>
-                    <div className="max-w-4xl space-y-4 text-lg font-semibold leading-tight tracking-[-0.03em] text-ink/75 md:text-2xl">
-                      {service.paragraphs.map((paragraph) => (
-                        <p key={paragraph}>{paragraph}</p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <section id="services" className="border-y border-ink px-4 py-16 md:px-8 md:py-24"><div className="mx-auto max-w-7xl"><SectionTitle eyebrow={t.servicesEyebrow} title={t.servicesTitle} /><div className="mt-10 grid border-t border-ink">{t.services.map((service, index) => { const isActive = activeService === index; return <div key={service.title} className="border-b border-ink"><button type="button" onClick={() => setActiveService(isActive ? null : index)} className="group flex w-full items-center justify-between py-5 text-left transition-colors duration-300 hover:bg-acid" aria-expanded={isActive}><span className="text-3xl font-black uppercase tracking-[-0.06em] md:text-7xl">{service.title}</span><span className={`text-3xl transition-transform duration-300 ${isActive ? 'rotate-45' : 'group-hover:rotate-45'}`}>+</span></button>{isActive && <div className="grid gap-4 pb-8 md:grid-cols-[12rem_1fr]"><span className="hidden text-xs font-black uppercase tracking-[0.35em] text-ink/45 md:block">Info</span><div className="max-w-4xl space-y-4 text-lg font-semibold leading-tight tracking-[-0.03em] text-ink/75 md:text-2xl">{service.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></div>}</div>; })}</div></div></section>
   );
 }
 
 function Contacts({ t }) {
-  return (
-    <footer id="contacts" className="px-4 py-16 md:px-8 md:py-24">
-      <div className="mx-auto max-w-7xl">
-        <SectionTitle eyebrow={t.contactsEyebrow} title={t.contactsTitle} />
-        <div className="mt-10 grid gap-3 sm:grid-cols-3">
-          {contacts.map((contact) => (
-            <a
-              key={contact.label}
-              href={contact.href}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex min-h-36 items-end justify-between border border-ink bg-fog p-5 text-2xl font-black uppercase tracking-[-0.05em] transition-all duration-300 hover:-translate-y-2 hover:bg-ink hover:text-white hover:shadow-brutal md:text-4xl"
-            >
-              {contact.label}
-              <span className="text-acid transition-transform duration-300 group-hover:-translate-y-2 group-hover:translate-x-2">↗</span>
-            </a>
-          ))}
-        </div>
-        <p className="mt-14 text-xs font-bold uppercase tracking-[0.35em] text-ink/45">
-          {t.footer}
-        </p>
-      </div>
-    </footer>
-  );
+  return <footer id="contacts" className="px-4 py-16 md:px-8 md:py-24"><div className="mx-auto max-w-7xl"><SectionTitle eyebrow={t.contactsEyebrow} title={t.contactsTitle} /><div className="mt-10 grid gap-3 sm:grid-cols-3">{contacts.map((contact) => <a key={contact.label} href={contact.href} target="_blank" rel="noreferrer" className="group flex min-h-36 items-end justify-between border border-ink bg-fog p-5 text-2xl font-black uppercase tracking-[-0.05em] transition-all duration-300 hover:-translate-y-2 hover:bg-ink hover:text-white hover:shadow-brutal md:text-4xl">{contact.label}<span className="text-acid transition-transform duration-300 group-hover:-translate-y-2 group-hover:translate-x-2">↗</span></a>)}</div><p className="mt-14 text-xs font-bold uppercase tracking-[0.35em] text-ink/45">{t.footer}</p></div></footer>;
 }
 
 function SectionTitle({ eyebrow, title }) {
-  return (
-    <div className="grid gap-4 md:grid-cols-[12rem_1fr] md:items-start">
-      <p className="w-fit bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">{eyebrow}</p>
-      <h2 className="max-w-5xl font-display text-5xl font-black uppercase leading-[0.85] tracking-editorial md:text-8xl">
-        {title}
-      </h2>
-    </div>
-  );
+  return <div className="grid gap-4 md:grid-cols-[12rem_1fr] md:items-start"><p className="w-fit bg-acid px-3 py-1 text-xs font-black uppercase tracking-[0.35em]">{eyebrow}</p><h2 className="max-w-5xl font-display text-5xl font-black uppercase leading-[0.85] tracking-editorial md:text-8xl">{title}</h2></div>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
