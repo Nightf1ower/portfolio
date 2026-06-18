@@ -35,6 +35,29 @@
     @apply w-full;
   }
 
+  #top h1 {
+    color: transparent !important;
+    background-image: url('/%D1%84%D0%BB%D0%B0%D0%B2%D0%B5%D1%80%D1%81.png');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: contain;
+    min-height: clamp(5rem, 23vw, 18rem);
+    width: 100%;
+    line-height: 1;
+    text-indent: -9999px;
+    overflow: visible;
+    transform-origin: 50% 50%;
+    animation: nightflower-float 5.5s ease-in-out infinite;
+    filter: contrast(1.08);
+    will-change: transform, filter;
+  }
+
+  #top h1:hover {
+    animation-play-state: paused;
+    transform: scaleX(1.035) scaleY(0.97) skewX(-1.5deg);
+    filter: contrast(1.25) drop-shadow(0 0 0.55rem rgba(0, 0, 0, 0.22));
+  }
+
   footer a[href^='mailto:'] {
     font-size: clamp(1rem, 2vw, 1.65rem);
     letter-spacing: -0.04em;
@@ -187,6 +210,21 @@
     }
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes nightflower-float {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
+      filter: contrast(1.08);
+    }
+    35% {
+      transform: translate3d(0.55rem, -0.25rem, 0) scaleX(1.012) scaleY(0.992) skewX(0.4deg);
+      filter: contrast(1.16);
+    }
+    70% {
+      transform: translate3d(-0.35rem, 0.18rem, 0) scaleX(0.99) scaleY(1.006) skewX(-0.3deg);
+      filter: contrast(1.04);
     }
   }
 }
