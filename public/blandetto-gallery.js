@@ -181,12 +181,17 @@
     card.type = 'button';
     const media = createElement('div', 'blandetto-card__media');
     const main = createElement('img', 'blandetto-card__img blandetto-card__img--main');
+    const hoverAssets = item.hover && item.hover.length ? item.hover : [];
+
     main.src = item.main.url;
     main.alt = item.title;
     main.loading = 'lazy';
     media.append(main);
 
-    const hoverAssets = item.hover && item.hover.length ? item.hover : [];
+    if ((modifier === 'logos' || modifier === 'prints') && hoverAssets.length === 0) {
+      media.style.aspectRatio = '16 / 6';
+    }
+
     let hoverImg = null;
     let hoverIndex = 0;
     let hoverTimer = null;
@@ -216,11 +221,7 @@
       });
     }
 
-    const meta = createElement('div', 'blandetto-card__meta');
-    const assetCount = getItemAssets(item).length;
-    meta.append(createElement('p', 'blandetto-card__title', item.title));
-    meta.append(createElement('span', 'blandetto-card__tag', item.cycle?.length > 1 ? 'CLICK NEXT' : assetCount > 1 ? `VIEW ${assetCount}` : tag));
-    card.append(media, meta);
+    card.append(media);
 
     let cycleIndex = 0;
     card.addEventListener('click', (event) => {
@@ -235,14 +236,13 @@
     return card;
   };
 
-  const makeSection = ({ title, note, items, modifier, tag }) => {
+  const makeSection = ({ title, items, modifier, tag }) => {
     if (!items || !items.length) return null;
     const section = createElement('section', `blandetto-section blandetto-section--${modifier}`);
     const head = createElement('div', 'blandetto-section__head');
     head.append(createElement('h3', 'blandetto-section__title', title));
     head.append(createElement('p', 'blandetto-section__count', `${items.length} / ${items.length}`));
     section.append(head);
-    if (note) section.append(createElement('p', 'blandetto-section__note', note));
     const grid = createElement('div', `blandetto-grid blandetto-grid--${modifier}`);
     items.forEach((item) => grid.append(makeCard(item, tag, modifier)));
     section.append(grid);
@@ -271,10 +271,10 @@
       const data = await loadBlandettoData();
       inner.querySelector('.blandetto-empty')?.remove();
       const sections = [
-        makeSection({ title: 'BLANDETTO LOGOS', note: 'Логотипы собраны по одному дизайну: одежда появляется на hover, а по клику открываются все версии — лого, INV и вещи.', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
-        makeSection({ title: 'CAP', note: 'Одна карточка кепки. Клик переключает следующий вид без лишних полей.', items: data.cap, modifier: 'cap', tag: 'CAP' }),
-        makeSection({ title: 'PRINTS', note: 'Принты собраны в группы: если есть вещь-пара, она появляется при наведении.', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
-        makeSection({ title: 'DENTIST MARKET', note: 'Подбренд Dentist Market: связанные лого и вещи собраны в одну карточку.', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
+        makeSection({ title: 'LOGO VARIATIONS', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
+        makeSection({ title: 'CAP', items: data.cap, modifier: 'cap', tag: 'CAP' }),
+        makeSection({ title: 'PRINTS', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
+        makeSection({ title: 'DENTIST MARKET', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
       ].filter(Boolean);
 
       if (sections.length) sections.forEach((section) => inner.append(section));
