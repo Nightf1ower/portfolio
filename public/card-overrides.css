@@ -77,7 +77,7 @@
 
 .pink-punk-section__grid--tees {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
+  align-items: start;
 }
 
 .pink-punk-section__grid--posters,
@@ -90,18 +90,25 @@
   display: block !important;
   width: 100% !important;
   margin: 0 !important;
-  background: #050505 !important;
-  border: 1px solid rgba(0, 0, 0, 0.65);
+  background: transparent !important;
+  border: 0 !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-frame {
-  aspect-ratio: 1 / 1.18;
+  aspect-ratio: auto !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-image {
+  height: auto !important;
+  width: 100% !important;
+  object-fit: contain !important;
+  padding: 0 !important;
+}
+
+.pink-punk-section__grid--tees .pink-punk-image--worn {
   height: 100% !important;
   object-fit: contain !important;
-  padding: 0.75rem;
+  padding: 0 !important;
 }
 
 .pink-punk-section__grid--posters .pink-punk-frame,
