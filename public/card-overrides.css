@@ -155,7 +155,7 @@
   z-index: 120;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: #f4f1ea;
+  background: #ffffff;
   color: #050505;
   padding: 1.5rem 1rem 3rem;
 }
@@ -176,7 +176,7 @@
   margin-bottom: 2rem;
   padding: 0.7rem 0 1rem;
   border-bottom: 1px solid #050505;
-  background: rgba(244, 241, 234, 0.94);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(10px);
 }
 
@@ -265,7 +265,8 @@
 }
 
 .blandetto-grid--cap {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 48rem;
 }
 
 .blandetto-card {
@@ -281,7 +282,8 @@
   overflow: hidden;
 }
 
-.blandetto-card--has-inv {
+.blandetto-card--has-inv,
+.blandetto-card--cap {
   cursor: pointer;
 }
 
@@ -328,7 +330,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding-top: 0.55rem;
-  background: #f4f1ea;
+  background: #ffffff;
 }
 
 .blandetto-card__title {
@@ -342,6 +344,33 @@
 .blandetto-card__tag {
   color: rgba(5, 5, 5, 0.45);
   white-space: nowrap;
+}
+
+.blandetto-grid--cap .blandetto-card {
+  background: transparent;
+}
+
+.blandetto-grid--cap .blandetto-card__media {
+  aspect-ratio: auto;
+  display: block;
+  background: transparent;
+  overflow: visible;
+}
+
+.blandetto-grid--cap .blandetto-card__img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.blandetto-grid--cap .blandetto-card__meta {
+  display: none;
+}
+
+.blandetto-grid--cap .blandetto-card:hover .blandetto-card__img--main {
+  opacity: 1;
 }
 
 .blandetto-lightbox {
@@ -384,9 +413,12 @@ body:has(.blandetto-lightbox) {
   .pink-punk-section__grid--tees,
   .pink-punk-section__grid--posters,
   .pink-punk-section__grid--prints,
-  .blandetto-grid,
-  .blandetto-grid--cap {
+  .blandetto-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .blandetto-grid--cap {
+    grid-template-columns: 1fr;
   }
 }
 
