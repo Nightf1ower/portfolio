@@ -95,19 +95,29 @@
 }
 
 .pink-punk-section__grid--tees .pink-punk-frame {
-  aspect-ratio: auto !important;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
+  overflow: hidden !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-image {
-  height: auto !important;
+  display: block !important;
+  height: 100% !important;
   width: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
   padding: 0 !important;
 }
 
+.pink-punk-section__grid--tees .pink-punk-image--base {
+  position: relative !important;
+}
+
 .pink-punk-section__grid--tees .pink-punk-image--worn {
+  position: absolute !important;
+  inset: 0 !important;
   height: 100% !important;
-  object-fit: contain !important;
+  width: 100% !important;
+  object-fit: cover !important;
   padding: 0 !important;
 }
 
