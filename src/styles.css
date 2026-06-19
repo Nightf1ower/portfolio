@@ -48,21 +48,31 @@
     line-height: 1;
     text-indent: -9999px;
     overflow: visible;
-    transform: none !important;
+    transform-origin: left bottom;
+    transition: transform 0.18s ease, filter 0.18s ease;
     animation: none !important;
-    filter: none !important;
+    filter: none;
+    cursor: default;
   }
 
   #top h1:hover {
-    transform: none !important;
+    background-image: url('/flower-logo-small.png');
+    transform: scale(1.025);
     animation: none !important;
-    filter: none !important;
+    filter: contrast(1.08);
   }
 
   @media (max-width: 768px) {
     #top h1 {
       background-image: url('/flower-logo-small.png');
       min-height: clamp(5.5rem, 28vw, 9rem);
+      transform: none;
+    }
+
+    #top h1:hover {
+      background-image: url('/flower-logo-small.png');
+      transform: none;
+      filter: none;
     }
   }
 
