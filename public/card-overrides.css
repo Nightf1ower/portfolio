@@ -80,6 +80,7 @@
   align-items: stretch;
 }
 
+.pink-punk-section__grid--posters,
 .pink-punk-section__grid--prints {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
@@ -103,10 +104,12 @@
   padding: 0.75rem;
 }
 
+.pink-punk-section__grid--posters .pink-punk-frame,
 .pink-punk-section__grid--prints .pink-punk-frame {
   background: transparent !important;
 }
 
+.pink-punk-section__grid--posters .pink-punk-image,
 .pink-punk-section__grid--prints .pink-punk-image {
   height: auto !important;
   object-fit: contain !important;
@@ -114,6 +117,7 @@
 
 @media (max-width: 900px) {
   .pink-punk-section__grid--tees,
+  .pink-punk-section__grid--posters,
   .pink-punk-section__grid--prints {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -121,6 +125,7 @@
 
 @media (max-width: 560px) {
   .pink-punk-section__grid--tees,
+  .pink-punk-section__grid--posters,
   .pink-punk-section__grid--prints {
     grid-template-columns: 1fr;
   }
