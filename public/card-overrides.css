@@ -98,13 +98,15 @@
   aspect-ratio: 1 / 1 !important;
   height: auto !important;
   overflow: hidden !important;
+  background: #ffffff !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-image {
   display: block !important;
   height: 100% !important;
   width: 100% !important;
-  object-fit: cover !important;
+  object-fit: contain !important;
+  object-position: center center !important;
   padding: 0 !important;
 }
 
@@ -117,8 +119,10 @@
   inset: 0 !important;
   height: 100% !important;
   width: 100% !important;
-  object-fit: cover !important;
+  object-fit: contain !important;
+  object-position: center center !important;
   padding: 0 !important;
+  background: #ffffff !important;
 }
 
 .pink-punk-section__grid--posters .pink-punk-frame,
