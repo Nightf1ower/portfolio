@@ -5,11 +5,11 @@
   const GARMENT_RE = /(tee|tshirt|t-shirt|shirt|hoodie|sweatshirt|sweater|pants|trousers|crewneck|longsleeve|long-sleeve|mockup|worn|wear|product|clothes|merch)/i;
   const INV_RE = /(^|[-_\s])(inv|invert|inverted|inverse)($|[-_\s])/i;
   const REMOVE_RE = /(main|base|original|orig|flat|front|back|mockup|preview|logo|print|blandetto|dentist|market|cap|caps)/gi;
-  let filesPromise = null;
+
   let blandettoData = null;
   let activeModal = null;
 
-  const sectionAliases = {
+  const aliases = {
     logos: ['logos', 'logo', 'blandetto-logos', 'blandetto logos'],
     cap: ['cap', 'caps', 'кепка'],
     prints: ['prints', 'print', 'blandetto-prints', 'blandetto prints'],
@@ -22,9 +22,39 @@
     style.id = 'blandetto-dynamic-style';
     style.textContent = `
       .blandetto-section__note, .blandetto-card__meta { display: none !important; }
-      .blandetto-grid--prints .blandetto-card__media { aspect-ratio: 1 / 1 !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; background: #ffffff !important; }
+      .blandetto-card-ready { cursor: pointer !important; }
+      .blandetto-card-ready > div { transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease; }
+      .blandetto-card-ready:hover > div { background: #050505 !important; color: #ffffff !important; }
+      .blandetto-modal { position: fixed; inset: 0; z-index: 120; overflow-y: auto; overscroll-behavior: contain; background: #ffffff; color: #050505; padding: 1.5rem 1rem 3rem; }
+      .blandetto-modal__inner { width: min(100%, 80rem); margin: 0 auto; }
+      .blandetto-modal__header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding: 0.7rem 0 1rem; border-bottom: 1px solid #050505; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); }
+      .blandetto-modal__label, .blandetto-empty { font-size: 0.68rem; font-weight: 900; letter-spacing: 0.28em; text-transform: uppercase; }
+      .blandetto-modal__label { display: inline-block; background: #050505; color: #ffffff; padding: 0.35rem 0.75rem; }
+      .blandetto-modal__close { border: 1px solid #050505; background: #ffffff; color: #050505; padding: 0.55rem 1rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.24em; text-transform: uppercase; transition: background 0.3s ease, color 0.3s ease; }
+      .blandetto-modal__close:hover { background: #050505; color: #ffffff; }
+      .blandetto-section { border-top: 1px solid rgba(5,5,5,0.42); padding-top: 1.25rem; }
+      .blandetto-section + .blandetto-section { margin-top: 5rem; }
+      .blandetto-section__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
+      .blandetto-section__title { margin: 0; font-size: clamp(2.8rem, 6vw, 6.5rem); font-weight: 900; line-height: 0.82; letter-spacing: -0.085em; text-transform: uppercase; }
+      .blandetto-section__count { color: rgba(5,5,5,0.5); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.25em; text-transform: uppercase; white-space: nowrap; }
+      .blandetto-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+      .blandetto-card { position: relative; display: block; width: 100%; border: 0; background: #ffffff; color: inherit; padding: 0; text-align: left; cursor: zoom-in; overflow: hidden; }
+      .blandetto-card__media { position: relative; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #ffffff; }
+      .blandetto-card__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center center; padding: 0; transition: opacity 0.3s ease, transform 0.35s ease; }
+      .blandetto-card__img--hover { opacity: 0; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--main { opacity: 0 !important; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--hover { opacity: 1 !important; }
+      .blandetto-card:not(.blandetto-card--has-hover):hover .blandetto-card__img--main { opacity: 1 !important; }
+      .blandetto-grid--prints .blandetto-card__media { aspect-ratio: 1 / 1 !important; overflow: hidden !important; background: #ffffff !important; }
       .blandetto-grid--prints .blandetto-card__img { width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center center !important; transform: none !important; }
       .blandetto-grid--prints .blandetto-card:hover .blandetto-card__img { transform: none !important; }
+      .blandetto-grid--dentist { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+      .blandetto-grid--dentist > *:nth-child(1) { grid-column: 1 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(3) { grid-column: 2 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(2) { grid-column: 3 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(5) { grid-column: 1 !important; grid-row: 2 !important; }
+      .blandetto-grid--dentist > *:nth-child(4) { grid-column: 2 !important; grid-row: 2 !important; }
+      .blandetto-grid--dentist > *:nth-child(6) { grid-column: 3 !important; grid-row: 2 !important; }
       .blandetto-cap-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.55fr); gap: 1rem; align-items: start; }
       .blandetto-cap-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
       .blandetto-cap-card { display: block; width: 100%; border: 0; background: transparent; padding: 0; text-align: left; cursor: zoom-in; }
@@ -34,164 +64,137 @@
       .blandetto-cap-reference { position: sticky; top: 5.5rem; }
       .blandetto-cap-reference__media { background: #fff; padding: 1rem; }
       .blandetto-cap-reference__img { display: block; width: 100%; height: auto; object-fit: contain; }
-      .blandetto-card:not(.blandetto-card--has-hover):hover .blandetto-card__img--main { opacity: 1 !important; }
-      .blandetto-card--has-hover:hover .blandetto-card__img--main { opacity: 0 !important; }
-      .blandetto-card--has-hover:hover .blandetto-card__img--hover { opacity: 1 !important; }
+      .blandetto-cap-reference__caption { box-sizing: border-box; padding-left: 1rem; padding-right: 1rem; max-width: 100%; }
+      .blandetto-lightbox { position: fixed; inset: 0; z-index: 160; display: flex; align-items: center; justify-content: center; background: rgba(5,5,5,0.92); padding: 1.25rem; }
+      .blandetto-lightbox__img { max-width: 92vw; max-height: 90vh; object-fit: contain; }
+      .blandetto-lightbox__close { position: absolute; right: 1rem; top: 1rem; border: 1px solid #fff; background: #fff; color: #050505; padding: 0.55rem 1rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.24em; text-transform: uppercase; }
       .blandetto-lightbox__nav { position: absolute; top: 50%; z-index: 3; width: 3.5rem; height: 3.5rem; transform: translateY(-50%); border: 1px solid #fff; background: #fff; color: #050505; font-size: 2rem; font-weight: 900; line-height: 1; }
       .blandetto-lightbox__nav--prev { left: 1rem; }
       .blandetto-lightbox__nav--next { right: 1rem; }
       .blandetto-lightbox__counter { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); margin: 0; background: #fff; color: #050505; padding: 0.45rem 0.75rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.22em; text-transform: uppercase; }
-      @media (max-width: 900px) { .blandetto-cap-layout { grid-template-columns: 1fr; } .blandetto-cap-reference { position: static; } }
-      @media (max-width: 560px) { .blandetto-cap-grid { grid-template-columns: 1fr; } }
+      body:has(.blandetto-modal), body:has(.blandetto-lightbox) { overflow: hidden !important; }
+      @media (max-width: 900px) { .blandetto-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .blandetto-grid--dentist { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; } .blandetto-grid--dentist > * { grid-column: auto !important; grid-row: auto !important; } .blandetto-cap-layout { grid-template-columns: 1fr; } .blandetto-cap-reference { position: static; } }
+      @media (max-width: 560px) { .blandetto-grid, .blandetto-cap-grid { grid-template-columns: 1fr; } .blandetto-section__head { display: block; } .blandetto-section__count { display: block; margin-top: 0.75rem; } }
     `;
     document.head.append(style);
   };
 
-  const encodePath = (path) => path.split('/').map(encodeURIComponent).join('/');
-  const fileName = (path) => path.split('/').pop() || path;
-  const cleanTitle = (value) => value.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
-  const normalizeSegment = (value) => decodeURIComponent(value).toLowerCase().replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-  const aliasSet = (aliases) => new Set(aliases.map(normalizeSegment));
+  const normalize = (value) => decodeURIComponent(value || '').toLowerCase().replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const fileName = (path) => (path || '').split('/').pop() || path;
+  const cleanTitle = (value) => (value || '').replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
+  const apiUrl = (path) => `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`;
 
   const fetchJson = async (url, timeout = 9000) => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), timeout);
     try {
       const response = await fetch(url, { signal: controller.signal });
-      if (!response.ok) throw new Error(`GitHub loading failed: ${response.status}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return await response.json();
     } finally {
       window.clearTimeout(timer);
     }
   };
 
-  const listDirectoryImages = async (path) => {
-    const url = `https://api.github.com/repos/${REPO}/contents/${encodePath(path)}?ref=${BRANCH}`;
-    const entries = await fetchJson(url);
-    if (!Array.isArray(entries)) return [];
-
-    const nested = await Promise.all(entries.map(async (entry) => {
-      if (entry.type === 'file' && IMAGE_RE.test(entry.path || '')) return [entry.path];
-      if (entry.type === 'dir') return listDirectoryImages(entry.path);
-      return [];
-    }));
-
-    return nested.flat();
-  };
-
-  const getBlandettoFiles = async () => {
-    if (!filesPromise) {
-      const candidates = ['public/works/blandetto', 'works/blandetto', 'public/blandetto', 'blandetto'];
-      filesPromise = (async () => {
-        for (const candidate of candidates) {
-          try {
-            const files = await listDirectoryImages(candidate);
-            if (files.length) return { basePath: candidate, files };
-          } catch (error) {
-            console.warn(`Blandetto path skipped: ${candidate}`, error);
-          }
-        }
-        throw new Error('Blandetto files not found');
-      })();
+  const readDirectoryRecursive = async (path) => {
+    const items = await fetchJson(apiUrl(path));
+    const list = Array.isArray(items) ? items : [items];
+    const out = [];
+    for (const item of list) {
+      if (item.type === 'dir') {
+        out.push(...await readDirectoryRecursive(item.path));
+      } else if (item.type === 'file' && IMAGE_RE.test(item.name || item.path)) {
+        out.push({ path: item.path, url: item.download_url || `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}` });
+      }
     }
-    return filesPromise;
+    return out;
   };
 
-  const toPublicUrl = (path) => {
-    if (path.startsWith('public/')) return `/${encodePath(path.replace(/^public\//, ''))}`;
-    return `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${encodePath(path)}`;
+  const loadAllAssets = async () => {
+    const bases = ['public/works/blandetto', 'public/blandetto', 'works/blandetto', 'blandetto'];
+    let lastError = null;
+    for (const base of bases) {
+      try {
+        const files = await readDirectoryRecursive(base);
+        if (files.length) return files;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError || new Error('No Blandetto assets found');
   };
 
-  const getRelAfterSection = (path, aliases) => {
-    const set = aliasSet(aliases);
+  const hasAliasSegment = (path, words) => {
+    const set = new Set(words.map(normalize));
+    return path.split('/').some((segment) => set.has(normalize(segment)));
+  };
+
+  const getSectionFiles = (files, section) => files.filter((asset) => hasAliasSegment(asset.path, aliases[section]));
+
+  const inferGroupKey = (path, section) => {
     const parts = path.split('/');
-    const index = parts.findIndex((part) => set.has(normalizeSegment(part)));
-    if (index === -1) return null;
-    return parts.slice(index + 1).join('/');
-  };
-
-  const getSectionFiles = (paths, aliases) => paths.filter((path) => IMAGE_RE.test(path) && getRelAfterSection(path, aliases));
-
-  const inferGroupKey = (path, aliases) => {
-    const rel = getRelAfterSection(path, aliases) || fileName(path);
-    const parts = rel.split('/').filter(Boolean);
-    if (parts.length > 1) return normalizeSegment(parts[0]);
+    const set = new Set((aliases[section] || []).map(normalize));
+    const sectionIndex = parts.findIndex((part) => set.has(normalize(part)));
+    if (sectionIndex >= 0 && parts.length > sectionIndex + 2) return normalize(parts[sectionIndex + 1]);
 
     let base = fileName(path).replace(/\.[^.]+$/, '').toLowerCase();
-    base = decodeURIComponent(base);
-    base = base.replace(INV_RE, ' ');
-    base = base.replace(GARMENT_RE, ' ');
-    base = base.replace(REMOVE_RE, ' ');
+    base = decodeURIComponent(base).replace(INV_RE, ' ').replace(GARMENT_RE, ' ').replace(REMOVE_RE, ' ');
     base = base.replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-    return base || normalizeSegment(fileName(path).replace(/\.[^.]+$/, ''));
+    return base || normalize(fileName(path).replace(/\.[^.]+$/, ''));
   };
 
-  const groupAssets = (paths, aliases) => {
+  const groupAssets = (files, section) => {
     const map = new Map();
-    paths.forEach((path) => {
-      const key = inferGroupKey(path, aliases);
+    files.forEach((asset) => {
+      const key = inferGroupKey(asset.path, section);
       if (!map.has(key)) map.set(key, []);
-      map.get(key).push(path);
+      map.get(key).push(asset);
     });
 
     return Array.from(map.entries())
       .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
-      .map(([key, files]) => {
-        const sorted = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-        const mainPath = sorted.find((path) => !INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || sorted.find((path) => !INV_RE.test(fileName(path))) || sorted[0];
-        const invPath = sorted.find((path) => INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || null;
-        const garmentHover = sorted.filter((path) => path !== mainPath && GARMENT_RE.test(fileName(path)) && !INV_RE.test(fileName(path))).map((path) => ({ path, url: toPublicUrl(path) }));
-        const hover = garmentHover.length ? garmentHover : invPath ? [{ path: invPath, url: toPublicUrl(invPath) }] : [];
-        return {
-          id: key,
-          title: cleanTitle(key),
-          main: { path: mainPath, url: toPublicUrl(mainPath) },
-          hover,
-          inv: invPath ? { path: invPath, url: toPublicUrl(invPath) } : null,
-          cycle: [],
-        };
+      .map(([key, assets]) => {
+        const sorted = assets.sort((a, b) => a.path.localeCompare(b.path, undefined, { numeric: true }));
+        const main = sorted.find((asset) => !INV_RE.test(fileName(asset.path)) && !GARMENT_RE.test(fileName(asset.path))) || sorted.find((asset) => !INV_RE.test(fileName(asset.path))) || sorted[0];
+        const inv = sorted.find((asset) => INV_RE.test(fileName(asset.path)) && asset.path !== main.path) || null;
+        const garments = sorted.filter((asset) => asset.path !== main.path && GARMENT_RE.test(fileName(asset.path)) && (!inv || asset.path !== inv.path));
+        const hover = garments.length ? garments : inv ? [inv] : [];
+        return { id: key, title: cleanTitle(key), main, inv, hover };
       });
   };
 
-  const makeCapAssets = (paths) => {
-    const sorted = paths.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-    const finalIndexByName = sorted.findIndex((path) => /(final|product|irl|person|model|human|wear|worn)/i.test(fileName(path)));
-    const finalIndex = finalIndexByName >= 0 ? finalIndexByName : sorted.length - 1;
-    return sorted.map((path, index) => ({
-      id: `cap-${index}`,
-      title: cleanTitle(fileName(path)),
-      main: { path, url: toPublicUrl(path) },
-      caption: index === finalIndex ? 'FINAL PRODUCT' : 'REALISTIC 3D RENDER',
-    }));
+  const makeCapAssets = (files) => {
+    const sorted = files.sort((a, b) => a.path.localeCompare(b.path, undefined, { numeric: true }));
+    const finalIndexByName = sorted.findIndex((asset) => /(final|product|irl|person|model|human|wear|worn)/i.test(fileName(asset.path)));
+    const finalIndex = finalIndexByName >= 0 ? finalIndexByName : Math.max(sorted.length - 1, 0);
+    return sorted.map((asset, index) => ({ ...asset, id: `cap-${index}`, title: cleanTitle(fileName(asset.path)), caption: index === finalIndex ? 'FINAL PRODUCT' : 'REALISTIC 3D RENDER' }));
   };
 
   const loadBlandettoData = async () => {
     if (blandettoData) return blandettoData;
-    const { basePath, files } = await getBlandettoFiles();
+    const all = await loadAllAssets();
+    const logosFiles = getSectionFiles(all, 'logos');
+    const capFiles = getSectionFiles(all, 'cap');
+    const printsFiles = getSectionFiles(all, 'prints');
+    const dentistFiles = getSectionFiles(all, 'dentist');
 
     blandettoData = {
-      basePath,
-      logos: groupAssets(getSectionFiles(files, sectionAliases.logos), sectionAliases.logos),
-      cap: makeCapAssets(getSectionFiles(files, sectionAliases.cap)),
-      prints: groupAssets(getSectionFiles(files, sectionAliases.prints), sectionAliases.prints),
-      dentist: groupAssets(getSectionFiles(files, sectionAliases.dentist), sectionAliases.dentist),
+      logos: groupAssets(logosFiles, 'logos'),
+      cap: makeCapAssets(capFiles),
+      prints: groupAssets(printsFiles, 'prints'),
+      dentist: groupAssets(dentistFiles, 'dentist'),
     };
     return blandettoData;
   };
 
   const createElement = (tag, className, text) => {
-    const element = document.createElement(tag);
-    if (className) element.className = className;
-    if (text) element.textContent = text;
-    return element;
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text) el.textContent = text;
+    return el;
   };
 
-  const getItemAssets = (item) => {
-    const assets = [item.main];
-    if (item.inv) assets.push(item.inv);
-    if (item.hover?.length) assets.push(...item.hover.filter((asset) => !item.inv || asset.path !== item.inv.path));
-    return assets.filter(Boolean);
-  };
+  const getItemAssets = (item) => [item.main, item.inv, ...(item.hover || [])].filter(Boolean).filter((asset, index, arr) => arr.findIndex((x) => x.path === asset.path) === index);
 
   const openLightbox = (assets, startIndex = 0) => {
     const list = Array.isArray(assets) ? assets : [assets];
@@ -206,63 +209,40 @@
     const render = () => {
       const asset = list[index];
       img.src = asset.url;
-      img.alt = asset.path ? cleanTitle(fileName(asset.path)) : 'Blandetto image';
+      img.alt = cleanTitle(fileName(asset.path));
       counter.textContent = `${index + 1} / ${list.length}`;
       prev.style.display = list.length > 1 ? '' : 'none';
       next.style.display = list.length > 1 ? '' : 'none';
       counter.style.display = list.length > 1 ? '' : 'none';
     };
 
-    const closeLightbox = () => overlay.remove();
-    const change = (direction) => { index = (index + direction + list.length) % list.length; render(); };
-
-    close.addEventListener('click', closeLightbox);
-    prev.addEventListener('click', (event) => { event.stopPropagation(); change(-1); });
-    next.addEventListener('click', (event) => { event.stopPropagation(); change(1); });
-    overlay.addEventListener('click', closeLightbox);
-    img.addEventListener('click', (event) => { event.stopPropagation(); if (list.length > 1) change(1); });
+    close.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', () => overlay.remove());
+    img.addEventListener('click', (event) => { event.stopPropagation(); if (list.length > 1) { index = (index + 1) % list.length; render(); } });
+    prev.addEventListener('click', (event) => { event.stopPropagation(); index = (index - 1 + list.length) % list.length; render(); });
+    next.addEventListener('click', (event) => { event.stopPropagation(); index = (index + 1) % list.length; render(); });
     overlay.append(close, prev, img, next, counter);
     document.body.append(overlay);
     render();
   };
 
-  const makeCard = (item, tag = '', modifier = '') => {
+  const makeCard = (item, modifier) => {
     const card = createElement('button', `blandetto-card blandetto-card--${modifier}`);
     card.type = 'button';
     const media = createElement('div', 'blandetto-card__media');
     const main = createElement('img', 'blandetto-card__img blandetto-card__img--main');
-    const hoverAssets = item.hover && item.hover.length ? item.hover : [];
-
     main.src = item.main.url;
     main.alt = item.title;
     main.loading = 'lazy';
     media.append(main);
 
-    if (modifier === 'logos' && hoverAssets.length === 0) media.style.aspectRatio = '16 / 6';
-
-    let hoverImg = null;
-    let hoverIndex = 0;
-    let hoverTimer = null;
-    if (hoverAssets.length) {
+    if (item.hover?.length) {
       card.classList.add('blandetto-card--has-hover');
-      hoverImg = createElement('img', 'blandetto-card__img blandetto-card__img--hover');
-      hoverImg.src = hoverAssets[0].url;
-      hoverImg.alt = `${item.title} hover preview`;
-      hoverImg.loading = 'lazy';
-      media.append(hoverImg);
-      card.addEventListener('mouseenter', () => {
-        if (hoverAssets.length < 2) return;
-        hoverTimer = window.setInterval(() => {
-          hoverIndex = (hoverIndex + 1) % hoverAssets.length;
-          hoverImg.src = hoverAssets[hoverIndex].url;
-        }, 850);
-      });
-      card.addEventListener('mouseleave', () => {
-        if (hoverTimer) window.clearInterval(hoverTimer);
-        hoverTimer = null;
-        hoverIndex = 0;
-        hoverImg.src = hoverAssets[0].url;
-      });
+      const hover = createElement('img', 'blandetto-card__img blandetto-card__img--hover');
+      hover.src = item.hover[0].url;
+      hover.alt = `${item.title} preview`;
+      hover.loading = 'lazy';
+      media.append(hover);
     }
 
     card.append(media);
@@ -270,44 +250,42 @@
     return card;
   };
 
-  const makeSection = ({ title, items, modifier, tag }) => {
-    if (!items || !items.length) return null;
+  const makeSection = ({ title, items, modifier }) => {
+    if (!items?.length) return null;
     const section = createElement('section', `blandetto-section blandetto-section--${modifier}`);
     const head = createElement('div', 'blandetto-section__head');
     head.append(createElement('h3', 'blandetto-section__title', title));
     head.append(createElement('p', 'blandetto-section__count', `${items.length} / ${items.length}`));
-    section.append(head);
     const grid = createElement('div', `blandetto-grid blandetto-grid--${modifier}`);
-    items.forEach((item) => grid.append(makeCard(item, tag, modifier)));
-    section.append(grid);
+    items.forEach((item) => grid.append(makeCard(item, modifier)));
+    section.append(head, grid);
     return section;
   };
 
   const makeCapSection = (items, logoReference) => {
-    if (!items || !items.length) return null;
+    if (!items?.length) return null;
     const section = createElement('section', 'blandetto-section blandetto-section--cap');
     const head = createElement('div', 'blandetto-section__head');
     head.append(createElement('h3', 'blandetto-section__title', 'CAP'));
     head.append(createElement('p', 'blandetto-section__count', `${items.length} / ${items.length}`));
-    section.append(head);
-
     const layout = createElement('div', 'blandetto-cap-layout');
     const grid = createElement('div', 'blandetto-cap-grid');
+
     items.forEach((item, index) => {
       const card = createElement('button', 'blandetto-cap-card');
       card.type = 'button';
       const media = createElement('div', 'blandetto-cap-card__media');
       const img = createElement('img', 'blandetto-cap-card__img');
-      img.src = item.main.url;
+      img.src = item.url;
       img.alt = item.title;
       img.loading = 'lazy';
       media.append(img);
       card.append(media, createElement('p', 'blandetto-cap-card__caption', item.caption));
-      card.addEventListener('click', (event) => { event.stopPropagation(); openLightbox(items.map((asset) => asset.main), index); });
+      card.addEventListener('click', (event) => { event.stopPropagation(); openLightbox(items, index); });
       grid.append(card);
     });
-    layout.append(grid);
 
+    layout.append(grid);
     if (logoReference) {
       const ref = createElement('aside', 'blandetto-cap-reference');
       const media = createElement('div', 'blandetto-cap-reference__media');
@@ -320,7 +298,7 @@
       layout.append(ref);
     }
 
-    section.append(layout);
+    section.append(head, layout);
     return section;
   };
 
@@ -333,30 +311,26 @@
     header.append(createElement('p', 'blandetto-modal__label', 'BLANDETTO'));
     const close = createElement('button', 'blandetto-modal__close', 'CLOSE');
     close.type = 'button';
-    close.addEventListener('click', () => { activeModal.remove(); activeModal = null; });
+    close.addEventListener('click', () => { activeModal?.remove(); activeModal = null; });
     header.append(close);
-    inner.append(header, createElement('p', 'blandetto-empty', 'LOADING BLANDETTO ASSETS...'));
+    const loading = createElement('p', 'blandetto-empty', 'LOADING BLANDETTO ASSETS...');
+    inner.append(header, loading);
     activeModal.append(inner);
     document.body.append(activeModal);
 
     try {
-      const data = await Promise.race([
-        loadBlandettoData(),
-        new Promise((_, reject) => window.setTimeout(() => reject(new Error('Blandetto loading timeout')), 12000)),
-      ]);
-      inner.querySelector('.blandetto-empty')?.remove();
-      const logoReference = data.logos?.[0] || null;
+      const data = await loadBlandettoData();
+      loading.remove();
       const sections = [
-        makeSection({ title: 'LOGO VARIATIONS', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
-        makeCapSection(data.cap, logoReference),
-        makeSection({ title: 'PRINTS', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
-        makeSection({ title: 'DENTIST MARKET', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
+        makeSection({ title: 'LOGO VARIATIONS', items: data.logos, modifier: 'logos' }),
+        makeCapSection(data.cap, data.logos?.[0] || null),
+        makeSection({ title: 'PRINTS', items: data.prints, modifier: 'prints' }),
+        makeSection({ title: 'DENTIST MARKET', items: data.dentist, modifier: 'dentist' }),
       ].filter(Boolean);
       if (sections.length) sections.forEach((section) => inner.append(section));
       else inner.append(createElement('p', 'blandetto-empty', 'BLANDETTO FILES NOT FOUND'));
     } catch (error) {
-      const empty = inner.querySelector('.blandetto-empty');
-      if (empty) empty.textContent = 'BLANDETTO FILES LOADING ERROR';
+      loading.textContent = 'BLANDETTO FILES LOADING ERROR';
       console.error(error);
     }
   };
