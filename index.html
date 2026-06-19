@@ -101,7 +101,7 @@
           if (!gallery || gallery.dataset.grouped === 'true') return;
 
           const cards = Array.from(gallery.querySelectorAll(':scope > .pink-punk-frame'));
-          if (cards.length < 4) return;
+          if (cards.length < 7) return;
 
           const makeSection = ({ title, count, note, modifier }) => {
             const section = document.createElement('section');
@@ -142,19 +142,28 @@
             modifier: 'tees',
           });
 
+          const posters = makeSection({
+            title: 'POSTERS',
+            count: '3 / 3',
+            note: 'Poster artworks and layout experiments for the Pink Punk visual system.',
+            modifier: 'posters',
+          });
+
+          const printCount = Math.max(cards.length - 6, 0);
           const prints = makeSection({
             title: 'PRINTS',
-            count: `${cards.length - 3} / ${cards.length - 3}`,
-            note: 'Standalone graphic prints and visual system elements.',
+            count: `${printCount} / ${printCount}`,
+            note: 'Standalone print graphics and additional visual system elements.',
             modifier: 'prints',
           });
 
           cards.slice(0, 3).forEach((card) => tees.grid.append(card));
-          cards.slice(3).forEach((card) => prints.grid.append(card));
+          cards.slice(3, 6).forEach((card) => posters.grid.append(card));
+          cards.slice(6).forEach((card) => prints.grid.append(card));
 
           gallery.textContent = '';
           gallery.dataset.grouped = 'true';
-          gallery.append(tees.section, prints.section);
+          gallery.append(tees.section, posters.section, prints.section);
         };
 
         const observer = new MutationObserver(enhancePinkPunkGallery);
