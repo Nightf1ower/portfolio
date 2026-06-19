@@ -5,7 +5,7 @@
   const GARMENT_RE = /(tee|tshirt|t-shirt|shirt|hoodie|sweatshirt|sweater|pants|trousers|crewneck|longsleeve|long-sleeve|mockup|worn|wear|product|clothes|merch)/i;
   const INV_RE = /(^|[-_\s])(inv|invert|inverted|inverse)($|[-_\s])/i;
   const REMOVE_RE = /(main|base|original|orig|flat|front|back|mockup|preview|logo|print|blandetto|dentist|market|cap|caps)/gi;
-  let treePromise = null;
+  let filesPromise = null;
   let blandettoData = null;
   let activeModal = null;
 
@@ -22,9 +22,9 @@
     style.id = 'blandetto-dynamic-style';
     style.textContent = `
       .blandetto-section__note, .blandetto-card__meta { display: none !important; }
-      .blandetto-grid--prints .blandetto-card__media { aspect-ratio: 1 / 1 !important; }
-      .blandetto-grid--prints .blandetto-card__img { object-fit: contain !important; transform: scale(1.42) !important; }
-      .blandetto-grid--prints .blandetto-card:hover .blandetto-card__img { transform: scale(1.42) !important; }
+      .blandetto-grid--prints .blandetto-card__media { aspect-ratio: 1 / 1 !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; background: #ffffff !important; }
+      .blandetto-grid--prints .blandetto-card__img { width: 100% !important; height: 100% !important; object-fit: contain !important; object-position: center center !important; transform: none !important; }
+      .blandetto-grid--prints .blandetto-card:hover .blandetto-card__img { transform: none !important; }
       .blandetto-cap-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.55fr); gap: 1rem; align-items: start; }
       .blandetto-cap-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
       .blandetto-cap-card { display: block; width: 100%; border: 0; background: transparent; padding: 0; text-align: left; cursor: zoom-in; }
@@ -53,23 +53,53 @@
   const normalizeSegment = (value) => decodeURIComponent(value).toLowerCase().replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   const aliasSet = (aliases) => new Set(aliases.map(normalizeSegment));
 
-  const getTree = async () => {
-    if (!treePromise) {
-      treePromise = fetch(`https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`)
-        .then((response) => response.ok ? response.json() : Promise.reject(new Error('GitHub tree loading failed')))
-        .then((data) => data.tree || []);
+  const fetchJson = async (url, timeout = 9000) => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error(`GitHub loading failed: ${response.status}`);
+      return await response.json();
+    } finally {
+      window.clearTimeout(timer);
     }
-    return treePromise;
+  };
+
+  const listDirectoryImages = async (path) => {
+    const url = `https://api.github.com/repos/${REPO}/contents/${encodePath(path)}?ref=${BRANCH}`;
+    const entries = await fetchJson(url);
+    if (!Array.isArray(entries)) return [];
+
+    const nested = await Promise.all(entries.map(async (entry) => {
+      if (entry.type === 'file' && IMAGE_RE.test(entry.path || '')) return [entry.path];
+      if (entry.type === 'dir') return listDirectoryImages(entry.path);
+      return [];
+    }));
+
+    return nested.flat();
+  };
+
+  const getBlandettoFiles = async () => {
+    if (!filesPromise) {
+      const candidates = ['public/works/blandetto', 'works/blandetto', 'public/blandetto', 'blandetto'];
+      filesPromise = (async () => {
+        for (const candidate of candidates) {
+          try {
+            const files = await listDirectoryImages(candidate);
+            if (files.length) return { basePath: candidate, files };
+          } catch (error) {
+            console.warn(`Blandetto path skipped: ${candidate}`, error);
+          }
+        }
+        throw new Error('Blandetto files not found');
+      })();
+    }
+    return filesPromise;
   };
 
   const toPublicUrl = (path) => {
     if (path.startsWith('public/')) return `/${encodePath(path.replace(/^public\//, ''))}`;
     return `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${encodePath(path)}`;
-  };
-
-  const findBasePath = (paths) => {
-    const candidates = ['public/works/blandetto', 'works/blandetto', 'public/blandetto', 'blandetto'];
-    return candidates.find((candidate) => paths.some((path) => path.toLowerCase().startsWith(`${candidate}/`))) || 'public/works/blandetto';
   };
 
   const getRelAfterSection = (path, aliases) => {
@@ -137,10 +167,7 @@
 
   const loadBlandettoData = async () => {
     if (blandettoData) return blandettoData;
-    const tree = await getTree();
-    const paths = tree.map((item) => item.path).filter(Boolean);
-    const basePath = findBasePath(paths);
-    const files = paths.filter((path) => path.toLowerCase().startsWith(`${basePath.toLowerCase()}/`) && IMAGE_RE.test(path));
+    const { basePath, files } = await getBlandettoFiles();
 
     blandettoData = {
       basePath,
@@ -289,7 +316,7 @@
       img.alt = 'Blandetto logo reference';
       img.loading = 'lazy';
       media.append(img);
-      ref.append(media, createElement('p', 'blandetto-cap-reference__caption', 'ЗА ОСНОВУ ВЗЯТЬ ЭТОТ ЛОГОТИП'));
+      ref.append(media, createElement('p', 'blandetto-cap-reference__caption', 'за основу взят этот логотип'));
       layout.append(ref);
     }
 
@@ -313,7 +340,10 @@
     document.body.append(activeModal);
 
     try {
-      const data = await loadBlandettoData();
+      const data = await Promise.race([
+        loadBlandettoData(),
+        new Promise((_, reject) => window.setTimeout(() => reject(new Error('Blandetto loading timeout')), 12000)),
+      ]);
       inner.querySelector('.blandetto-empty')?.remove();
       const logoReference = data.logos?.[0] || null;
       const sections = [
@@ -325,7 +355,8 @@
       if (sections.length) sections.forEach((section) => inner.append(section));
       else inner.append(createElement('p', 'blandetto-empty', 'BLANDETTO FILES NOT FOUND'));
     } catch (error) {
-      inner.querySelector('.blandetto-empty').textContent = 'BLANDETTO FILES LOADING ERROR';
+      const empty = inner.querySelector('.blandetto-empty');
+      if (empty) empty.textContent = 'BLANDETTO FILES LOADING ERROR';
       console.error(error);
     }
   };
