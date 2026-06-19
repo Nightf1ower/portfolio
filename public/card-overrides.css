@@ -1,0 +1,19 @@
+#works .mt-10.grid > button:first-of-type > div > div:nth-child(2) > div > div:nth-child(2) {
+  background-color: transparent !important;
+  background-image: url('https://raw.githubusercontent.com/Nightf1ower/portfolio/main/works/pink-punk/PP_PUNK.jpg') !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  mix-blend-mode: normal !important;
+  inset: auto 1rem 3.4rem 1rem !important;
+  height: 5.2rem !important;
+  z-index: 5 !important;
+}
+
+#works .mt-10.grid > button:first-of-type > div > div:nth-child(2) > div > div:first-child {
+  background-color: #050505 !important;
+}
+
+#works .mt-10.grid > button:first-of-type > div > div:nth-child(2) > div > div:last-child {
+  z-index: 6 !important;
+}
