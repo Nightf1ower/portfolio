@@ -16,6 +16,37 @@
     dentist: ['dentist-market', 'dentist_market', 'dentist market', 'dentist', 'dentist-club', 'dentist club'],
   };
 
+  const injectBlandettoStyles = () => {
+    if (document.getElementById('blandetto-dynamic-style')) return;
+    const style = document.createElement('style');
+    style.id = 'blandetto-dynamic-style';
+    style.textContent = `
+      .blandetto-section__note, .blandetto-card__meta { display: none !important; }
+      .blandetto-grid--prints .blandetto-card__media { aspect-ratio: 1 / 1 !important; }
+      .blandetto-grid--prints .blandetto-card__img { object-fit: contain !important; transform: scale(1.42) !important; }
+      .blandetto-grid--prints .blandetto-card:hover .blandetto-card__img { transform: scale(1.42) !important; }
+      .blandetto-cap-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.55fr); gap: 1rem; align-items: start; }
+      .blandetto-cap-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+      .blandetto-cap-card { display: block; width: 100%; border: 0; background: transparent; padding: 0; text-align: left; cursor: zoom-in; }
+      .blandetto-cap-card__media { background: #fff; overflow: hidden; }
+      .blandetto-cap-card__img { display: block; width: 100%; height: auto; object-fit: contain; }
+      .blandetto-cap-card__caption, .blandetto-cap-reference__caption { margin: 0.55rem 0 0; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.23em; line-height: 1; text-transform: uppercase; color: rgba(5,5,5,0.55); }
+      .blandetto-cap-reference { position: sticky; top: 5.5rem; }
+      .blandetto-cap-reference__media { background: #fff; padding: 1rem; }
+      .blandetto-cap-reference__img { display: block; width: 100%; height: auto; object-fit: contain; }
+      .blandetto-card:not(.blandetto-card--has-hover):hover .blandetto-card__img--main { opacity: 1 !important; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--main { opacity: 0 !important; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--hover { opacity: 1 !important; }
+      .blandetto-lightbox__nav { position: absolute; top: 50%; z-index: 3; width: 3.5rem; height: 3.5rem; transform: translateY(-50%); border: 1px solid #fff; background: #fff; color: #050505; font-size: 2rem; font-weight: 900; line-height: 1; }
+      .blandetto-lightbox__nav--prev { left: 1rem; }
+      .blandetto-lightbox__nav--next { right: 1rem; }
+      .blandetto-lightbox__counter { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); margin: 0; background: #fff; color: #050505; padding: 0.45rem 0.75rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.22em; text-transform: uppercase; }
+      @media (max-width: 900px) { .blandetto-cap-layout { grid-template-columns: 1fr; } .blandetto-cap-reference { position: static; } }
+      @media (max-width: 560px) { .blandetto-cap-grid { grid-template-columns: 1fr; } }
+    `;
+    document.head.append(style);
+  };
+
   const encodePath = (path) => path.split('/').map(encodeURIComponent).join('/');
   const fileName = (path) => path.split('/').pop() || path;
   const cleanTitle = (value) => value.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
@@ -79,7 +110,8 @@
         const sorted = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
         const mainPath = sorted.find((path) => !INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || sorted.find((path) => !INV_RE.test(fileName(path))) || sorted[0];
         const invPath = sorted.find((path) => INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || null;
-        const hover = sorted.filter((path) => path !== mainPath && GARMENT_RE.test(fileName(path)) && !INV_RE.test(fileName(path))).map((path) => ({ path, url: toPublicUrl(path) }));
+        const garmentHover = sorted.filter((path) => path !== mainPath && GARMENT_RE.test(fileName(path)) && !INV_RE.test(fileName(path))).map((path) => ({ path, url: toPublicUrl(path) }));
+        const hover = garmentHover.length ? garmentHover : invPath ? [{ path: invPath, url: toPublicUrl(invPath) }] : [];
         return {
           id: key,
           title: cleanTitle(key),
@@ -91,17 +123,16 @@
       });
   };
 
-  const makeCycleAsset = (paths, title) => {
+  const makeCapAssets = (paths) => {
     const sorted = paths.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-    if (!sorted.length) return [];
-    return [{
-      id: 'cap-cycle',
-      title,
-      main: { path: sorted[0], url: toPublicUrl(sorted[0]) },
-      hover: [],
-      inv: null,
-      cycle: sorted.map((path) => ({ path, url: toPublicUrl(path) })),
-    }];
+    const finalIndexByName = sorted.findIndex((path) => /(final|product|irl|person|model|human|wear|worn)/i.test(fileName(path)));
+    const finalIndex = finalIndexByName >= 0 ? finalIndexByName : sorted.length - 1;
+    return sorted.map((path, index) => ({
+      id: `cap-${index}`,
+      title: cleanTitle(fileName(path)),
+      main: { path, url: toPublicUrl(path) },
+      caption: index === finalIndex ? 'FINAL PRODUCT' : 'REALISTIC 3D RENDER',
+    }));
   };
 
   const loadBlandettoData = async () => {
@@ -111,17 +142,12 @@
     const basePath = findBasePath(paths);
     const files = paths.filter((path) => path.toLowerCase().startsWith(`${basePath.toLowerCase()}/`) && IMAGE_RE.test(path));
 
-    const logoFiles = getSectionFiles(files, sectionAliases.logos);
-    const capFiles = getSectionFiles(files, sectionAliases.cap);
-    const printFiles = getSectionFiles(files, sectionAliases.prints);
-    const dentistFiles = getSectionFiles(files, sectionAliases.dentist);
-
     blandettoData = {
       basePath,
-      logos: groupAssets(logoFiles, sectionAliases.logos),
-      cap: makeCycleAsset(capFiles, 'CAP'),
-      prints: groupAssets(printFiles, sectionAliases.prints),
-      dentist: groupAssets(dentistFiles, sectionAliases.dentist),
+      logos: groupAssets(getSectionFiles(files, sectionAliases.logos), sectionAliases.logos),
+      cap: makeCapAssets(getSectionFiles(files, sectionAliases.cap)),
+      prints: groupAssets(getSectionFiles(files, sectionAliases.prints), sectionAliases.prints),
+      dentist: groupAssets(getSectionFiles(files, sectionAliases.dentist), sectionAliases.dentist),
     };
     return blandettoData;
   };
@@ -136,7 +162,7 @@
   const getItemAssets = (item) => {
     const assets = [item.main];
     if (item.inv) assets.push(item.inv);
-    if (item.hover?.length) assets.push(...item.hover);
+    if (item.hover?.length) assets.push(...item.hover.filter((asset) => !item.inv || asset.path !== item.inv.path));
     return assets.filter(Boolean);
   };
 
@@ -161,10 +187,7 @@
     };
 
     const closeLightbox = () => overlay.remove();
-    const change = (direction) => {
-      index = (index + direction + list.length) % list.length;
-      render();
-    };
+    const change = (direction) => { index = (index + direction + list.length) % list.length; render(); };
 
     close.addEventListener('click', closeLightbox);
     prev.addEventListener('click', (event) => { event.stopPropagation(); change(-1); });
@@ -177,7 +200,7 @@
   };
 
   const makeCard = (item, tag = '', modifier = '') => {
-    const card = createElement('button', `blandetto-card blandetto-card--${modifier} ${item.inv ? 'blandetto-card--has-inv' : ''}`);
+    const card = createElement('button', `blandetto-card blandetto-card--${modifier}`);
     card.type = 'button';
     const media = createElement('div', 'blandetto-card__media');
     const main = createElement('img', 'blandetto-card__img blandetto-card__img--main');
@@ -188,9 +211,7 @@
     main.loading = 'lazy';
     media.append(main);
 
-    if ((modifier === 'logos' || modifier === 'prints') && hoverAssets.length === 0) {
-      media.style.aspectRatio = '16 / 6';
-    }
+    if (modifier === 'logos' && hoverAssets.length === 0) media.style.aspectRatio = '16 / 6';
 
     let hoverImg = null;
     let hoverIndex = 0;
@@ -199,15 +220,11 @@
       card.classList.add('blandetto-card--has-hover');
       hoverImg = createElement('img', 'blandetto-card__img blandetto-card__img--hover');
       hoverImg.src = hoverAssets[0].url;
-      hoverImg.alt = `${item.title} garment preview`;
+      hoverImg.alt = `${item.title} hover preview`;
       hoverImg.loading = 'lazy';
-      hoverImg.addEventListener('error', () => {
-        card.classList.remove('blandetto-card--has-hover');
-        hoverImg.remove();
-      }, { once: true });
       media.append(hoverImg);
       card.addEventListener('mouseenter', () => {
-        if (hoverAssets.length < 2 || !card.classList.contains('blandetto-card--has-hover')) return;
+        if (hoverAssets.length < 2) return;
         hoverTimer = window.setInterval(() => {
           hoverIndex = (hoverIndex + 1) % hoverAssets.length;
           hoverImg.src = hoverAssets[hoverIndex].url;
@@ -217,22 +234,12 @@
         if (hoverTimer) window.clearInterval(hoverTimer);
         hoverTimer = null;
         hoverIndex = 0;
-        if (hoverImg) hoverImg.src = hoverAssets[0].url;
+        hoverImg.src = hoverAssets[0].url;
       });
     }
 
     card.append(media);
-
-    let cycleIndex = 0;
-    card.addEventListener('click', (event) => {
-      event.stopPropagation();
-      if (item.cycle && item.cycle.length > 1) {
-        cycleIndex = (cycleIndex + 1) % item.cycle.length;
-        main.src = item.cycle[cycleIndex].url;
-        return;
-      }
-      openLightbox(getItemAssets(item));
-    });
+    card.addEventListener('click', (event) => { event.stopPropagation(); openLightbox(getItemAssets(item)); });
     return card;
   };
 
@@ -249,7 +256,49 @@
     return section;
   };
 
+  const makeCapSection = (items, logoReference) => {
+    if (!items || !items.length) return null;
+    const section = createElement('section', 'blandetto-section blandetto-section--cap');
+    const head = createElement('div', 'blandetto-section__head');
+    head.append(createElement('h3', 'blandetto-section__title', 'CAP'));
+    head.append(createElement('p', 'blandetto-section__count', `${items.length} / ${items.length}`));
+    section.append(head);
+
+    const layout = createElement('div', 'blandetto-cap-layout');
+    const grid = createElement('div', 'blandetto-cap-grid');
+    items.forEach((item, index) => {
+      const card = createElement('button', 'blandetto-cap-card');
+      card.type = 'button';
+      const media = createElement('div', 'blandetto-cap-card__media');
+      const img = createElement('img', 'blandetto-cap-card__img');
+      img.src = item.main.url;
+      img.alt = item.title;
+      img.loading = 'lazy';
+      media.append(img);
+      card.append(media, createElement('p', 'blandetto-cap-card__caption', item.caption));
+      card.addEventListener('click', (event) => { event.stopPropagation(); openLightbox(items.map((asset) => asset.main), index); });
+      grid.append(card);
+    });
+    layout.append(grid);
+
+    if (logoReference) {
+      const ref = createElement('aside', 'blandetto-cap-reference');
+      const media = createElement('div', 'blandetto-cap-reference__media');
+      const img = createElement('img', 'blandetto-cap-reference__img');
+      img.src = logoReference.main.url;
+      img.alt = 'Blandetto logo reference';
+      img.loading = 'lazy';
+      media.append(img);
+      ref.append(media, createElement('p', 'blandetto-cap-reference__caption', 'ЗА ОСНОВУ ВЗЯТЬ ЭТОТ ЛОГОТИП'));
+      layout.append(ref);
+    }
+
+    section.append(layout);
+    return section;
+  };
+
   const openBlandettoModal = async () => {
+    injectBlandettoStyles();
     if (activeModal) activeModal.remove();
     activeModal = createElement('div', 'blandetto-modal');
     const inner = createElement('div', 'blandetto-modal__inner');
@@ -257,26 +306,22 @@
     header.append(createElement('p', 'blandetto-modal__label', 'BLANDETTO'));
     const close = createElement('button', 'blandetto-modal__close', 'CLOSE');
     close.type = 'button';
-    close.addEventListener('click', () => {
-      activeModal.remove();
-      activeModal = null;
-    });
+    close.addEventListener('click', () => { activeModal.remove(); activeModal = null; });
     header.append(close);
-    inner.append(header);
-    inner.append(createElement('p', 'blandetto-empty', 'LOADING BLANDETTO ASSETS...'));
+    inner.append(header, createElement('p', 'blandetto-empty', 'LOADING BLANDETTO ASSETS...'));
     activeModal.append(inner);
     document.body.append(activeModal);
 
     try {
       const data = await loadBlandettoData();
       inner.querySelector('.blandetto-empty')?.remove();
+      const logoReference = data.logos?.[0] || null;
       const sections = [
         makeSection({ title: 'LOGO VARIATIONS', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
-        makeSection({ title: 'CAP', items: data.cap, modifier: 'cap', tag: 'CAP' }),
+        makeCapSection(data.cap, logoReference),
         makeSection({ title: 'PRINTS', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
         makeSection({ title: 'DENTIST MARKET', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
       ].filter(Boolean);
-
       if (sections.length) sections.forEach((section) => inner.append(section));
       else inner.append(createElement('p', 'blandetto-empty', 'BLANDETTO FILES NOT FOUND'));
     } catch (error) {
@@ -294,12 +339,7 @@
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.addEventListener('click', openBlandettoModal);
-    card.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        openBlandettoModal();
-      }
-    });
+    card.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openBlandettoModal(); } });
   };
 
   const observer = new MutationObserver(enhanceBlandettoCard);
