@@ -2,15 +2,25 @@
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
-  const GARMENT_RE = /(tee|tshirt|t-shirt|shirt|hoodie|sweatshirt|pants|trousers|crewneck|longsleeve|long-sleeve|mockup|worn|wear|product)/i;
+  const GARMENT_RE = /(tee|tshirt|t-shirt|shirt|hoodie|sweatshirt|sweater|pants|trousers|crewneck|longsleeve|long-sleeve|mockup|worn|wear|product|clothes|merch)/i;
   const INV_RE = /(^|[-_\s])inv(erted)?($|[-_\s])/i;
+  const REMOVE_RE = /(main|base|original|orig|flat|front|back|mockup|preview|logo|print|blandetto|dentist|market|cap|caps)/gi;
   let treePromise = null;
   let blandettoData = null;
   let activeModal = null;
 
+  const sectionAliases = {
+    logos: ['logos', 'logo', 'blandetto-logos', 'blandetto logos'],
+    cap: ['cap', 'caps', 'кепка'],
+    prints: ['prints', 'print', 'blandetto-prints', 'blandetto prints'],
+    dentist: ['dentist-market', 'dentist_market', 'dentist market', 'dentist', 'dentist-club', 'dentist club'],
+  };
+
   const encodePath = (path) => path.split('/').map(encodeURIComponent).join('/');
   const fileName = (path) => path.split('/').pop() || path;
   const cleanTitle = (value) => value.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim().toUpperCase();
+  const normalizeSegment = (value) => decodeURIComponent(value).toLowerCase().replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const aliasSet = (aliases) => new Set(aliases.map(normalizeSegment));
 
   const getTree = async () => {
     if (!treePromise) {
@@ -27,46 +37,38 @@
   };
 
   const findBasePath = (paths) => {
-    if (paths.some((path) => path.startsWith('public/works/blandetto/'))) return 'public/works/blandetto';
-    if (paths.some((path) => path.startsWith('works/blandetto/'))) return 'works/blandetto';
-    return 'public/works/blandetto';
+    const candidates = ['public/works/blandetto', 'works/blandetto', 'public/blandetto', 'blandetto'];
+    return candidates.find((candidate) => paths.some((path) => path.toLowerCase().startsWith(`${candidate}/`))) || 'public/works/blandetto';
   };
 
-  const getSectionFiles = (paths, basePath, sectionNames) => {
-    const names = Array.isArray(sectionNames) ? sectionNames : [sectionNames];
-    return paths.filter((path) => {
-      if (!IMAGE_RE.test(path)) return false;
-      const lower = path.toLowerCase();
-      return names.some((name) => lower.includes(`/${name.toLowerCase()}/`) || lower.startsWith(`${basePath.toLowerCase()}/${name.toLowerCase()}/`));
-    });
+  const getRelAfterSection = (path, aliases) => {
+    const set = aliasSet(aliases);
+    const parts = path.split('/');
+    const index = parts.findIndex((part) => set.has(normalizeSegment(part)));
+    if (index === -1) return null;
+    return parts.slice(index + 1).join('/');
   };
 
-  const inferGroupKey = (path, basePath, sectionName) => {
-    const rel = path.slice(`${basePath}/${sectionName}/`.length);
-    const parts = rel.split('/');
-    if (parts.length > 1) return parts[0].toLowerCase();
+  const getSectionFiles = (paths, aliases) => paths.filter((path) => IMAGE_RE.test(path) && getRelAfterSection(path, aliases));
+
+  const inferGroupKey = (path, aliases) => {
+    const rel = getRelAfterSection(path, aliases) || fileName(path);
+    const parts = rel.split('/').filter(Boolean);
+    if (parts.length > 1) return normalizeSegment(parts[0]);
+
     let base = fileName(path).replace(/\.[^.]+$/, '').toLowerCase();
+    base = decodeURIComponent(base);
     base = base.replace(INV_RE, ' ');
     base = base.replace(GARMENT_RE, ' ');
-    base = base.replace(/logo/gi, 'logo');
+    base = base.replace(REMOVE_RE, ' ');
     base = base.replace(/[_\s]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-    return base || fileName(path).replace(/\.[^.]+$/, '').toLowerCase();
+    return base || normalizeSegment(fileName(path).replace(/\.[^.]+$/, ''));
   };
 
-  const groupAssets = (paths, basePath, sectionName, mode = 'grouped') => {
-    if (mode === 'flat') {
-      return paths.sort((a, b) => a.localeCompare(b, undefined, { numeric: true })).map((path, index) => ({
-        id: `${sectionName}-${index}`,
-        title: cleanTitle(fileName(path)),
-        main: { path, url: toPublicUrl(path) },
-        hover: [],
-        inv: null,
-      }));
-    }
-
+  const groupAssets = (paths, aliases) => {
     const map = new Map();
     paths.forEach((path) => {
-      const key = inferGroupKey(path, basePath, sectionName);
+      const key = inferGroupKey(path, aliases);
       if (!map.has(key)) map.set(key, []);
       map.get(key).push(path);
     });
@@ -75,7 +77,7 @@
       .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
       .map(([key, files]) => {
         const sorted = files.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-        const mainPath = sorted.find((path) => !INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || sorted[0];
+        const mainPath = sorted.find((path) => !INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || sorted.find((path) => !INV_RE.test(fileName(path))) || sorted[0];
         const invPath = sorted.find((path) => INV_RE.test(fileName(path)) && !GARMENT_RE.test(fileName(path))) || null;
         const hover = sorted.filter((path) => path !== mainPath && GARMENT_RE.test(fileName(path)) && !INV_RE.test(fileName(path))).map((path) => ({ path, url: toPublicUrl(path) }));
         return {
@@ -84,8 +86,22 @@
           main: { path: mainPath, url: toPublicUrl(mainPath) },
           hover,
           inv: invPath ? { path: invPath, url: toPublicUrl(invPath) } : null,
+          cycle: [],
         };
       });
+  };
+
+  const makeCycleAsset = (paths, title) => {
+    const sorted = paths.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    if (!sorted.length) return [];
+    return [{
+      id: 'cap-cycle',
+      title,
+      main: { path: sorted[0], url: toPublicUrl(sorted[0]) },
+      hover: [],
+      inv: null,
+      cycle: sorted.map((path) => ({ path, url: toPublicUrl(path) })),
+    }];
   };
 
   const loadBlandettoData = async () => {
@@ -93,19 +109,19 @@
     const tree = await getTree();
     const paths = tree.map((item) => item.path).filter(Boolean);
     const basePath = findBasePath(paths);
-    const files = paths.filter((path) => path.startsWith(`${basePath}/`) && IMAGE_RE.test(path));
+    const files = paths.filter((path) => path.toLowerCase().startsWith(`${basePath.toLowerCase()}/`) && IMAGE_RE.test(path));
 
-    const logoFiles = getSectionFiles(files, basePath, 'logos');
-    const capFiles = getSectionFiles(files, basePath, ['cap', 'caps']);
-    const printFiles = getSectionFiles(files, basePath, 'prints');
-    const dentistFiles = getSectionFiles(files, basePath, ['dentist-market', 'dentist_market', 'dentist']);
+    const logoFiles = getSectionFiles(files, sectionAliases.logos);
+    const capFiles = getSectionFiles(files, sectionAliases.cap);
+    const printFiles = getSectionFiles(files, sectionAliases.prints);
+    const dentistFiles = getSectionFiles(files, sectionAliases.dentist);
 
     blandettoData = {
       basePath,
-      logos: groupAssets(logoFiles, basePath, 'logos'),
-      cap: groupAssets(capFiles, basePath, 'cap', 'flat'),
-      prints: groupAssets(printFiles, basePath, 'prints'),
-      dentist: groupAssets(dentistFiles, basePath, 'dentist-market', 'flat'),
+      logos: groupAssets(logoFiles, sectionAliases.logos),
+      cap: makeCycleAsset(capFiles, 'CAP'),
+      prints: groupAssets(printFiles, sectionAliases.prints),
+      dentist: groupAssets(dentistFiles, sectionAliases.dentist),
     };
     return blandettoData;
   };
@@ -132,8 +148,8 @@
     document.body.append(overlay);
   };
 
-  const makeCard = (item, tag = '') => {
-    const card = createElement('button', `blandetto-card ${item.inv ? 'blandetto-card--has-inv' : ''}`);
+  const makeCard = (item, tag = '', modifier = '') => {
+    const card = createElement('button', `blandetto-card blandetto-card--${modifier} ${item.inv ? 'blandetto-card--has-inv' : ''}`);
     card.type = 'button';
     const media = createElement('div', 'blandetto-card__media');
     const main = createElement('img', 'blandetto-card__img blandetto-card__img--main');
@@ -169,12 +185,18 @@
 
     const meta = createElement('div', 'blandetto-card__meta');
     meta.append(createElement('p', 'blandetto-card__title', item.title));
-    meta.append(createElement('span', 'blandetto-card__tag', item.inv ? 'CLICK INV' : tag));
+    meta.append(createElement('span', 'blandetto-card__tag', item.cycle?.length > 1 ? 'CLICK NEXT' : item.inv ? 'CLICK INV' : tag));
     card.append(media, meta);
 
     let inverted = false;
+    let cycleIndex = 0;
     card.addEventListener('click', (event) => {
       event.stopPropagation();
+      if (item.cycle && item.cycle.length > 1) {
+        cycleIndex = (cycleIndex + 1) % item.cycle.length;
+        main.src = item.cycle[cycleIndex].url;
+        return;
+      }
       if (item.inv) {
         inverted = !inverted;
         main.src = inverted ? item.inv.url : item.main.url;
@@ -194,7 +216,7 @@
     section.append(head);
     if (note) section.append(createElement('p', 'blandetto-section__note', note));
     const grid = createElement('div', `blandetto-grid blandetto-grid--${modifier}`);
-    items.forEach((item) => grid.append(makeCard(item, tag)));
+    items.forEach((item) => grid.append(makeCard(item, tag, modifier)));
     section.append(grid);
     return section;
   };
@@ -221,10 +243,10 @@
       const data = await loadBlandettoData();
       inner.querySelector('.blandetto-empty')?.remove();
       const sections = [
-        makeSection({ title: 'BLANDETTO LOGOS', note: 'Логотипы и варианты. Если есть INV — клик по карточке меняет лого на инвертированное. Если есть tee/hoodie/pants — на hover появляется вещь.', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
-        makeSection({ title: 'CAP', note: 'Отдельный блок с кепкой после логотипов.', items: data.cap, modifier: 'cap', tag: 'CAP' }),
-        makeSection({ title: 'PRINTS', note: 'Отдельные принты. Если у файла есть вещь-пара, она появляется при наведении.', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
-        makeSection({ title: 'DENTIST MARKET', note: 'Подбренд: вещи Dentist Market отдельным блоком.', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
+        makeSection({ title: 'BLANDETTO LOGOS', note: 'Логотипы собраны по одному дизайну: одежда появляется на hover, INV переключается кликом.', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
+        makeSection({ title: 'CAP', note: 'Одна карточка кепки. Клик переключает следующий вид без лишних полей.', items: data.cap, modifier: 'cap', tag: 'CAP' }),
+        makeSection({ title: 'PRINTS', note: 'Принты собраны в группы: если есть вещь-пара, она появляется при наведении.', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
+        makeSection({ title: 'DENTIST MARKET', note: 'Подбренд Dentist Market: связанные лого и вещи собраны в одну карточку.', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
       ].filter(Boolean);
 
       if (sections.length) sections.forEach((section) => inner.append(section));
