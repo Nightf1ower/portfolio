@@ -39,11 +39,11 @@
     color: transparent !important;
     background-image: url('/flower-logo.png');
     background-repeat: no-repeat;
-    background-position: left center;
+    background-position: left bottom;
     background-size: contain;
     display: block;
     width: 100%;
-    min-height: clamp(7.5rem, 17vw, 17.5rem);
+    min-height: clamp(10.5rem, 17vw, 15.2rem);
     margin: 0;
     line-height: 1;
     text-indent: -9999px;
@@ -63,6 +63,77 @@
     #top h1 {
       background-image: url('/flower-logo-small.png');
       min-height: clamp(5.5rem, 28vw, 9rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    #top {
+      min-height: 46rem;
+      padding-top: 8.5rem !important;
+      padding-bottom: 4rem !important;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    #top > .mx-auto.grid {
+      width: 100%;
+      grid-template-columns: minmax(0, 1fr) 14rem !important;
+      align-items: end !important;
+      gap: 2rem !important;
+    }
+
+    #top > .mx-auto.grid > .relative.z-10:first-child {
+      align-self: end;
+    }
+
+    #top > .mx-auto.grid > .relative.z-10:last-child {
+      width: 14rem !important;
+      min-height: 34rem !important;
+      justify-self: end;
+    }
+
+    #top > .mx-auto.grid > .relative.z-10:last-child > div {
+      padding: 2.25rem !important;
+    }
+
+    #top > .mx-auto.grid > .relative.z-10:last-child span {
+      display: inline-block;
+      max-width: 8rem;
+      white-space: normal;
+      line-height: 1.05;
+    }
+
+    #top h1 {
+      min-height: clamp(11.5rem, 17vw, 15.5rem);
+    }
+
+    #top h1 + div {
+      margin-top: 0.35rem !important;
+      align-items: flex-start !important;
+    }
+
+    #top h1 + div > p {
+      font-size: 0 !important;
+      line-height: 0 !important;
+      max-width: none !important;
+      letter-spacing: 0 !important;
+    }
+
+    #top h1 + div > p::after {
+      content: 'GRAPHIC DESIGNER';
+      display: block;
+      color: #050505;
+      font-size: clamp(3rem, 4.1vw, 4.4rem);
+      line-height: 0.78;
+      letter-spacing: -0.075em;
+      text-transform: uppercase;
+    }
+
+    #top h1 + div > a {
+      margin-top: 0.15rem;
+      align-self: flex-start;
+      min-width: 13rem;
+      justify-content: center;
     }
   }
 
