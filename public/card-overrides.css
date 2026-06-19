@@ -105,13 +105,13 @@
   display: block !important;
   height: 100% !important;
   width: 100% !important;
-  object-fit: contain !important;
-  object-position: center center !important;
   padding: 0 !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-image--base {
   position: relative !important;
+  object-fit: cover !important;
+  object-position: center center !important;
 }
 
 .pink-punk-section__grid--tees .pink-punk-image--worn {
