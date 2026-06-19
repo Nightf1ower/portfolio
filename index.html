@@ -20,6 +20,14 @@
       .blandetto-lightbox__nav--prev { left: 1rem; }
       .blandetto-lightbox__nav--next { right: 1rem; }
       .blandetto-lightbox__counter { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); margin: 0; background: #fff; color: #050505; padding: 0.45rem 0.75rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.22em; text-transform: uppercase; }
+      .blandetto-grid--dentist { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+      .blandetto-grid--dentist > *:nth-child(1) { grid-column: 1 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(3) { grid-column: 2 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(2) { grid-column: 3 !important; grid-row: 1 !important; }
+      .blandetto-grid--dentist > *:nth-child(5) { grid-column: 1 !important; grid-row: 2 !important; }
+      .blandetto-grid--dentist > *:nth-child(4) { grid-column: 2 !important; grid-row: 2 !important; }
+      .blandetto-grid--dentist > *:nth-child(6) { grid-column: 3 !important; grid-row: 2 !important; }
+      @media (max-width: 900px) { .blandetto-grid--dentist { grid-template-columns: 1fr !important; } .blandetto-grid--dentist > * { grid-column: auto !important; grid-row: auto !important; } }
     </style>
   </head>
   <body>
