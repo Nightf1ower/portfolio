@@ -94,6 +94,73 @@
         window.addEventListener('mouseleave', reset);
         window.addEventListener('blur', reset);
       })();
+
+      (() => {
+        const enhancePinkPunkGallery = () => {
+          const gallery = document.querySelector('.pink-punk-gallery');
+          if (!gallery || gallery.dataset.grouped === 'true') return;
+
+          const cards = Array.from(gallery.querySelectorAll(':scope > .pink-punk-frame'));
+          if (cards.length < 4) return;
+
+          const makeSection = ({ title, count, note, modifier }) => {
+            const section = document.createElement('section');
+            section.className = `pink-punk-section pink-punk-section--${modifier}`;
+
+            const head = document.createElement('div');
+            head.className = 'pink-punk-section__head';
+
+            const h3 = document.createElement('h3');
+            h3.className = 'pink-punk-section__title';
+            h3.textContent = title;
+
+            const counter = document.createElement('p');
+            counter.className = 'pink-punk-section__counter';
+            counter.textContent = count;
+
+            head.append(h3, counter);
+            section.append(head);
+
+            if (note) {
+              const p = document.createElement('p');
+              p.className = 'pink-punk-section__note';
+              p.textContent = note;
+              section.append(p);
+            }
+
+            const grid = document.createElement('div');
+            grid.className = `pink-punk-section__grid pink-punk-section__grid--${modifier}`;
+            section.append(grid);
+
+            return { section, grid };
+          };
+
+          const tees = makeSection({
+            title: 'T-SHIRTS',
+            count: '3 / 3',
+            note: 'Flat print previews first. Hover over a card to see the same graphic worn on body.',
+            modifier: 'tees',
+          });
+
+          const prints = makeSection({
+            title: 'PRINTS',
+            count: `${cards.length - 3} / ${cards.length - 3}`,
+            note: 'Standalone graphic prints and visual system elements.',
+            modifier: 'prints',
+          });
+
+          cards.slice(0, 3).forEach((card) => tees.grid.append(card));
+          cards.slice(3).forEach((card) => prints.grid.append(card));
+
+          gallery.textContent = '';
+          gallery.dataset.grouped = 'true';
+          gallery.append(tees.section, prints.section);
+        };
+
+        const observer = new MutationObserver(enhancePinkPunkGallery);
+        observer.observe(document.body, { childList: true, subtree: true });
+        window.addEventListener('load', enhancePinkPunkGallery);
+      })();
     </script>
   </body>
 </html>
