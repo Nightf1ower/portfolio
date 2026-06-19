@@ -3,7 +3,7 @@
   const BRANCH = 'main';
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
   const GARMENT_RE = /(tee|tshirt|t-shirt|shirt|hoodie|sweatshirt|sweater|pants|trousers|crewneck|longsleeve|long-sleeve|mockup|worn|wear|product|clothes|merch)/i;
-  const INV_RE = /(^|[-_\s])inv(erted)?($|[-_\s])/i;
+  const INV_RE = /(^|[-_\s])(inv|invert|inverted|inverse)($|[-_\s])/i;
   const REMOVE_RE = /(main|base|original|orig|flat|front|back|mockup|preview|logo|print|blandetto|dentist|market|cap|caps)/gi;
   let treePromise = null;
   let blandettoData = null;
@@ -133,19 +133,47 @@
     return element;
   };
 
-  const openLightbox = (asset) => {
+  const getItemAssets = (item) => {
+    const assets = [item.main];
+    if (item.inv) assets.push(item.inv);
+    if (item.hover?.length) assets.push(...item.hover);
+    return assets.filter(Boolean);
+  };
+
+  const openLightbox = (assets, startIndex = 0) => {
+    const list = Array.isArray(assets) ? assets : [assets];
+    let index = startIndex;
     const overlay = createElement('div', 'blandetto-lightbox');
     const close = createElement('button', 'blandetto-lightbox__close', 'CLOSE');
+    const prev = createElement('button', 'blandetto-lightbox__nav blandetto-lightbox__nav--prev', '←');
+    const next = createElement('button', 'blandetto-lightbox__nav blandetto-lightbox__nav--next', '→');
+    const counter = createElement('p', 'blandetto-lightbox__counter');
     const img = createElement('img', 'blandetto-lightbox__img');
-    img.src = asset.url;
-    img.alt = asset.path ? cleanTitle(fileName(asset.path)) : 'Blandetto image';
+
+    const render = () => {
+      const asset = list[index];
+      img.src = asset.url;
+      img.alt = asset.path ? cleanTitle(fileName(asset.path)) : 'Blandetto image';
+      counter.textContent = `${index + 1} / ${list.length}`;
+      prev.style.display = list.length > 1 ? '' : 'none';
+      next.style.display = list.length > 1 ? '' : 'none';
+      counter.style.display = list.length > 1 ? '' : 'none';
+    };
 
     const closeLightbox = () => overlay.remove();
+    const change = (direction) => {
+      index = (index + direction + list.length) % list.length;
+      render();
+    };
+
     close.addEventListener('click', closeLightbox);
+    prev.addEventListener('click', (event) => { event.stopPropagation(); change(-1); });
+    next.addEventListener('click', (event) => { event.stopPropagation(); change(1); });
     overlay.addEventListener('click', closeLightbox);
-    img.addEventListener('click', (event) => event.stopPropagation());
-    overlay.append(close, img);
+    img.addEventListener('click', (event) => { event.stopPropagation(); if (list.length > 1) change(1); });
+    overlay.append(close, prev, img, next, counter);
     document.body.append(overlay);
+    render();
   };
 
   const makeCard = (item, tag = '', modifier = '') => {
@@ -163,13 +191,18 @@
     let hoverIndex = 0;
     let hoverTimer = null;
     if (hoverAssets.length) {
+      card.classList.add('blandetto-card--has-hover');
       hoverImg = createElement('img', 'blandetto-card__img blandetto-card__img--hover');
       hoverImg.src = hoverAssets[0].url;
       hoverImg.alt = `${item.title} garment preview`;
       hoverImg.loading = 'lazy';
+      hoverImg.addEventListener('error', () => {
+        card.classList.remove('blandetto-card--has-hover');
+        hoverImg.remove();
+      }, { once: true });
       media.append(hoverImg);
       card.addEventListener('mouseenter', () => {
-        if (hoverAssets.length < 2) return;
+        if (hoverAssets.length < 2 || !card.classList.contains('blandetto-card--has-hover')) return;
         hoverTimer = window.setInterval(() => {
           hoverIndex = (hoverIndex + 1) % hoverAssets.length;
           hoverImg.src = hoverAssets[hoverIndex].url;
@@ -179,16 +212,16 @@
         if (hoverTimer) window.clearInterval(hoverTimer);
         hoverTimer = null;
         hoverIndex = 0;
-        hoverImg.src = hoverAssets[0].url;
+        if (hoverImg) hoverImg.src = hoverAssets[0].url;
       });
     }
 
     const meta = createElement('div', 'blandetto-card__meta');
+    const assetCount = getItemAssets(item).length;
     meta.append(createElement('p', 'blandetto-card__title', item.title));
-    meta.append(createElement('span', 'blandetto-card__tag', item.cycle?.length > 1 ? 'CLICK NEXT' : item.inv ? 'CLICK INV' : tag));
+    meta.append(createElement('span', 'blandetto-card__tag', item.cycle?.length > 1 ? 'CLICK NEXT' : assetCount > 1 ? `VIEW ${assetCount}` : tag));
     card.append(media, meta);
 
-    let inverted = false;
     let cycleIndex = 0;
     card.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -197,12 +230,7 @@
         main.src = item.cycle[cycleIndex].url;
         return;
       }
-      if (item.inv) {
-        inverted = !inverted;
-        main.src = inverted ? item.inv.url : item.main.url;
-        return;
-      }
-      openLightbox(item.main);
+      openLightbox(getItemAssets(item));
     });
     return card;
   };
@@ -243,7 +271,7 @@
       const data = await loadBlandettoData();
       inner.querySelector('.blandetto-empty')?.remove();
       const sections = [
-        makeSection({ title: 'BLANDETTO LOGOS', note: 'Логотипы собраны по одному дизайну: одежда появляется на hover, INV переключается кликом.', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
+        makeSection({ title: 'BLANDETTO LOGOS', note: 'Логотипы собраны по одному дизайну: одежда появляется на hover, а по клику открываются все версии — лого, INV и вещи.', items: data.logos, modifier: 'logos', tag: 'LOGO' }),
         makeSection({ title: 'CAP', note: 'Одна карточка кепки. Клик переключает следующий вид без лишних полей.', items: data.cap, modifier: 'cap', tag: 'CAP' }),
         makeSection({ title: 'PRINTS', note: 'Принты собраны в группы: если есть вещь-пара, она появляется при наведении.', items: data.prints, modifier: 'prints', tag: 'PRINT' }),
         makeSection({ title: 'DENTIST MARKET', note: 'Подбренд Dentist Market: связанные лого и вещи собраны в одну карточку.', items: data.dentist, modifier: 'dentist', tag: 'DENTIST' }),
