@@ -49,17 +49,17 @@
     text-indent: -9999px;
     overflow: visible;
     transform-origin: left bottom;
-    transition: transform 0.18s ease, filter 0.18s ease;
+    transform: translate3d(var(--logo-x, 0px), var(--logo-y, 0px), 0);
+    transition: filter 0.18s ease;
     animation: none !important;
     filter: none;
     cursor: default;
+    will-change: transform;
   }
 
   #top h1:hover {
-    background-image: url('/flower-logo-small.png');
-    transform: scale(1.025);
-    animation: none !important;
-    filter: contrast(1.08);
+    background-image: url('/flower-logo.png');
+    filter: contrast(1.06);
   }
 
   @media (max-width: 768px) {
