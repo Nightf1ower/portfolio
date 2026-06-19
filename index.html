@@ -9,6 +9,17 @@
     />
     <title>Yaroslav — Graphic Designer</title>
     <link rel="stylesheet" href="/card-overrides.css" />
+    <style>
+      .blandetto-card:not(.blandetto-card--has-hover):hover .blandetto-card__img--main { opacity: 1 !important; }
+      .blandetto-card:not(.blandetto-card--has-hover) .blandetto-card__img--hover { display: none !important; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--main { opacity: 0 !important; }
+      .blandetto-card--has-hover:hover .blandetto-card__img--hover { opacity: 1 !important; }
+      .blandetto-grid--cap .blandetto-card:hover .blandetto-card__img--main { opacity: 1 !important; }
+      .blandetto-lightbox__nav { position: absolute; top: 50%; z-index: 3; width: 3.5rem; height: 3.5rem; transform: translateY(-50%); border: 1px solid #fff; background: #fff; color: #050505; font-size: 2rem; font-weight: 900; line-height: 1; }
+      .blandetto-lightbox__nav--prev { left: 1rem; }
+      .blandetto-lightbox__nav--next { right: 1rem; }
+      .blandetto-lightbox__counter { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); margin: 0; background: #fff; color: #050505; padding: 0.45rem 0.75rem; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.22em; text-transform: uppercase; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
