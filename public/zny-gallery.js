@@ -1,5 +1,5 @@
 (() => {
-  const V = 'zny-3';
+  const V = 'zny-4';
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
   const FOLDERS = { prints: 'prints', afisha: 'afisha', example: 'example', stickers: 'stickers' };
@@ -22,7 +22,7 @@
     const style = el('style');
     style.id = 'zny-style';
     style.textContent = `
-      .zny-modal{position:fixed;inset:0;z-index:330;overflow:auto;background:#fff;color:#050505;padding:1.5rem 1rem 4rem}.zny-inner{width:min(100%,80rem);margin:0 auto}.zny-head{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:rgba(255,255,255,.95);backdrop-filter:blur(10px)}.zny-label,.zny-close,.zny-count,.zny-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.zny-label{background:#050505;color:#fff;padding:.35rem .75rem}.zny-close{border:1px solid #050505;background:#050505;color:#fff;padding:.55rem 1rem}.zny-hero{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;margin-bottom:5rem}.zny-title{margin:0;font-size:clamp(4rem,13vw,13rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.zny-lead{max-width:54rem;margin:1.25rem 0 0;color:rgba(5,5,5,.72);font-size:clamp(1.2rem,2vw,1.75rem);font-weight:800;line-height:.96;letter-spacing:-.045em;text-transform:uppercase}.zny-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.zny-section+.zny-section{margin-top:5rem}.zny-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.zny-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.zny-count{margin:0;color:rgba(5,5,5,.48)}.zny-note{max-width:48rem;margin:0 0 1.5rem;color:rgba(5,5,5,.68);font-size:clamp(1rem,1.5vw,1.3rem);font-weight:750;line-height:1.05;letter-spacing:-.035em}.zny-grid,.zny-print-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.zny-card{border:0;background:#fff;padding:0;cursor:zoom-in;text-align:left}.zny-card__media{position:relative;aspect-ratio:1/1;background:#fff;overflow:hidden}.zny-card img{display:block;width:100%;height:100%;object-fit:contain;background:#fff}.zny-card__img{position:absolute;inset:0;transition:opacity .28s ease}.zny-card__img--hover{opacity:0}.zny-card--has-hover:hover .zny-card__img--main{opacity:0}.zny-card--has-hover:hover .zny-card__img--hover{opacity:1}.zny-print-caption,.zny-sticker-caption{margin:.5rem 0 0;color:rgba(5,5,5,.48);font-size:.65rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.zny-grid--example{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example.zny-count-1{grid-template-columns:1fr}.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(4,minmax(0,1fr))}.zny-sticker-list{display:grid;gap:1rem}.zny-sticker-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}.zny-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.zny-light{position:fixed;inset:0;z-index:430;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.zny-light img{max-width:92vw;max-height:90vh;object-fit:contain}.zny-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fff;color:#050505;padding:.7rem 1rem;font-size:.7rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.zny-grid,.zny-print-list{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.zny-grid,.zny-print-list,.zny-sticker-row,.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:1fr}.zny-section-head{display:block}.zny-count{display:block;margin-top:.75rem}}
+      .zny-modal{position:fixed;inset:0;z-index:330;overflow:auto;background:#fff;color:#050505;padding:1.5rem 1rem 4rem}.zny-inner{width:min(100%,80rem);margin:0 auto}.zny-head{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:rgba(255,255,255,.95);backdrop-filter:blur(10px)}.zny-close,.zny-count,.zny-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.zny-close{border:1px solid #050505;background:#050505;color:#fff;padding:.55rem 1rem}.zny-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.zny-section+.zny-section{margin-top:5rem}.zny-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.zny-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.zny-count{margin:0;color:rgba(5,5,5,.48)}.zny-grid,.zny-print-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.zny-card{border:0;background:#fff;padding:0;cursor:zoom-in;text-align:left}.zny-card__media{position:relative;aspect-ratio:1/1;background:#fff;overflow:hidden}.zny-card img{display:block;width:100%;height:100%;object-fit:contain;background:#fff}.zny-card__img{position:absolute;inset:0;transition:opacity .28s ease}.zny-card__img--hover{opacity:0}.zny-card--has-hover:hover .zny-card__img--main{opacity:0}.zny-card--has-hover:hover .zny-card__img--hover{opacity:1}.zny-print-caption,.zny-sticker-caption{margin:.5rem 0 0;color:rgba(5,5,5,.48);font-size:.65rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.zny-afisha-list{display:grid;grid-template-columns:1fr;gap:2.4rem}.zny-afisha-card{width:100%}.zny-afisha-card .zny-card__media{aspect-ratio:auto;overflow:visible}.zny-afisha-card img{position:static;width:100%;height:auto;max-height:none;object-fit:contain}.zny-grid--example{grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;align-items:start}.zny-grid--example .zny-card__media{aspect-ratio:auto;overflow:visible}.zny-grid--example .zny-card img{position:static;width:100%;height:auto;object-fit:contain}.zny-sticker-list{display:grid;gap:1rem}.zny-sticker-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}.zny-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.zny-light{position:fixed;inset:0;z-index:430;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.zny-light img{max-width:92vw;max-height:90vh;object-fit:contain}.zny-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fff;color:#050505;padding:.7rem 1rem;font-size:.7rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.zny-grid,.zny-print-list{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example{grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}}@media(max-width:560px){.zny-grid,.zny-print-list,.zny-sticker-row,.zny-grid--example{grid-template-columns:1fr}.zny-section-head{display:block}.zny-count{display:block;margin-top:.75rem}}
     `;
     document.head.append(style);
   }
@@ -116,6 +116,20 @@
     return button;
   }
 
+  function imageCard(item, list, index, className = '') {
+    const button = el('button', `zny-card ${className}`.trim());
+    button.type = 'button';
+    const media = el('div', 'zny-card__media');
+    const img = el('img');
+    img.src = q(item.url);
+    img.alt = basename(item.name || item.path);
+    img.loading = 'lazy';
+    media.append(img);
+    button.append(media);
+    button.onclick = (event) => { event.stopPropagation(); lightbox(list, index); };
+    return button;
+  }
+
   function getPrintKey(item) {
     const base = norm(basename(item.name || item.path));
     const match = base.match(/print[-_ ]?\d+/i);
@@ -160,13 +174,23 @@
     return wrap;
   }
 
+  function renderAfisha(items) {
+    const wrap = el('div', 'zny-afisha-list');
+    if (!items.length) {
+      wrap.append(el('p', 'zny-empty', 'Файлы для этого блока пока не найдены в /works/zny/afisha'));
+      return wrap;
+    }
+    items.forEach((item, index) => wrap.append(imageCard(item, items, index, 'zny-afisha-card')));
+    return wrap;
+  }
+
   function renderSimpleGrid(items, className, emptyText) {
     const grid = el('div', `${className || 'zny-grid'} zny-count-${items.length}`);
     if (!items.length) {
       grid.append(el('p', 'zny-empty', emptyText));
       return grid;
     }
-    items.forEach((item, index) => grid.append(card(item, items, index)));
+    items.forEach((item, index) => grid.append(imageCard(item, items, index)));
     return grid;
   }
 
@@ -195,19 +219,17 @@
     Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true })).forEach(([, list]) => {
       const sorted = list.sort((a, b) => stickerRank(a) - stickerRank(b) || (a.name || '').localeCompare(b.name || '', undefined, { numeric: true }));
       const row = el('div', 'zny-sticker-row');
-      sorted.forEach((item, index) => row.append(card(item, sorted, index, stickerRank(item) ? 'IRL' : 'STICKER')));
+      sorted.forEach((item, index) => row.append(imageCard(item, sorted, index)));
       wrap.append(row);
     });
     return wrap;
   }
 
-  function makeSection(title, count, node, note) {
+  function makeSection(title, count, node) {
     const section = el('section', 'zny-section');
     const head = el('div', 'zny-section-head');
     head.append(el('h3', 'zny-h', title), el('p', 'zny-count', `${count} / ${count}`));
-    section.append(head);
-    if (note) section.append(el('p', 'zny-note', note));
-    section.append(node);
+    section.append(head, node);
     return section;
   }
 
@@ -219,7 +241,7 @@
     const header = el('div', 'zny-head');
     const close = el('button', 'zny-close', 'ЗАКРЫТЬ');
     close.onclick = () => modal.remove();
-    header.append(el('p', 'zny-label', 'ZNY'), close);
+    header.append(close);
     const loading = el('p', 'zny-empty', 'LOADING ZNY ASSETS...');
     inner.append(header, loading);
     modal.append(inner);
@@ -228,14 +250,10 @@
     const data = await load();
     loading.remove();
 
-    const hero = el('section', 'zny-hero');
-    hero.append(el('p', 'zny-kicker', 'PRINTS / AFISHA / EXAMPLES / STICKERS'), el('h2', 'zny-title', 'ZNY'), el('p', 'zny-lead', 'Архив графических работ ZNY: принты, афиши, примеры применения и стикеры.'));
-    inner.append(hero);
-
-    inner.append(makeSection('PRINTS', printGroups(data.prints).length, renderPrints(data.prints), 'Наведи на принт: сначала версия, потом товар, потом вариант на товаре.'));
-    inner.append(makeSection('AFISHA', data.afisha.length, renderSimpleGrid(data.afisha, 'zny-grid', 'Файлы для этого блока пока не найдены в /works/zny/afisha'), 'Афиши идут подряд по порядку загрузки.'));
-    inner.append(makeSection('EXAMPLES', data.example.length, renderSimpleGrid(data.example, 'zny-grid zny-grid--example', 'Файлы для этого блока пока не найдены в /works/zny/example'), 'Примеры размещаются по два изображения либо до четырёх изображений в одну линию.'));
-    inner.append(makeSection('STICKERS', data.stickers.length, renderStickers(data.stickers), 'Стикер и его IRL-фото идут рядом: sticker-01 + sticker-01-irl.'));
+    inner.append(makeSection('PRINTS', printGroups(data.prints).length, renderPrints(data.prints)));
+    inner.append(makeSection('AFISHA', data.afisha.length, renderAfisha(data.afisha)));
+    inner.append(makeSection('EXAMPLES', data.example.length, renderSimpleGrid(data.example, 'zny-grid zny-grid--example', 'Файлы для этого блока пока не найдены в /works/zny/example')));
+    inner.append(makeSection('STICKERS', data.stickers.length, renderStickers(data.stickers)));
   }
 
   document.addEventListener('click', (event) => {
