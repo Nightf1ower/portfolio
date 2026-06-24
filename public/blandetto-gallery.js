@@ -7,4 +7,10 @@
     script.async = false;
     (document.currentScript || document.body).after(script);
   }
+  if (!document.querySelector('script[src^="/fable-gallery.js"]')) {
+    const script = document.createElement('script');
+    script.src = '/fable-gallery.js?v=fable-1';
+    script.async = false;
+    (document.currentScript || document.body).after(script);
+  }
 })();
