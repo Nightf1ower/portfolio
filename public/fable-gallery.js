@@ -1,5 +1,5 @@
 (() => {
-  const V = 'fable-1';
+  const V = 'fable-2';
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
@@ -51,10 +51,7 @@
       .filter((item) => item.type === 'blob')
       .filter((item) => /^public\/works\/fable\//i.test(item.path || '') && IMAGE_RE.test(item.path || ''))
       .sort((a, b) => (a.path || '').localeCompare(b.path || '', undefined, { numeric: true }))
-      .map((item) => ({
-        path: item.path,
-        url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}`,
-      }));
+      .map((item) => ({ path: item.path, url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}` }));
   }
 
   function lightbox(items, index = 0) {
@@ -119,7 +116,8 @@
   document.addEventListener('click', (event) => {
     const card = event.target.closest('#works article, #works button');
     if (!card) return;
-    const title = card.querySelector('h3')?.textContent?.trim().toUpperCase();
+    const rawTitle = card.querySelector('h3')?.textContent?.trim().toUpperCase() || '';
+    const title = rawTitle.replace(/[^A-ZА-Я0-9]/g, '');
     if (title !== 'FABLE') return;
     event.preventDefault();
     event.stopImmediatePropagation();
