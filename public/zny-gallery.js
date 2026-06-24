@@ -1,5 +1,5 @@
 (() => {
-  const V = 'zny-1';
+  const V = 'zny-2';
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
   const FOLDERS = {
@@ -27,7 +27,7 @@
     const style = el('style');
     style.id = 'zny-style';
     style.textContent = `
-      .zny-modal{position:fixed;inset:0;z-index:330;overflow:auto;background:#fff;color:#050505;padding:1.5rem 1rem 4rem}.zny-inner{width:min(100%,80rem);margin:0 auto}.zny-head{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:rgba(255,255,255,.95);backdrop-filter:blur(10px)}.zny-label,.zny-close,.zny-count,.zny-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.zny-label{background:#050505;color:#fff;padding:.35rem .75rem}.zny-close{border:1px solid #050505;background:#050505;color:#fff;padding:.55rem 1rem}.zny-hero{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;margin-bottom:5rem}.zny-title{margin:0;font-size:clamp(4rem,13vw,13rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.zny-lead{max-width:54rem;margin:1.25rem 0 0;color:rgba(5,5,5,.72);font-size:clamp(1.2rem,2vw,1.75rem);font-weight:800;line-height:.96;letter-spacing:-.045em;text-transform:uppercase}.zny-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.zny-section+.zny-section{margin-top:5rem}.zny-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.zny-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.zny-count{margin:0;color:rgba(5,5,5,.48)}.zny-note{max-width:48rem;margin:0 0 1.5rem;color:rgba(5,5,5,.68);font-size:clamp(1rem,1.5vw,1.3rem);font-weight:750;line-height:1.05;letter-spacing:-.035em}.zny-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.zny-card{border:0;background:#fff;padding:0;cursor:zoom-in;text-align:left}.zny-card img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;background:#fff}.zny-print-group{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-bottom:1rem}.zny-print-group:last-child{margin-bottom:0}.zny-print-caption,.zny-sticker-caption{margin:.5rem 0 0;color:rgba(5,5,5,.48);font-size:.65rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.zny-grid--example{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example.zny-count-1{grid-template-columns:1fr}.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(4,minmax(0,1fr))}.zny-sticker-list{display:grid;gap:1rem}.zny-sticker-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}.zny-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.zny-light{position:fixed;inset:0;z-index:430;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.zny-light img{max-width:92vw;max-height:90vh;object-fit:contain}.zny-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fff;color:#050505;padding:.7rem 1rem;font-size:.7rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.zny-grid,.zny-print-group{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.zny-grid,.zny-print-group,.zny-sticker-row,.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:1fr}.zny-section-head{display:block}.zny-count{display:block;margin-top:.75rem}}
+      .zny-modal{position:fixed;inset:0;z-index:330;overflow:auto;background:#fff;color:#050505;padding:1.5rem 1rem 4rem}.zny-inner{width:min(100%,80rem);margin:0 auto}.zny-head{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:rgba(255,255,255,.95);backdrop-filter:blur(10px)}.zny-label,.zny-close,.zny-count,.zny-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.zny-label{background:#050505;color:#fff;padding:.35rem .75rem}.zny-close{border:1px solid #050505;background:#050505;color:#fff;padding:.55rem 1rem}.zny-hero{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;margin-bottom:5rem}.zny-title{margin:0;font-size:clamp(4rem,13vw,13rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.zny-lead{max-width:54rem;margin:1.25rem 0 0;color:rgba(5,5,5,.72);font-size:clamp(1.2rem,2vw,1.75rem);font-weight:800;line-height:.96;letter-spacing:-.045em;text-transform:uppercase}.zny-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.zny-section+.zny-section{margin-top:5rem}.zny-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.zny-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.zny-count{margin:0;color:rgba(5,5,5,.48)}.zny-note{max-width:48rem;margin:0 0 1.5rem;color:rgba(5,5,5,.68);font-size:clamp(1rem,1.5vw,1.3rem);font-weight:750;line-height:1.05;letter-spacing:-.035em}.zny-grid,.zny-print-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.zny-card{border:0;background:#fff;padding:0;cursor:zoom-in;text-align:left}.zny-card__media{position:relative;aspect-ratio:1/1;background:#fff;overflow:hidden}.zny-card img{display:block;width:100%;height:100%;object-fit:contain;background:#fff}.zny-card__img{position:absolute;inset:0;transition:opacity .28s ease}.zny-card__img--hover{opacity:0}.zny-card--has-hover:hover .zny-card__img--main{opacity:0}.zny-card--has-hover:hover .zny-card__img--hover{opacity:1}.zny-print-caption,.zny-sticker-caption{margin:.5rem 0 0;color:rgba(5,5,5,.48);font-size:.65rem;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.zny-grid--example{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example.zny-count-1{grid-template-columns:1fr}.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(4,minmax(0,1fr))}.zny-sticker-list{display:grid;gap:1rem}.zny-sticker-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}.zny-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.zny-light{position:fixed;inset:0;z-index:430;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.zny-light img{max-width:92vw;max-height:90vh;object-fit:contain}.zny-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fff;color:#050505;padding:.7rem 1rem;font-size:.7rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.zny-grid,.zny-print-list{grid-template-columns:repeat(2,minmax(0,1fr))}.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.zny-grid,.zny-print-list,.zny-sticker-row,.zny-grid--example,.zny-grid--example.zny-count-3,.zny-grid--example.zny-count-4{grid-template-columns:1fr}.zny-section-head{display:block}.zny-count{display:block;margin-top:.75rem}}
     `;
     document.head.append(style);
   }
@@ -82,14 +82,23 @@
     render();
   }
 
-  function card(item, list, index, caption) {
-    const button = el('button', 'zny-card');
+  function card(item, list, index, caption, hoverItem) {
+    const button = el('button', hoverItem ? 'zny-card zny-card--has-hover' : 'zny-card');
     button.type = 'button';
-    const img = el('img');
+    const media = el('div', 'zny-card__media');
+    const img = el('img', 'zny-card__img zny-card__img--main');
     img.src = q(item.url);
     img.alt = caption || basename(item.name || item.path);
     img.loading = 'lazy';
-    button.append(img);
+    media.append(img);
+    if (hoverItem) {
+      const hover = el('img', 'zny-card__img zny-card__img--hover');
+      hover.src = q(hoverItem.url);
+      hover.alt = `${img.alt} hover`;
+      hover.loading = 'lazy';
+      media.append(hover);
+    }
+    button.append(media);
     if (caption) button.append(el('p', 'zny-print-caption', caption));
     button.onclick = (event) => { event.stopPropagation(); lightbox(list, index); };
     return button;
@@ -106,13 +115,6 @@
     if (/version|variant|v\d|alt/.test(base)) return 1;
     if (/tee|tshirt|t-shirt|shirt|hoodie|product|mockup|irl/.test(base)) return 2;
     return 0;
-  }
-
-  function printCaption(item) {
-    const rank = printRank(item);
-    if (rank === 0) return 'PRINT';
-    if (rank === 1) return 'VERSION';
-    return 'PRODUCT';
   }
 
   function printGroups(items) {
@@ -136,9 +138,10 @@
     }
     const groups = printGroups(items);
     groups.forEach((group) => {
-      const row = el('div', 'zny-print-group');
-      group.list.forEach((item, index) => row.append(card(item, group.list, index, printCaption(item))));
-      wrap.append(row);
+      const main = group.list.find((item) => printRank(item) === 0) || group.list[0];
+      const hover = group.list.find((item) => printRank(item) > 0 && item !== main) || null;
+      const mainIndex = group.list.findIndex((item) => item === main);
+      wrap.append(card(main, group.list, Math.max(mainIndex, 0), group.key.toUpperCase(), hover));
     });
     return wrap;
   }
@@ -215,7 +218,7 @@
     hero.append(el('p', 'zny-kicker', 'PRINTS / AFISHA / EXAMPLES / STICKERS'), el('h2', 'zny-title', 'ZNY'), el('p', 'zny-lead', 'Архив графических работ ZNY: принты, афиши, примеры применения и стикеры.'));
     inner.append(hero);
 
-    inner.append(makeSection('PRINTS', data.prints.length, renderPrints(data.prints), 'Сначала основной принт, затем его версия, затем товар / применение.'));
+    inner.append(makeSection('PRINTS', printGroups(data.prints).length, renderPrints(data.prints), 'Наведи на принт, чтобы увидеть версию / товар. Внутри карточки по клику открывается вся серия.'));
     inner.append(makeSection('AFISHA', data.afisha.length, renderSimpleGrid(data.afisha, 'zny-grid', 'Файлы для этого блока пока не найдены в /works/zny/afisha'), 'Афиши идут подряд по порядку загрузки.'));
     inner.append(makeSection('EXAMPLES', data.example.length, renderSimpleGrid(data.example, 'zny-grid zny-grid--example', 'Файлы для этого блока пока не найдены в /works/zny/example'), 'Примеры размещаются по два изображения либо до четырёх изображений в одну линию.'));
     inner.append(makeSection('STICKERS', data.stickers.length, renderStickers(data.stickers), 'Стикер и его IRL-фото идут рядом: sticker-01 + sticker-01-irl.'));
