@@ -13,4 +13,20 @@
     script.async = false;
     (document.currentScript || document.body).after(script);
   }
+
+  const updateNavigation = () => {
+    const language = localStorage.getItem('site-language') || 'en';
+    const links = document.querySelectorAll('header nav a.nav-link');
+    if (links.length < 4) return;
+    const labels = language === 'ru'
+      ? ['Проекты', 'Обо мне', 'Услуги', 'Контакты']
+      : ['Projects', 'About', 'Services', 'Contact'];
+    links.forEach((link, index) => {
+      if (labels[index]) link.textContent = labels[index];
+    });
+  };
+
+  const observer = new MutationObserver(updateNavigation);
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  updateNavigation();
 })();
