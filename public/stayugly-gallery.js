@@ -1,144 +1,34 @@
 (() => {
-  const V = 'stayugly-3';
+  const V = 'stayugly-4';
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
-  const FOLDERS = {
-    concept: 'concept',
-    final: 'final',
-    photoshoot: 'photo',
-    packaging: 'package'
-  };
+  const FOLDERS = { concept:'concept', final:'final', photoshoot:'photo', packaging:'package' };
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
   let modal = null;
 
   const q = (p) => `${p}?v=${V}`;
-  const el = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text) node.textContent = text;
-    return node;
-  };
+  const el = (tag, className, text) => { const node=document.createElement(tag); if(className)node.className=className; if(text)node.textContent=text; return node; };
 
-  function styles() {
-    if (document.getElementById('stayugly-style')) return;
-    const s = el('style');
-    s.id = 'stayugly-style';
-    s.textContent = `
-      .su-modal{position:fixed;inset:0;z-index:320;background:#fcfcfa;color:#050505;overflow:auto;padding:1.5rem 1rem 4rem}.su-inner{width:min(100%,80rem);margin:0 auto}.su-head{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:rgba(252,252,250,.95);backdrop-filter:blur(10px)}.su-label,.su-close,.su-count,.su-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.su-label{background:#050505;color:#fcfcfa;padding:.35rem .75rem}.su-close{border:1px solid #050505;background:#050505;color:#fcfcfa;padding:.55rem 1rem}.su-hero{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;margin-bottom:5rem}.su-title{margin:0;font-size:clamp(4rem,12vw,12rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.su-lead{max-width:58rem;margin:1.5rem 0 0;font-size:clamp(1.45rem,3vw,3rem);font-weight:800;line-height:.92;letter-spacing:-.055em;text-transform:uppercase}.su-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.su-section+.su-section{margin-top:5rem}.su-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.su-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.su-text{max-width:52rem;margin:0 0 1.5rem;color:rgba(5,5,5,.72);font-size:clamp(1rem,1.6vw,1.35rem);font-weight:700;line-height:1.05;letter-spacing:-.035em}.su-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.su-card{border:0;background:#fcfcfa;padding:0;cursor:zoom-in}.su-card img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover}.su-specs{display:grid;gap:.55rem;max-width:42rem;margin:0 0 1.5rem;padding:0;list-style:none}.su-specs li{border:1px solid rgba(5,5,5,.22);padding:.8rem 1rem;font-size:.82rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.su-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.su-light{position:fixed;inset:0;z-index:420;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.su-light img{max-width:92vw;max-height:90vh;object-fit:contain}.su-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fcfcfa;color:#050505;padding:.7rem 1rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.su-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.su-grid{grid-template-columns:1fr}.su-section-head{display:block}.su-count{display:block;margin-top:.75rem}}
-    `;
-    document.head.append(s);
+  function styles(){
+    if(document.getElementById('stayugly-style'))return;
+    const s=el('style'); s.id='stayugly-style'; s.textContent=`
+      .su-modal{position:fixed;inset:0;z-index:320;background:#fcfcfa;color:#050505;overflow:auto;padding:1.5rem 1rem 4rem}.su-inner{width:min(100%,80rem);margin:0 auto}.su-head{position:relative;top:auto;z-index:4;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:transparent;backdrop-filter:none}.su-label,.su-close,.su-count,.su-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.su-label{background:#050505;color:#fcfcfa;padding:.35rem .75rem}.su-close{border:1px solid #050505;background:#050505;color:#fcfcfa;padding:.55rem 1rem}.su-hero{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;margin-bottom:5rem}.su-title{margin:0;font-size:clamp(4rem,12vw,12rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.su-lead{max-width:58rem;margin:1.5rem 0 0;font-size:clamp(1.45rem,3vw,3rem);font-weight:800;line-height:.92;letter-spacing:-.055em;text-transform:uppercase}.su-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.su-section+.su-section{margin-top:5rem}.su-section-head{display:flex;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.su-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.su-text{max-width:52rem;margin:0 0 1.5rem;color:rgba(5,5,5,.72);font-size:clamp(1rem,1.6vw,1.35rem);font-weight:700;line-height:1.05;letter-spacing:-.035em}.su-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.su-card{border:0;background:#fcfcfa;padding:0;cursor:zoom-in}.su-card img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover}.su-specs{display:grid;gap:.55rem;max-width:42rem;margin:0 0 1.5rem;padding:0;list-style:none}.su-specs li{border:1px solid rgba(5,5,5,.22);padding:.8rem 1rem;font-size:.82rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.su-final{display:grid;gap:1.25rem}.su-final-main{width:100%;border:0;background:transparent;padding:0;cursor:zoom-in}.su-final-main img{display:block;width:100%;height:auto;object-fit:contain}.su-final-flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:.75rem}.su-final-step{border:0;background:transparent;padding:0;cursor:zoom-in}.su-final-step img{display:block;width:100%;height:auto;object-fit:contain}.su-arrow{font-family:inherit;font-size:clamp(2rem,4vw,4.5rem);font-weight:900;line-height:1;letter-spacing:-.08em}.su-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.su-light{position:fixed;inset:0;z-index:420;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.su-light img{max-width:92vw;max-height:90vh;object-fit:contain}.su-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fcfcfa;color:#050505;padding:.7rem 1rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}@media(max-width:900px){.su-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.su-final-flow{grid-template-columns:1fr}.su-arrow{transform:rotate(90deg);justify-self:center}}@media(max-width:560px){.su-grid{grid-template-columns:1fr}.su-section-head{display:block}.su-count{display:block;margin-top:.75rem}}
+    `; document.head.append(s);
   }
 
-  function apiUrl(folder) {
-    return `https://api.github.com/repos/${REPO}/contents/public/works/stayugly/${folder}?ref=${BRANCH}`;
-  }
+  function apiUrl(folder){return `https://api.github.com/repos/${REPO}/contents/public/works/stayugly/${folder}?ref=${BRANCH}`;}
+  async function fetchFolder(folder){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),6000);try{const response=await fetch(apiUrl(folder),{signal:controller.signal});if(!response.ok)return[];const items=await response.json();return(Array.isArray(items)?items:[]).filter(item=>item.type==='file'&&IMAGE_RE.test(item.name||item.path)).sort((a,b)=>(a.name||'').localeCompare(b.name||'',undefined,{numeric:true})).map(item=>item.download_url||`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}`)}catch{return[]}finally{clearTimeout(timer)}}
+  async function load(section){return fetchFolder(FOLDERS[section]);}
 
-  async function fetchFolder(folder) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 6000);
-    try {
-      const response = await fetch(apiUrl(folder), { signal: controller.signal });
-      if (!response.ok) return [];
-      const items = await response.json();
-      return (Array.isArray(items) ? items : [])
-        .filter((item) => item.type === 'file' && IMAGE_RE.test(item.name || item.path))
-        .sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { numeric: true }))
-        .map((item) => item.download_url || `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}`);
-    } catch (error) {
-      return [];
-    } finally {
-      clearTimeout(timer);
-    }
-  }
+  function lightbox(list,index=0){let i=index;const overlay=el('div','su-light'),close=el('button','','CLOSE'),img=el('img');const render=()=>{img.src=q(list[i])};close.onclick=()=>overlay.remove();overlay.onclick=()=>overlay.remove();img.onclick=e=>{e.stopPropagation();i=(i+1)%list.length;render()};overlay.append(close,img);document.body.append(overlay);render()}
 
-  async function load(section) {
-    return fetchFolder(FOLDERS[section]);
-  }
+  function gallery(list,fallbackText='Файлы для этого блока пока не найдены'){const grid=el('div','su-grid');if(!list.length){grid.append(el('p','su-empty',fallbackText));return grid}list.forEach((src,index)=>{const button=el('button','su-card');button.type='button';const img=el('img');img.src=q(src);img.loading='lazy';button.append(img);button.onclick=e=>{e.stopPropagation();lightbox(list,index)};grid.append(button)});return grid}
 
-  function lightbox(list, index = 0) {
-    let i = index;
-    const overlay = el('div', 'su-light');
-    const close = el('button', '', 'CLOSE');
-    const img = el('img');
-    const render = () => { img.src = q(list[i]); };
-    close.onclick = () => overlay.remove();
-    overlay.onclick = () => overlay.remove();
-    img.onclick = (event) => { event.stopPropagation(); i = (i + 1) % list.length; render(); };
-    overlay.append(close, img);
-    document.body.append(overlay);
-    render();
-  }
+  function finalGallery(list){const wrap=el('div','su-final');if(!list.length){wrap.append(el('p','su-empty','Файлы для этого блока пока не найдены'));return wrap}const first=list[0];const main=el('button','su-final-main');main.type='button';const mainImg=el('img');mainImg.src=q(first);mainImg.alt='StayUgly final overview';main.append(mainImg);main.onclick=e=>{e.stopPropagation();lightbox(list,0)};wrap.append(main);const order=[2,1,3].filter(i=>list[i]);if(order.length){const flow=el('div','su-final-flow');order.forEach((index,pos)=>{const button=el('button','su-final-step');button.type='button';const img=el('img');img.src=q(list[index]);img.loading='lazy';button.append(img);button.onclick=e=>{e.stopPropagation();lightbox(list,index)};flow.append(button);if(pos<order.length-1)flow.append(el('span','su-arrow','→'))});wrap.append(flow)}return wrap}
 
-  function gallery(list, fallbackText = 'Файлы для этого блока пока не найдены') {
-    const grid = el('div', 'su-grid');
-    if (!list.length) {
-      grid.append(el('p', 'su-empty', fallbackText));
-      return grid;
-    }
-    list.forEach((src, index) => {
-      const button = el('button', 'su-card');
-      button.type = 'button';
-      const img = el('img');
-      img.src = q(src);
-      img.loading = 'lazy';
-      button.append(img);
-      button.onclick = (event) => { event.stopPropagation(); lightbox(list, index); };
-      grid.append(button);
-    });
-    return grid;
-  }
+  function makeSection(title,text,list,extra,customGallery){const section=el('section','su-section'),head=el('div','su-section-head');head.append(el('h3','su-h',title),el('p','su-count',`${list.length} / ${list.length}`));section.append(head);if(text)section.append(el('p','su-text',text));if(extra)section.append(extra);section.append(customGallery?customGallery(list):gallery(list));return section}
 
-  function makeSection(title, text, list, extra) {
-    const section = el('section', 'su-section');
-    const head = el('div', 'su-section-head');
-    head.append(el('h3', 'su-h', title), el('p', 'su-count', `${list.length} / ${list.length}`));
-    section.append(head);
-    if (text) section.append(el('p', 'su-text', text));
-    if (extra) section.append(extra);
-    section.append(gallery(list));
-    return section;
-  }
+  async function open(){styles();modal?.remove();modal=el('div','su-modal');const inner=el('div','su-inner'),header=el('div','su-head'),close=el('button','su-close','ЗАКРЫТЬ');close.onclick=()=>modal.remove();header.append(el('p','su-label','STAYUGLY'),close);const loading=el('p','su-empty','LOADING STAYUGLY ASSETS...');inner.append(header,loading);modal.append(inner);document.body.append(modal);const[concept,final,photoshoot,packaging]=await Promise.all([load('concept'),load('final'),load('photoshoot'),load('packaging')]);loading.remove();const hero=el('section','su-hero');hero.append(el('p','su-kicker','PERSONAL PRODUCT / COLLABORATION'),el('h2','su-title','STAYUGLY'),el('p','su-lead','Личная разработанная мною вещь в коллаборации с коллегой STAYUGLY. Разработка с нуля: собственные лекала, принт, дизайн, подбор подрядчиков и полный путь от идеи до готового продукта.'));inner.append(hero);inner.append(makeSection('CONCEPT','Как разрабатывалась вещь: первые визуальные решения, поиск формы, принта, посадки и общего характера изделия.',concept));const specs=el('ul','su-specs');['Футер 2-х нитка 245 гр/м²','Вручную обрезаны','BIG SQUARE футболка 80×60','*каждая вещь уникальна'].forEach(item=>specs.append(el('li','',item)));inner.append(makeSection('FINAL RESULT','Финальный результат: несколько фотографий товара и то, как вещь выглядит вживую.',final,specs,finalGallery));inner.append(makeSection('PHOTOSET','Фотосет также сделан нами: съемка, обработка, ретушь и финальная визуальная сборка — всё внутри проекта.',photoshoot));inner.append(makeSection('PACKAGING','Небольшой милый финальный блок про упаковку и то, как вещь приходит к человеку.',packaging))}
 
-  async function open() {
-    styles();
-    modal?.remove();
-    modal = el('div', 'su-modal');
-    const inner = el('div', 'su-inner');
-    const header = el('div', 'su-head');
-    const close = el('button', 'su-close', 'ЗАКРЫТЬ');
-    close.onclick = () => modal.remove();
-    header.append(el('p', 'su-label', 'STAYUGLY'), close);
-    const loading = el('p', 'su-empty', 'LOADING STAYUGLY ASSETS...');
-    inner.append(header, loading);
-    modal.append(inner);
-    document.body.append(modal);
-
-    const [concept, final, photoshoot, packaging] = await Promise.all([
-      load('concept'), load('final'), load('photoshoot'), load('packaging')
-    ]);
-    loading.remove();
-
-    const hero = el('section', 'su-hero');
-    hero.append(el('p', 'su-kicker', 'PERSONAL PRODUCT / COLLABORATION'), el('h2', 'su-title', 'STAYUGLY'), el('p', 'su-lead', 'Личная разработанная мною вещь в коллаборации с коллегой STAYUGLY. Разработка с нуля: собственные лекала, принт, дизайн, подбор подрядчиков и полный путь от идеи до готового продукта.'));
-    inner.append(hero);
-
-    inner.append(makeSection('CONCEPT', 'Как разрабатывалась вещь: первые визуальные решения, поиск формы, принта, посадки и общего характера изделия.', concept));
-
-    const specs = el('ul', 'su-specs');
-    ['Футер 2-х нитка 245 гр/м²', 'Вручную обрезаны', 'BIG SQUARE футболка 80×60', '*каждая вещь уникальна'].forEach((item) => specs.append(el('li', '', item)));
-    inner.append(makeSection('FINAL RESULT', 'Финальный результат: несколько фотографий товара и то, как вещь выглядит вживую.', final, specs));
-
-    inner.append(makeSection('PHOTOSET', 'Фотосет также сделан нами: съемка, обработка, ретушь и финальная визуальная сборка — всё внутри проекта.', photoshoot));
-    inner.append(makeSection('PACKAGING', 'Небольшой милый финальный блок про упаковку и то, как вещь приходит к человеку.', packaging));
-  }
-
-  document.addEventListener('click', (event) => {
-    const card = event.target.closest('#works article, #works button');
-    if (!card) return;
-    const title = card.querySelector('h3')?.textContent?.trim().toUpperCase();
-    if (title !== 'STAY UGLY' && title !== 'STAYUGLY') return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    open();
-  }, true);
+  document.addEventListener('click',event=>{const card=event.target.closest('#works article,#works button');if(!card)return;const title=card.querySelector('h3')?.textContent?.trim().toUpperCase();if(title!=='STAY UGLY'&&title!=='STAYUGLY')return;event.preventDefault();event.stopImmediatePropagation();open()},true);
 })();
