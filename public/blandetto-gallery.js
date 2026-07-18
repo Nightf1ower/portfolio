@@ -13,6 +13,7 @@
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-1');
   loadScript('script[src^="/merch-gallery-v4.js"]', '/merch-gallery-v4.js?v=merch-9');
+  loadScript('script[src^="/merch-layout-fix-v10.js"]', '/merch-layout-fix-v10.js?v=merch-layout-10');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
