@@ -1,5 +1,5 @@
 (() => {
-  const V = 'merch-1';
+  const V = 'merch-2';
   const REPO = 'Nightf1ower/portfolio';
   const BRANCH = 'main';
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
@@ -14,7 +14,11 @@
     return node;
   };
   const q = (src) => `${src}?v=${V}`;
-  const normalize = (value) => decodeURIComponent(value || '').toLowerCase().replace(/[\s_-]+/g, ' ').trim();
+  const normalize = (value) => decodeURIComponent(value || '')
+    .toLowerCase()
+    .replace(/[\\]+/g, '/')
+    .replace(/[\s_-]+/g, ' ')
+    .trim();
 
   function lockScroll() {
     previousBodyOverflow = document.body.style.overflow;
@@ -77,7 +81,9 @@
         .filter((item) => item.type === 'blob' && IMAGE_RE.test(item.path || ''))
         .filter((item) => {
           const path = normalize(item.path);
-          return path.includes('public/works/merch/yablochko zelenoe/') || path.includes('public/works/merch/yablochko-zelenoe/');
+          const hasMerch = /(^|\/)merch(\/|$)/.test(path);
+          const hasProject = path.includes('yablochko zelenoe') || path.includes('яблочко зеленое');
+          return hasMerch && hasProject;
         })
         .sort((a, b) => (a.path || '').localeCompare(b.path || '', undefined, { numeric: true }))
         .map((item) => ({ path: item.path, url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}` }));
@@ -88,11 +94,11 @@
 
   function category(item) {
     const path = normalize(item.path);
-    if (path.includes('/brochure/')) return 'brochure';
-    if (path.includes('/prints/')) return 'prints';
-    if (path.includes('/posters/')) return 'posters';
-    if (path.includes('/ads/')) return 'ads';
-    if (path.includes('/billboards/')) return 'billboards';
+    if (path.includes('/brochure/') || /(^|\/)brochure[^/]*$/.test(path)) return 'brochure';
+    if (path.includes('/prints/') || /(^|\/)prints?[^/]*$/.test(path)) return 'prints';
+    if (path.includes('/posters/') || /(^|\/)posters?[^/]*$/.test(path)) return 'posters';
+    if (path.includes('/ads/') || /(^|\/)ads?[^/]*$/.test(path)) return 'ads';
+    if (path.includes('/billboards/') || /(^|\/)billboards?[^/]*$/.test(path)) return 'billboards';
     return 'other';
   }
 
