@@ -13,6 +13,12 @@
     script.async = false;
     (document.currentScript || document.body).after(script);
   }
+  if (!document.querySelector('script[src^="/project9006-layout.js"]')) {
+    const script = document.createElement('script');
+    script.src = '/project9006-layout.js?v=9006-layout-1';
+    script.async = false;
+    (document.currentScript || document.body).after(script);
+  }
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
