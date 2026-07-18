@@ -12,8 +12,8 @@
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-7');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-1');
-  loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-12');
-  loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-12');
+  loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
+  loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-13');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
