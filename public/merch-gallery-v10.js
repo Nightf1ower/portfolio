@@ -1,5 +1,5 @@
 (() => {
-  const REPO='Nightf1ower/portfolio',BRANCH='main',VERSION='merch-10';
+  const REPO='Nightf1ower/portfolio',BRANCH='main',VERSION='merch-11';
   const ROOT_Y='public/works/merch/yablochko',ROOT_D='public/works/merch/dxs';
   const IMAGE_RE=/\.(png|jpe?g|webp|gif|avif)$/i;
   let modal=null,prevBody='',prevHtml='';
@@ -33,8 +33,16 @@
     return [section('BROCHURE',groups.brochure,brochure),section('PRINTS',groups.print,prints),section('POSTERS',groups.poster,posters),section('ADS',groups.ad,ads),section('BILLBOARDS',groups.billboard,bills)];
   }
 
-  function dxsContent(items){const isVisual=x=>/(visual|visualization|mockup|irl|photo|real)/i.test(stem(x));const stickerAll=items.filter(x=>/(\/sticker|sticketr)/i.test(x.path||'')),posterAll=items.filter(x=>/\/poster/i.test(x.path||'')),ads=items.filter(x=>/\/ad(s)?\//i.test(x.path||'')||/(^|[-_])ad[-_]?\d/i.test(stem(x)));
-    const stickerBase=stickerAll.filter(x=>!isVisual(x)).slice(0,3),stickerVisual=stickerAll.filter(isVisual);const posterBase=posterAll.filter(x=>!isVisual(x)).slice(0,4),posterVisual=posterAll.filter(isVisual);
+  function dxsContent(items){
+    const inFolder=(x,folder)=>(x.path||'').toLowerCase().startsWith(`${ROOT_D}/${folder}/`);
+    const isVisual=x=>stem(x).includes('-visual')||stem(x).includes('_visual');
+    const stickerAll=items.filter(x=>inFolder(x,'sticker'));
+    const posterAll=items.filter(x=>inFolder(x,'poster'));
+    const ads=items.filter(x=>inFolder(x,'ad'));
+    const stickerBase=stickerAll.filter(x=>!isVisual(x)).slice(0,3);
+    const stickerVisual=stickerAll.filter(isVisual);
+    const posterBase=posterAll.filter(x=>!isVisual(x)).slice(0,4);
+    const posterVisual=posterAll.filter(isVisual);
     const zone=el('div','m10-dxs-zone');zone.append(el('h1','m10-dxs-title','DXS'));
     const stickerSection=section('STICKERS',stickerBase,grid(stickerBase,'m10-dxs-stickers'));if(stickerVisual.length){stickerSection.append(el('h3','m10-subtitle','VISUALIZATION'),grid(stickerVisual,'m10-visuals'))}zone.append(stickerSection);
     const posterSection=section('POSTERS',posterBase,grid(posterBase,'m10-dxs-posters'));if(posterVisual.length){posterSection.append(el('h3','m10-subtitle','VISUALIZATION'),grid(posterVisual,'m10-visuals'))}zone.append(posterSection);
