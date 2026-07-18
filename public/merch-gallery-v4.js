@@ -1,9 +1,10 @@
 (() => {
-  const REPO='Nightf1ower/portfolio',BRANCH='main',ROOT='public/works/merch/yablochko',VERSION='merch-5';
+  const REPO='Nightf1ower/portfolio',BRANCH='main',ROOT='public/works/merch/yablochko',VERSION='merch-6';
   const IMAGE_RE=/\.(png|jpe?g|webp|gif|avif)$/i;
   let modal=null,prevBody='',prevHtml='';
   const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text)n.textContent=text;return n};
   const fileName=x=>(x.path||'').split('/').pop()||'';
+  const stem=x=>fileName(x).replace(/\.[^.]+$/,'').toLowerCase().replace(/[\s_]+/g,'-');
   const num=x=>{const m=fileName(x).match(/(\d+)/);return m?Number(m[1]):999};
   const imageUrl=path=>`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}?v=${VERSION}`;
 
@@ -15,7 +16,7 @@
   function category(x){const p=(x.path||'').toLowerCase();if(p.includes('/brochure/'))return'brochure';if(p.includes('/print/'))return'print';if(p.includes('/poster/'))return'poster';if(p.includes('/ad/'))return'ad';if(p.includes('/billboard/'))return'billboard';return'other'}
   function lightbox(items,index=0){if(!items.length)return;let current=index;const o=el('div','merch5-light'),b=el('button','', 'CLOSE'),im=el('img');const draw=()=>im.src=imageUrl(items[current].path);o.onclick=()=>o.remove();b.onclick=()=>o.remove();im.onclick=e=>{e.stopPropagation();current=(current+1)%items.length;draw()};o.append(b,im);document.body.append(o);draw()}
   function card(item,items,index,cls=''){const b=el('button',`merch5-card ${cls}`.trim()),m=el('div','merch5-media'),im=el('img');im.src=imageUrl(item.path);im.alt=fileName(item);m.append(im);b.append(m);b.onclick=()=>lightbox(items,index);return b}
-  function brochure(items){const w=el('div','merch5-brochure');const sorted=[...items].sort((a,b)=>num(a)-num(b));[[1,3],[2,4]].forEach(([baseNo,hoverNo])=>{const base=sorted.find(x=>num(x)===baseNo),hover=sorted.find(x=>num(x)===hoverNo);if(!base)return;const b=el('button','merch5-card'),m=el('div','merch5-media'),im=el('img');im.src=imageUrl(base.path);m.append(im);if(hover){const h=el('img','merch5-layer');h.src=imageUrl(hover.path);m.append(h)}b.append(m);b.onclick=()=>lightbox([base,hover].filter(Boolean),0);w.append(b)});return w}
+  function brochure(items){const w=el('div','merch5-brochure');const find=name=>items.find(x=>stem(x)===name);[['brochure-01','brochure-01-tee'],['brochure-02','brochure-02-tee']].forEach(([baseName,teeName])=>{const base=find(baseName),hover=find(teeName);if(!base)return;const b=el('button','merch5-card'),m=el('div','merch5-media'),im=el('img');im.src=imageUrl(base.path);im.alt=fileName(base);m.append(im);if(hover){const h=el('img','merch5-layer');h.src=imageUrl(hover.path);h.alt=fileName(hover);m.append(h)}b.append(m);b.onclick=()=>lightbox([base,hover].filter(Boolean),0);w.append(b)});return w}
   function prints(items){const order=[1,4,2,3],sorted=order.map(n=>items.find(x=>num(x)===n)).filter(Boolean),w=el('div','merch5-prints');sorted.forEach((x,i)=>w.append(card(x,sorted,i,num(x)===3?'merch5-print-large':'')));return w}
   function posters(items){const sorted=[...items].sort((a,b)=>num(a)-num(b)),feature=sorted.find(x=>num(x)===3),rest=sorted.filter(x=>x!==feature),w=el('div','merch5-poster-layout'),top=el('div','merch5-poster-top');rest.forEach(x=>top.append(card(x,sorted,sorted.indexOf(x))));w.append(top);if(feature)w.append(card(feature,sorted,sorted.indexOf(feature),'merch5-poster-bottom'));return w}
   function ads(items){const sorted=[...items].sort((a,b)=>num(a)-num(b)),feature=sorted.find(x=>num(x)===4),rest=sorted.filter(x=>x!==feature),w=el('div','merch5-ad-layout');if(feature)w.append(card(feature,sorted,sorted.indexOf(feature),'merch5-ad-feature'));const grid=el('div','merch5-ad-rest');rest.forEach(x=>grid.append(card(x,sorted,sorted.indexOf(x))));w.append(grid);return w}
