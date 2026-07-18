@@ -12,7 +12,7 @@
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-7');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-1');
-  loadScript('script[src^="/merch-gallery.js"]', '/merch-gallery.js?v=merch-1');
+  loadScript('script[src^="/merch-gallery.js"]', '/merch-gallery.js?v=merch-2');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
