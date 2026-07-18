@@ -19,6 +19,12 @@
     script.async = false;
     (document.currentScript || document.body).after(script);
   }
+  if (!document.querySelector('script[src^="/merch-gallery.js"]')) {
+    const script = document.createElement('script');
+    script.src = '/merch-gallery.js?v=merch-1';
+    script.async = false;
+    (document.currentScript || document.body).after(script);
+  }
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
