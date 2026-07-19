@@ -2,7 +2,7 @@
   if (window.__merchMobileLayoutFixLoaded) return;
   window.__merchMobileLayoutFixLoaded = true;
 
-  const VERSION = 'merch-mobile-fix-1';
+  const VERSION = 'merch-mobile-fix-2';
   const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
 
   function injectStyles() {
@@ -39,14 +39,18 @@
 
       .m10-dxs-zone {
         margin-top: 1.75rem !important;
-        padding-top: 3.75rem !important;
+        padding-top: 6.5rem !important;
         background: linear-gradient(
           to bottom,
           #87CEEB 0,
-          #a58fa8 1.25rem,
-          #c97888 2.35rem,
-          #df4a4f 3.7rem,
-          #e5312b 5.5rem,
+          #91c4dd 1.6rem,
+          #a1b5cd 3.2rem,
+          #b29fb8 4.9rem,
+          #c5899c 6.7rem,
+          #d4727c 8.7rem,
+          #df575f 10.8rem,
+          #e34047 12.8rem,
+          #e5312b 15rem,
           #e5312b 100%
         ) !important;
       }
@@ -90,14 +94,18 @@
 
         .m10-dxs-zone {
           margin-top: 1rem !important;
-          padding-top: 3rem !important;
+          padding-top: 5rem !important;
           background: linear-gradient(
             to bottom,
             #87CEEB 0,
-            #a58fa8 .85rem,
-            #cf6979 1.65rem,
-            #e24349 2.65rem,
-            #e5312b 4rem,
+            #90c4dd .9rem,
+            #a0b4cd 1.8rem,
+            #b29fb8 2.8rem,
+            #c68a9c 3.8rem,
+            #d7757e 4.8rem,
+            #df5960 6.1rem,
+            #e44247 7.8rem,
+            #e5312b 10rem,
             #e5312b 100%
           ) !important;
         }
