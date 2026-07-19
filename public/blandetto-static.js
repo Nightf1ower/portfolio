@@ -54,7 +54,7 @@
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = '/blandetto-final.js?v=direct-1';
+  script.src = '/blandetto-final.js?v=direct-2';
   script.async = false;
   (document.currentScript || document.body).after(script);
 })();
