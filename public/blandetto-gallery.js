@@ -14,6 +14,7 @@
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-3');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
   loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-3');
+  loadScript('script[src^="/pink-punk-gradient-layer-fix.js"]', '/pink-punk-gradient-layer-fix.js?v=pink-gradient-layer-1');
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-16');
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
