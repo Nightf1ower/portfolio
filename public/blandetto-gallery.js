@@ -10,6 +10,7 @@
   };
 
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
+  loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-1');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-8');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-3');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
