@@ -160,18 +160,14 @@
 
             const title = section.querySelector('.pink-punk-section__title');
             const note = section.querySelector('.pink-punk-section__note');
-            if (title) title.textContent = sectionCopy.title;
-            if (note) note.textContent = sectionCopy.note;
+            if (title && title.textContent !== sectionCopy.title) title.textContent = sectionCopy.title;
+            if (note && note.textContent !== sectionCopy.note) note.textContent = sectionCopy.note;
           });
         };
 
         const enhancePinkPunkGallery = () => {
           const gallery = document.querySelector('.pink-punk-gallery');
-          if (!gallery) return;
-          if (gallery.dataset.grouped === 'true') {
-            translatePinkPunkGallery();
-            return;
-          }
+          if (!gallery || gallery.dataset.grouped === 'true') return;
 
           const cards = Array.from(gallery.querySelectorAll(':scope > .pink-punk-frame'));
           if (cards.length < 7) return;
@@ -223,10 +219,7 @@
           gallery.append(tees.section, posters.section, prints.section);
         };
 
-        const galleryObserver = new MutationObserver(() => {
-          enhancePinkPunkGallery();
-          translatePinkPunkGallery();
-        });
+        const galleryObserver = new MutationObserver(enhancePinkPunkGallery);
         galleryObserver.observe(document.body, { childList: true, subtree: true });
 
         const languageObserver = new MutationObserver(translatePinkPunkGallery);
