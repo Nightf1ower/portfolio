@@ -2,12 +2,9 @@
   if (window.__mobileTouchGalleryFixLoaded) return;
   window.__mobileTouchGalleryFixLoaded = true;
 
-  const VERSION = 'touch-gallery-1';
+  const VERSION = 'touch-gallery-2';
   const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
   const imageSelectors = [
-    '#works img',
-    '.pink-punk-gallery img',
-    '.pink-punk-lightbox-frame img',
     '.zny-modal img',
     '.zny-light img',
     '.bf img',
@@ -25,7 +22,10 @@
   const touchImageSelector = imageSelectors.map((selector) => `.touch-gallery-ui ${selector}`).join(',');
 
   function injectStyles() {
-    if (document.getElementById('mobile-touch-gallery-fix-style')) return;
+    const previous = document.getElementById('mobile-touch-gallery-fix-style');
+    if (previous?.dataset.version === VERSION) return;
+    previous?.remove();
+
     const style = document.createElement('style');
     style.id = 'mobile-touch-gallery-fix-style';
     style.dataset.version = VERSION;
@@ -38,7 +38,6 @@
         user-drag:none!important;
       }
 
-      .touch-gallery-ui .pink-punk-frame,
       .touch-gallery-ui .blandetto-card,
       .touch-gallery-ui .bf-card,
       .touch-gallery-ui .zny-card,
@@ -47,16 +46,6 @@
       .touch-gallery-ui .su-concept-step{
         touch-action:manipulation!important;
         -webkit-tap-highlight-color:transparent!important;
-      }
-
-      .touch-gallery-ui .pink-punk-frame--hover:hover .pink-punk-image--base,
-      .touch-gallery-ui .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--base{
-        opacity:1!important;
-      }
-
-      .touch-gallery-ui .pink-punk-frame--hover:hover .pink-punk-image--worn,
-      .touch-gallery-ui .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn{
-        opacity:0!important;
       }
 
       .touch-gallery-ui .blandetto-card:hover .blandetto-card__img--main,
@@ -73,7 +62,6 @@
       }
 
       .touch-gallery-ui .blandetto-card:hover .blandetto-card__img,
-      .touch-gallery-ui .pink-punk-frame:hover,
       .touch-gallery-ui #works button:hover,
       .touch-gallery-ui #works article:hover,
       .touch-gallery-ui #works [class*="group-hover:rotate-3"],
@@ -83,16 +71,12 @@
       }
 
       @media (hover:none), (pointer:coarse), (max-width:768px){
-        .pink-punk-frame--hover:hover .pink-punk-image--base,
-        .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--base,
         .blandetto-card:hover .blandetto-card__img--main,
         .bf-card:hover .bf-main,
         .zny-card--has-hover:hover .zny-card__img--main{
           opacity:1!important;
         }
 
-        .pink-punk-frame--hover:hover .pink-punk-image--worn,
-        .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn,
         .blandetto-card:hover .blandetto-card__img--hover,
         .bf-card:hover .bf-hov,
         .zny-card--has-hover:hover .zny-card__img--hover,
@@ -109,7 +93,7 @@
   }
 
   function markImages(root = document) {
-    if (!isTouchUI()) return;
+    if (!isTouchUI() || !imageSelector) return;
     root.querySelectorAll?.(imageSelector).forEach((image) => {
       image.draggable = false;
       image.setAttribute('draggable', 'false');
@@ -133,7 +117,7 @@
   }
 
   function protectEvent(event) {
-    if (!document.documentElement.classList.contains('touch-gallery-ui')) return;
+    if (!document.documentElement.classList.contains('touch-gallery-ui') || !imageSelector) return;
     const image = event.target.closest?.(imageSelector);
     if (!image || image.dataset.touchProtected !== 'true') return;
     event.preventDefault();
