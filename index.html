@@ -27,7 +27,10 @@
       .blandetto-grid--dentist > *:nth-child(5) { grid-column: 1 !important; grid-row: 2 !important; }
       .blandetto-grid--dentist > *:nth-child(4) { grid-column: 2 !important; grid-row: 2 !important; }
       .blandetto-grid--dentist > *:nth-child(6) { grid-column: 3 !important; grid-row: 2 !important; }
-      @media (max-width: 900px) { .blandetto-grid--dentist { grid-template-columns: 1fr !important; } .blandetto-grid--dentist > * { grid-column: auto !important; grid-row: auto !important; } }
+      @media (max-width: 900px) {
+        .blandetto-grid--dentist { grid-template-columns: 1fr !important; }
+        .blandetto-grid--dentist > * { grid-column: auto !important; grid-row: auto !important; }
+      }
     </style>
   </head>
   <body>
@@ -45,9 +48,7 @@
         const maxMove = 30;
 
         const getLogo = () => {
-          if (!logo || !document.body.contains(logo)) {
-            logo = document.querySelector('#top h1');
-          }
+          if (!logo || !document.body.contains(logo)) logo = document.querySelector('#top h1');
           return logo;
         };
 
@@ -116,134 +117,36 @@
       })();
 
       (() => {
-        const pinkPunkCopy = {
-          ru: {
-            tees: {
-              title: 'ФУТБОЛКИ',
-              note: 'Сначала — превью принтов. Наведите на карточку, чтобы увидеть тот же дизайн на модели.',
-            },
-            posters: {
-              title: 'ПОСТЕРЫ',
-              note: 'Постеры и эксперименты с композицией для визуальной системы Pink Punk.',
-            },
-            prints: {
-              title: 'ПРИНТЫ',
-              note: 'Самостоятельные принты и дополнительные элементы визуальной системы.',
-            },
-          },
-          en: {
-            tees: {
-              title: 'T-SHIRTS',
-              note: 'Flat print previews first. Hover over a card to see the same graphic worn on body.',
-            },
-            posters: {
-              title: 'POSTERS',
-              note: 'Poster artworks and layout experiments for the Pink Punk visual system.',
-            },
-            prints: {
-              title: 'PRINTS',
-              note: 'Standalone print graphics and additional visual system elements.',
-            },
-          },
-        };
-
-        const getPinkPunkLanguage = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
-
-        const translatePinkPunkGallery = () => {
-          const gallery = document.querySelector('.pink-punk-gallery[data-grouped="true"]');
-          if (!gallery) return;
-
-          const copy = pinkPunkCopy[getPinkPunkLanguage()];
-          gallery.querySelectorAll('.pink-punk-section').forEach((section) => {
-            const sectionCopy = copy[section.dataset.section];
-            if (!sectionCopy) return;
-
-            const title = section.querySelector('.pink-punk-section__title');
-            const note = section.querySelector('.pink-punk-section__note');
-            if (title && title.textContent !== sectionCopy.title) title.textContent = sectionCopy.title;
-            if (note && note.textContent !== sectionCopy.note) note.textContent = sectionCopy.note;
-          });
-        };
-
-        const enhancePinkPunkGallery = () => {
-          const gallery = document.querySelector('.pink-punk-gallery');
-          if (!gallery || gallery.dataset.grouped === 'true') return;
-
-          const cards = Array.from(gallery.querySelectorAll(':scope > .pink-punk-frame'));
-          if (cards.length < 7) return;
-
-          const copy = pinkPunkCopy[getPinkPunkLanguage()];
-
-          const makeSection = ({ sectionKey, count, modifier }) => {
-            const section = document.createElement('section');
-            section.className = `pink-punk-section pink-punk-section--${modifier}`;
-            section.dataset.section = sectionKey;
-
-            const head = document.createElement('div');
-            head.className = 'pink-punk-section__head';
-
-            const h3 = document.createElement('h3');
-            h3.className = 'pink-punk-section__title';
-            h3.textContent = copy[sectionKey].title;
-
-            const counter = document.createElement('p');
-            counter.className = 'pink-punk-section__counter';
-            counter.textContent = count;
-
-            head.append(h3, counter);
-            section.append(head);
-
-            const p = document.createElement('p');
-            p.className = 'pink-punk-section__note';
-            p.textContent = copy[sectionKey].note;
-            section.append(p);
-
-            const grid = document.createElement('div');
-            grid.className = `pink-punk-section__grid pink-punk-section__grid--${modifier}`;
-            section.append(grid);
-
-            return { section, grid };
-          };
-
-          const tees = makeSection({ sectionKey: 'tees', count: '3 / 3', modifier: 'tees' });
-          const posters = makeSection({ sectionKey: 'posters', count: '3 / 3', modifier: 'posters' });
-          const printCount = Math.max(cards.length - 6, 0);
-          const prints = makeSection({ sectionKey: 'prints', count: `${printCount} / ${printCount}`, modifier: 'prints' });
-
-          cards.slice(0, 3).forEach((card) => tees.grid.append(card));
-          cards.slice(3, 6).forEach((card) => posters.grid.append(card));
-          cards.slice(6).forEach((card) => prints.grid.append(card));
-
-          gallery.textContent = '';
-          gallery.dataset.grouped = 'true';
-          gallery.append(tees.section, posters.section, prints.section);
-        };
-
-        const galleryObserver = new MutationObserver(enhancePinkPunkGallery);
-        galleryObserver.observe(document.body, { childList: true, subtree: true });
-
-        const languageObserver = new MutationObserver(translatePinkPunkGallery);
-        languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-
-        window.addEventListener('load', enhancePinkPunkGallery);
-      })();
-    </script>
-    <script src="/blandetto-gallery.js"></script>
-    <script src="/blandetto-static.js"></script>
-    <script src="/stayugly-gallery-v5.js?v=stayugly-14"></script>
-    <script>
-      (() => {
-        const fixedCaption = '\u0437\u0430 \u043e\u0441\u043d\u043e\u0432\u0443 \u0432\u0437\u044f\u0442 \u044d\u0442\u043e\u0442 \u043b\u043e\u0433\u043e\u0442\u0438\u043f';
+        const fixedCaption = 'за основу взят этот логотип';
         const applyCaptionFix = () => {
           document.querySelectorAll('.blandetto-cap-reference__caption').forEach((caption) => {
-            caption.textContent = fixedCaption;
+            if (caption.textContent !== fixedCaption) caption.textContent = fixedCaption;
           });
         };
-        const observer = new MutationObserver(applyCaptionFix);
-        observer.observe(document.body, { childList: true, subtree: true });
-        window.addEventListener('load', applyCaptionFix);
-        applyCaptionFix();
+
+        let scheduled = false;
+        const scheduleCaptionFix = () => {
+          if (scheduled) return;
+          scheduled = true;
+          requestAnimationFrame(() => {
+            scheduled = false;
+            applyCaptionFix();
+          });
+        };
+
+        document.addEventListener('click', (event) => {
+          const card = event.target.closest('#works article, #works button');
+          if (!card) return;
+          const title = card.querySelector('h3')?.textContent?.trim().toUpperCase();
+          if (title !== 'BLANDETTO') return;
+          setTimeout(scheduleCaptionFix, 0);
+          setTimeout(scheduleCaptionFix, 120);
+        }, true);
+        window.addEventListener('load', scheduleCaptionFix);
       })();
     </script>
+    <script src="/blandetto-gallery.js?v=loader-2"></script>
+    <script src="/blandetto-static.js"></script>
+    <script src="/stayugly-gallery-v5.js?v=stayugly-14"></script>
   </body>
 </html>
