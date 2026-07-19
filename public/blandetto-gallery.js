@@ -16,6 +16,7 @@
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-13');
   loadScript('script[src^="/nightflower-playground.js"]', '/nightflower-playground.js?v=playground-1');
+  loadScript('script[src^="/nightflower-playground-mount-fix.js"]', '/nightflower-playground-mount-fix.js?v=playground-1');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
