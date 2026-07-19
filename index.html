@@ -116,23 +116,79 @@
       })();
 
       (() => {
+        const pinkPunkCopy = {
+          ru: {
+            tees: {
+              title: 'ФУТБОЛКИ',
+              note: 'Сначала — превью принтов. Наведите на карточку, чтобы увидеть тот же дизайн на модели.',
+            },
+            posters: {
+              title: 'ПОСТЕРЫ',
+              note: 'Постеры и эксперименты с композицией для визуальной системы Pink Punk.',
+            },
+            prints: {
+              title: 'ПРИНТЫ',
+              note: 'Самостоятельные принты и дополнительные элементы визуальной системы.',
+            },
+          },
+          en: {
+            tees: {
+              title: 'T-SHIRTS',
+              note: 'Flat print previews first. Hover over a card to see the same graphic worn on body.',
+            },
+            posters: {
+              title: 'POSTERS',
+              note: 'Poster artworks and layout experiments for the Pink Punk visual system.',
+            },
+            prints: {
+              title: 'PRINTS',
+              note: 'Standalone print graphics and additional visual system elements.',
+            },
+          },
+        };
+
+        const getPinkPunkLanguage = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
+
+        const translatePinkPunkGallery = () => {
+          const gallery = document.querySelector('.pink-punk-gallery[data-grouped="true"]');
+          if (!gallery) return;
+
+          const copy = pinkPunkCopy[getPinkPunkLanguage()];
+          gallery.querySelectorAll('.pink-punk-section').forEach((section) => {
+            const sectionCopy = copy[section.dataset.section];
+            if (!sectionCopy) return;
+
+            const title = section.querySelector('.pink-punk-section__title');
+            const note = section.querySelector('.pink-punk-section__note');
+            if (title) title.textContent = sectionCopy.title;
+            if (note) note.textContent = sectionCopy.note;
+          });
+        };
+
         const enhancePinkPunkGallery = () => {
           const gallery = document.querySelector('.pink-punk-gallery');
-          if (!gallery || gallery.dataset.grouped === 'true') return;
+          if (!gallery) return;
+          if (gallery.dataset.grouped === 'true') {
+            translatePinkPunkGallery();
+            return;
+          }
 
           const cards = Array.from(gallery.querySelectorAll(':scope > .pink-punk-frame'));
           if (cards.length < 7) return;
 
-          const makeSection = ({ title, count, note, modifier }) => {
+          const copy = pinkPunkCopy[getPinkPunkLanguage()];
+
+          const makeSection = ({ sectionKey, count, modifier }) => {
             const section = document.createElement('section');
             section.className = `pink-punk-section pink-punk-section--${modifier}`;
+            section.dataset.section = sectionKey;
 
             const head = document.createElement('div');
             head.className = 'pink-punk-section__head';
 
             const h3 = document.createElement('h3');
             h3.className = 'pink-punk-section__title';
-            h3.textContent = title;
+            h3.textContent = copy[sectionKey].title;
 
             const counter = document.createElement('p');
             counter.className = 'pink-punk-section__counter';
@@ -141,12 +197,10 @@
             head.append(h3, counter);
             section.append(head);
 
-            if (note) {
-              const p = document.createElement('p');
-              p.className = 'pink-punk-section__note';
-              p.textContent = note;
-              section.append(p);
-            }
+            const p = document.createElement('p');
+            p.className = 'pink-punk-section__note';
+            p.textContent = copy[sectionKey].note;
+            section.append(p);
 
             const grid = document.createElement('div');
             grid.className = `pink-punk-section__grid pink-punk-section__grid--${modifier}`;
@@ -155,27 +209,10 @@
             return { section, grid };
           };
 
-          const tees = makeSection({
-            title: 'T-SHIRTS',
-            count: '3 / 3',
-            note: 'Flat print previews first. Hover over a card to see the same graphic worn on body.',
-            modifier: 'tees',
-          });
-
-          const posters = makeSection({
-            title: 'POSTERS',
-            count: '3 / 3',
-            note: 'Poster artworks and layout experiments for the Pink Punk visual system.',
-            modifier: 'posters',
-          });
-
+          const tees = makeSection({ sectionKey: 'tees', count: '3 / 3', modifier: 'tees' });
+          const posters = makeSection({ sectionKey: 'posters', count: '3 / 3', modifier: 'posters' });
           const printCount = Math.max(cards.length - 6, 0);
-          const prints = makeSection({
-            title: 'PRINTS',
-            count: `${printCount} / ${printCount}`,
-            note: 'Standalone print graphics and additional visual system elements.',
-            modifier: 'prints',
-          });
+          const prints = makeSection({ sectionKey: 'prints', count: `${printCount} / ${printCount}`, modifier: 'prints' });
 
           cards.slice(0, 3).forEach((card) => tees.grid.append(card));
           cards.slice(3, 6).forEach((card) => posters.grid.append(card));
@@ -186,8 +223,15 @@
           gallery.append(tees.section, posters.section, prints.section);
         };
 
-        const observer = new MutationObserver(enhancePinkPunkGallery);
-        observer.observe(document.body, { childList: true, subtree: true });
+        const galleryObserver = new MutationObserver(() => {
+          enhancePinkPunkGallery();
+          translatePinkPunkGallery();
+        });
+        galleryObserver.observe(document.body, { childList: true, subtree: true });
+
+        const languageObserver = new MutationObserver(translatePinkPunkGallery);
+        languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
         window.addEventListener('load', enhancePinkPunkGallery);
       })();
     </script>
