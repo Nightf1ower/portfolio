@@ -4,7 +4,7 @@
 
   const VERSION = 'touch-gallery-1';
   const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
-  const imageSelector = [
+  const imageSelectors = [
     '#works img',
     '.pink-punk-gallery img',
     '.pink-punk-lightbox-frame img',
@@ -20,7 +20,9 @@
     '.fable-lightbox img',
     '.project9006-modal img',
     '.project9006-lightbox img'
-  ].join(',');
+  ];
+  const imageSelector = imageSelectors.join(',');
+  const touchImageSelector = imageSelectors.map((selector) => `.touch-gallery-ui ${selector}`).join(',');
 
   function injectStyles() {
     if (document.getElementById('mobile-touch-gallery-fix-style')) return;
@@ -28,7 +30,7 @@
     style.id = 'mobile-touch-gallery-fix-style';
     style.dataset.version = VERSION;
     style.textContent = `
-      .touch-gallery-ui ${imageSelector}{
+      ${touchImageSelector}{
         -webkit-touch-callout:none!important;
         -webkit-user-select:none!important;
         user-select:none!important;
@@ -132,8 +134,8 @@
 
   function protectEvent(event) {
     if (!document.documentElement.classList.contains('touch-gallery-ui')) return;
-    const image = event.target.closest?.(`${imageSelector}[data-touch-protected="true"]`);
-    if (!image) return;
+    const image = event.target.closest?.(imageSelector);
+    if (!image || image.dataset.touchProtected !== 'true') return;
     event.preventDefault();
   }
 
