@@ -2,11 +2,13 @@
   if (window.__merchMobileLayoutFixLoaded) return;
   window.__merchMobileLayoutFixLoaded = true;
 
-  const VERSION = 'merch-mobile-fix-3';
+  const VERSION = 'merch-mobile-fix-4';
   const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
 
   function injectStyles() {
-    if (document.getElementById('merch-mobile-layout-fix-style')) return;
+    const previous = document.getElementById('merch-mobile-layout-fix-style');
+    if (previous?.dataset.version === VERSION) return;
+    previous?.remove();
 
     const style = document.createElement('style');
     style.id = 'merch-mobile-layout-fix-style';
@@ -174,26 +176,26 @@
   }
 
   injectStyles();
-  applySmoothGradient();
-  protectImages();
 
+  let scheduled = false;
+  function scheduleRefresh() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      applySmoothGradient();
+      protectImages();
+    });
+  }
+
+  scheduleRefresh();
   document.addEventListener('contextmenu', preventImageMenu, true);
   document.addEventListener('dragstart', preventImageMenu, true);
   document.addEventListener('selectstart', preventImageMenu, true);
 
-  const observer = new MutationObserver((records) => {
-    records.forEach((record) => record.addedNodes.forEach((node) => {
-      if (node.nodeType !== 1) return;
-      if (node.matches?.('.m10-modal img, .m10-light img')) {
-        node.draggable = false;
-        node.setAttribute('draggable', 'false');
-      }
-      protectImages(node);
-    }));
-    applySmoothGradient();
-  });
+  const observer = new MutationObserver(scheduleRefresh);
   observer.observe(document.body, { childList: true, subtree: true });
 
-  touchQuery.addEventListener?.('change', () => protectImages());
-  window.addEventListener('resize', () => protectImages(), { passive: true });
+  touchQuery.addEventListener?.('change', scheduleRefresh);
+  window.addEventListener('resize', scheduleRefresh, { passive: true });
 })();
