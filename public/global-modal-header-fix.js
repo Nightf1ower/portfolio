@@ -3,7 +3,7 @@
 
   const style = document.createElement('style');
   style.id = 'global-modal-header-fix';
-  style.dataset.version = 'modal-head-3';
+  style.dataset.version = 'modal-head-4';
   style.textContent = `
     .su-head,
     .zny-head,
@@ -53,6 +53,40 @@
       display: none !important;
     }
   `;
-
   document.head.append(style);
+
+  const lightboxCloseSelectors = [
+    '.zny-light button',
+    '.fable-light button',
+    '.bf-light .bf-close',
+    '.su-light button',
+    '.m10-light button',
+    '.merch9-light button',
+    '.blandetto-lightbox button',
+    '.z-\\[150\\].fixed.inset-0 > button'
+  ];
+
+  const modalCloseSelectors = [
+    '.zny-close',
+    '.fable-close',
+    '.bf-x',
+    '.su-close',
+    '.m10-close',
+    '.merch9-close',
+    '.blandetto-close',
+    '.bld-close',
+    '.project9006-close',
+    '.p9006-close',
+    '.z-\\[100\\].fixed.inset-0 > div > .sticky button'
+  ];
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const lightboxClose = document.querySelector(lightboxCloseSelectors.join(','));
+    if (lightboxClose) {
+      lightboxClose.click();
+      return;
+    }
+    document.querySelector(modalCloseSelectors.join(','))?.click();
+  });
 })();
