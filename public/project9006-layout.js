@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = '9006-layout-2';
+  const VERSION = '9006-layout-3';
   const LOGOS = [
     '/works/90-06/logo-variations/LOGO%201.jpg',
     '/works/90-06/logo-variations/LOGO%203.jpg',
@@ -14,8 +14,41 @@
     '/works/90-06/posters/nzc6.jpg',
   ];
 
+  const COPY = {
+    ru: {
+      projectType: 'Визуальная айдентика и арт-дирекшн',
+      chips: ['АЙДЕНТИКА', 'ДИЗАЙН МЕРЧА', 'КАМПЭЙН', 'СЕРИЯ ПОСТЕРОВ'],
+      identity: 'АЙДЕНТИКА',
+      merch: 'ДИЗАЙН МЕРЧА',
+      campaign: 'КАМПЭЙН',
+      posters: 'СЕРИЯ ПОСТЕРОВ',
+    },
+    en: {
+      projectType: 'Visual Identity & Art Direction',
+      chips: ['IDENTITY', 'MERCH DESIGN', 'PHOTO CAMPAIGN', 'POSTER SERIES'],
+      identity: 'IDENTITY',
+      merch: 'MERCH DESIGN',
+      campaign: 'PHOTO CAMPAIGN',
+      posters: 'POSTER SERIES',
+    },
+  };
+
+  const SECTION_TITLES = {
+    identity: ['LOGO VARIATIONS', 'LOGO', 'IDENTITY', 'АЙДЕНТИКА'],
+    sheet: ['LOGO SHEET'],
+    merch: ['MERCH', 'MERCH DESIGN', 'ДИЗАЙН МЕРЧА'],
+    campaign: ['PHOTOSHOOT', 'PHOTO CAMPAIGN', 'КАМПЭЙН'],
+    posters: ['POSTERS', 'POSTER SERIES', 'СЕРИЯ ПОСТЕРОВ'],
+  };
+
+  const normalize = (value) => (value || '').trim().toUpperCase();
+  const getLanguage = () => (localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en');
+
   function injectStyles() {
-    if (document.getElementById('project9006-layout-style')) return;
+    const previous = document.getElementById('project9006-layout-style');
+    if (previous?.dataset.version === VERSION) return;
+    previous?.remove();
+
     const style = document.createElement('style');
     style.id = 'project9006-layout-style';
     style.dataset.version = VERSION;
@@ -24,11 +57,9 @@
         display: block !important;
       }
 
-      .project9006-modal .project9006-switch-controls {
-        display: none !important;
-      }
-
-      .project9006-modal .project9006-hidden-action {
+      .project9006-modal .project9006-switch-controls,
+      .project9006-modal .project9006-hidden-action,
+      .project9006-modal .project9006-logo-sheet-source {
         display: none !important;
       }
 
@@ -69,10 +100,6 @@
         height: auto !important;
         max-height: none !important;
         object-fit: contain !important;
-      }
-
-      .project9006-modal .project9006-logo-sheet-source {
-        display: none !important;
       }
 
       .project9006-modal .project9006-merch-media {
@@ -175,11 +202,17 @@
     });
   }
 
-  function sectionByTitle(modal, title) {
+  function sectionByTitles(modal, titles) {
+    const accepted = new Set(titles.map(normalize));
     return Array.from(modal.querySelectorAll('section')).find((section) => {
       const heading = section.querySelector('h3');
-      return heading?.textContent?.trim().toUpperCase() === title;
+      return accepted.has(normalize(heading?.textContent));
     });
+  }
+
+  function setHeading(section, text) {
+    const heading = section?.querySelector('h3');
+    if (heading && heading.textContent !== text) heading.textContent = text;
   }
 
   function imageNode(src, alt, loading = 'lazy') {
@@ -191,14 +224,30 @@
     return image;
   }
 
-  function rebuildLogoSection(modal) {
-    const section = sectionByTitle(modal, 'LOGO VARIATIONS') || sectionByTitle(modal, 'LOGO');
-    const sheetSection = sectionByTitle(modal, 'LOGO SHEET');
+  function updateProjectCard(lang) {
+    const card = Array.from(document.querySelectorAll('#works button, #works article')).find((node) =>
+      node.querySelector('h3')?.textContent?.trim() === '90.06'
+    );
+    if (!card) return;
+
+    const heading = card.querySelector('h3');
+    const type = heading?.nextElementSibling;
+    if (type?.tagName === 'P' && type.textContent !== COPY[lang].projectType) {
+      type.textContent = COPY[lang].projectType;
+    }
+
+    const chipWrap = type?.nextElementSibling;
+    const chips = chipWrap ? Array.from(chipWrap.querySelectorAll(':scope > span')) : [];
+    chips.forEach((chip, index) => {
+      const label = COPY[lang].chips[index];
+      if (label && chip.textContent !== label) chip.textContent = label;
+    });
+  }
+
+  function rebuildLogoSection(modal, section, sheetSection) {
     if (!section || section.dataset.layout9006 === VERSION) return;
 
     const headingRow = section.firstElementChild;
-    const heading = headingRow?.querySelector('h3');
-    if (heading) heading.textContent = 'LOGO';
     headingRow?.querySelector('p')?.remove();
     Array.from(section.children).slice(1).forEach((child) => child.remove());
 
@@ -220,8 +269,7 @@
     section.dataset.layout9006 = VERSION;
   }
 
-  function simplifyMerchSection(modal) {
-    const section = sectionByTitle(modal, 'MERCH');
+  function simplifyMerchSection(section) {
     if (!section) return;
     const layout = Array.from(section.children).find((child) => child.querySelector?.('img'));
     if (!layout) return;
@@ -232,8 +280,7 @@
     if (columns[1]) columns[1].classList.add('project9006-switch-controls');
   }
 
-  function restorePhotoshoot(modal) {
-    const section = sectionByTitle(modal, 'PHOTOSHOOT');
+  function restorePhotoshoot(section) {
     if (!section || section.dataset.layout9006 === VERSION) return;
     const imageButtons = Array.from(section.querySelectorAll('button')).filter((button) => button.querySelector('img'));
     if (!imageButtons.length) return;
@@ -258,7 +305,7 @@
       'EXPAND',
     ]);
     modal.querySelectorAll('button').forEach((button) => {
-      const text = button.textContent?.trim().toUpperCase();
+      const text = normalize(button.textContent);
       if (labels.has(text)) button.classList.add('project9006-hidden-action');
     });
   }
@@ -275,8 +322,7 @@
       button.type = 'button';
       button.className = 'project9006-poster-card';
       button.setAttribute('aria-label', `Open 90.06 poster ${index + 1}`);
-      const image = imageNode(src, `90.06 poster ${index + 1}`);
-      button.append(image);
+      button.append(imageNode(src, `90.06 poster ${index + 1}`));
       button.addEventListener('click', () => window.open(src, '_blank', 'noopener,noreferrer'));
       grid.append(button);
     });
@@ -288,18 +334,39 @@
 
   function enhance() {
     injectStyles();
+    const lang = getLanguage();
+    updateProjectCard(lang);
+
     const modal = find9006Modal();
     if (!modal) return;
     modal.classList.add('project9006-modal');
-    rebuildLogoSection(modal);
-    simplifyMerchSection(modal);
-    restorePhotoshoot(modal);
+
+    const identity = sectionByTitles(modal, SECTION_TITLES.identity);
+    const sheet = sectionByTitles(modal, SECTION_TITLES.sheet);
+    const merch = sectionByTitles(modal, SECTION_TITLES.merch);
+    const campaign = sectionByTitles(modal, SECTION_TITLES.campaign);
+    const posters = sectionByTitles(modal, SECTION_TITLES.posters);
+
+    rebuildLogoSection(modal, identity, sheet);
+    simplifyMerchSection(merch);
+    restorePhotoshoot(campaign);
     hideTextActions(modal);
-    replacePosters(sectionByTitle(modal, 'POSTERS'));
+    replacePosters(posters);
+
+    setHeading(identity, COPY[lang].identity);
+    setHeading(merch, COPY[lang].merch);
+    setHeading(campaign, COPY[lang].campaign);
+    setHeading(posters, COPY[lang].posters);
   }
 
   const observer = new MutationObserver(enhance);
   observer.observe(document.body, { childList: true, subtree: true });
   window.addEventListener('load', enhance);
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+      setTimeout(enhance, 0);
+      setTimeout(enhance, 80);
+    }
+  });
   enhance();
 })();
