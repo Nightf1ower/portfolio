@@ -3,8 +3,71 @@
 
   const style = document.createElement('style');
   style.id = 'global-modal-header-fix';
-  style.dataset.version = 'modal-head-4';
+  style.dataset.version = 'modal-head-5';
   style.textContent = `
+    html:has(.project9006-modal),
+    body:has(.project9006-modal),
+    html:has(div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"]),
+    body:has(div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"]) {
+      width: 100% !important;
+      min-height: 100% !important;
+      overflow: hidden !important;
+      overscroll-behavior: none !important;
+      background: #050505 !important;
+      background-color: #050505 !important;
+    }
+
+    .project9006-modal,
+    div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] {
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      box-sizing: border-box !important;
+      width: 100vw !important;
+      max-width: none !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+      min-height: 100svh !important;
+      margin: 0 !important;
+      z-index: 999999 !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      overscroll-behavior: contain !important;
+      background: #050505 !important;
+      background-color: #050505 !important;
+      background-image: none !important;
+      isolation: isolate !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .project9006-modal::before,
+    div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"]::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: #050505;
+    }
+
+    .project9006-modal > div,
+    div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] > div {
+      min-height: 100% !important;
+    }
+
+    @supports (padding: max(0px)) {
+      .project9006-modal,
+      div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] {
+        padding-top: max(1rem, env(safe-area-inset-top)) !important;
+        padding-right: max(1rem, env(safe-area-inset-right)) !important;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+        padding-left: max(1rem, env(safe-area-inset-left)) !important;
+      }
+    }
+
     .su-head,
     .zny-head,
     .fable-head,
