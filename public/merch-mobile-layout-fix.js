@@ -2,7 +2,7 @@
   if (window.__merchMobileLayoutFixLoaded) return;
   window.__merchMobileLayoutFixLoaded = true;
 
-  const VERSION = 'merch-mobile-fix-2';
+  const VERSION = 'merch-mobile-fix-3';
   const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
 
   function injectStyles() {
@@ -37,22 +37,42 @@
         background-clip: border-box !important;
       }
 
-      .m10-dxs-zone {
-        margin-top: 1.75rem !important;
-        padding-top: 6.5rem !important;
+      .m10-yablochko-transition {
+        position: relative !important;
+        z-index: 0 !important;
+        isolation: isolate !important;
+        margin-bottom: 0 !important;
+        padding-bottom: clamp(2.5rem, 6vw, 5rem) !important;
+      }
+
+      .m10-yablochko-transition::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        left: 50%;
+        top: 38%;
+        bottom: -1px;
+        width: 100vw;
+        transform: translateX(-50%);
+        pointer-events: none;
         background: linear-gradient(
           to bottom,
-          #87CEEB 0,
-          #91c4dd 1.6rem,
-          #a1b5cd 3.2rem,
-          #b29fb8 4.9rem,
-          #c5899c 6.7rem,
-          #d4727c 8.7rem,
-          #df575f 10.8rem,
-          #e34047 12.8rem,
-          #e5312b 15rem,
+          rgba(135, 206, 235, 0) 0%,
+          rgba(142, 201, 229, 0.16) 10%,
+          rgba(151, 193, 218, 0.32) 20%,
+          rgba(165, 181, 204, 0.48) 31%,
+          rgba(181, 164, 185, 0.64) 43%,
+          rgba(198, 139, 157, 0.77) 56%,
+          rgba(213, 111, 124, 0.88) 69%,
+          rgba(225, 78, 83, 0.95) 82%,
           #e5312b 100%
-        ) !important;
+        );
+      }
+
+      .m10-dxs-zone {
+        margin-top: 0 !important;
+        padding-top: clamp(2.25rem, 5vw, 4rem) !important;
+        background: #e5312b !important;
       }
 
       .m10-dxs-title {
@@ -92,22 +112,31 @@
           pointer-events: none !important;
         }
 
-        .m10-dxs-zone {
-          margin-top: 1rem !important;
-          padding-top: 5rem !important;
+        .m10-yablochko-transition {
+          padding-bottom: 2.5rem !important;
+        }
+
+        .m10-yablochko-transition::before {
+          top: 30%;
           background: linear-gradient(
             to bottom,
-            #87CEEB 0,
-            #90c4dd .9rem,
-            #a0b4cd 1.8rem,
-            #b29fb8 2.8rem,
-            #c68a9c 3.8rem,
-            #d7757e 4.8rem,
-            #df5960 6.1rem,
-            #e44247 7.8rem,
-            #e5312b 10rem,
+            rgba(135, 206, 235, 0) 0%,
+            rgba(141, 201, 229, 0.12) 9%,
+            rgba(149, 195, 221, 0.25) 18%,
+            rgba(160, 186, 211, 0.39) 28%,
+            rgba(174, 172, 195, 0.53) 39%,
+            rgba(190, 151, 174, 0.66) 51%,
+            rgba(205, 127, 147, 0.78) 63%,
+            rgba(218, 99, 113, 0.88) 75%,
+            rgba(227, 70, 76, 0.96) 88%,
             #e5312b 100%
-          ) !important;
+          );
+        }
+
+        .m10-dxs-zone {
+          margin-top: 0 !important;
+          padding-top: 2.25rem !important;
+          background: #e5312b !important;
         }
 
         .m10-dxs-title {
@@ -120,6 +149,14 @@
 
   function isTouchUI() {
     return touchQuery.matches || navigator.maxTouchPoints > 0 || window.innerWidth <= 768;
+  }
+
+  function applySmoothGradient() {
+    const zone = document.querySelector('.m10-dxs-zone');
+    const previousSection = zone?.previousElementSibling;
+    if (!zone || !previousSection) return false;
+    previousSection.classList.add('m10-yablochko-transition');
+    return true;
   }
 
   function protectImages(root = document) {
@@ -137,6 +174,7 @@
   }
 
   injectStyles();
+  applySmoothGradient();
   protectImages();
 
   document.addEventListener('contextmenu', preventImageMenu, true);
@@ -152,6 +190,7 @@
       }
       protectImages(node);
     }));
+    applySmoothGradient();
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
