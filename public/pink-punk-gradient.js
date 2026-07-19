@@ -2,7 +2,7 @@
   if (window.__pinkPunkGradientLoaded) return;
   window.__pinkPunkGradientLoaded = true;
 
-  const VERSION = 'pink-gradient-1';
+  const VERSION = 'pink-gradient-2';
 
   function injectStyles() {
     if (document.getElementById('pink-punk-gradient-style')) return;
@@ -28,15 +28,11 @@
       }
 
       .pink-punk-gradient-modal > div > .sticky {
-        background: linear-gradient(
-          90deg,
-          rgba(155, 0, 20, 0.96) 0%,
-          rgba(82, 0, 13, 0.93) 58%,
-          rgba(5, 5, 5, 0.91) 100%
-        ) !important;
-        border-bottom-color: rgba(255, 255, 255, 0.26) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
+        background: transparent !important;
+        border-bottom-color: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
       .pink-punk-gradient-modal .pink-punk-section {
