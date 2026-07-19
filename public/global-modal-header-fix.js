@@ -1,5 +1,5 @@
 (() => {
-  if (document.getElementById('global-modal-header-fix')) return;
+  document.getElementById('global-modal-header-fix')?.remove();
 
   const style = document.createElement('style');
   style.id = 'global-modal-header-fix';
@@ -39,7 +39,48 @@
       position: relative !important;
       z-index: 2 !important;
     }
+
+    /* Remove image totals such as 4 / 4 or 30 / 30 from every project. */
+    .pink-punk-section__counter,
+    .blandetto-lightbox__counter,
+    .blandetto-section__count,
+    .bf-c,
+    .zny-count,
+    .fable-count,
+    .m10-count,
+    .merch9-count,
+    .su-count,
+    .project9006-count,
+    .p9006-count,
+    .project9006-modal section > div:first-child > p.text-xs,
+    div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] section > div:first-child > p.text-xs {
+      display: none !important;
+    }
   `;
 
   document.head.append(style);
+
+  const removeCounters = () => {
+    const selectors = [
+      '.pink-punk-section__counter',
+      '.blandetto-lightbox__counter',
+      '.blandetto-section__count',
+      '.bf-c',
+      '.zny-count',
+      '.fable-count',
+      '.m10-count',
+      '.merch9-count',
+      '.su-count',
+      '.project9006-count',
+      '.p9006-count',
+      '.project9006-modal section > div:first-child > p.text-xs',
+      'div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] section > div:first-child > p.text-xs'
+    ];
+
+    document.querySelectorAll(selectors.join(',')).forEach((counter) => counter.remove());
+  };
+
+  const observer = new MutationObserver(removeCounters);
+  observer.observe(document.body, { childList: true, subtree: true });
+  removeCounters();
 })();
