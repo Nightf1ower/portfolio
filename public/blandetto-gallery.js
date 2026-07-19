@@ -9,7 +9,7 @@
     (document.currentScript || document.body).after(script);
   };
 
-  loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-1');
+  loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-2');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-7');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-1');
