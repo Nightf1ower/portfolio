@@ -1,5 +1,8 @@
 (() => {
-  const VERSION = '9006-layout-3';
+  if (window.__project9006LayoutLoaded) return;
+  window.__project9006LayoutLoaded = true;
+
+  const VERSION = '9006-layout-4';
   const LOGOS = [
     '/works/90-06/logo-variations/LOGO%201.jpg',
     '/works/90-06/logo-variations/LOGO%203.jpg',
@@ -71,21 +74,19 @@
 
       .project9006-modal .project9006-logo-card {
         box-sizing: border-box !important;
+        display: block !important;
         width: 100% !important;
         aspect-ratio: 1 / 1 !important;
         overflow: hidden !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: rgba(255,255,255,.04) !important;
+        background: transparent !important;
       }
 
       .project9006-modal .project9006-logo-card img {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
-        padding: clamp(.75rem, 2.5vw, 1.5rem) !important;
-        object-fit: contain !important;
+        padding: 0 !important;
+        object-fit: cover !important;
       }
 
       .project9006-modal .project9006-logo-sheet {
@@ -104,14 +105,14 @@
 
       .project9006-modal .project9006-merch-media {
         box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         width: min(100%, 42rem) !important;
         aspect-ratio: 1 / 1 !important;
         min-height: 0 !important;
         margin-inline: auto !important;
         overflow: hidden !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
         background: rgba(255,255,255,.04) !important;
       }
 
@@ -157,27 +158,31 @@
       .project9006-modal .project9006-posters-grid {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        align-items: start !important;
         gap: 1rem !important;
       }
 
       .project9006-modal .project9006-poster-card {
         box-sizing: border-box !important;
+        display: block !important;
         width: 100% !important;
-        aspect-ratio: 1 / 1 !important;
+        height: auto !important;
+        aspect-ratio: auto !important;
         min-height: 0 !important;
-        overflow: hidden !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: rgba(255,255,255,.04) !important;
+        overflow: visible !important;
+        background: transparent !important;
       }
 
       .project9006-modal .project9006-poster-card img {
+        position: static !important;
         display: block !important;
         width: 100% !important;
-        height: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: none !important;
         padding: 0 !important;
-        object-fit: cover !important;
+        object-fit: contain !important;
+        transform: none !important;
       }
 
       @media (max-width: 900px) {
@@ -244,7 +249,7 @@
     });
   }
 
-  function rebuildLogoSection(modal, section, sheetSection) {
+  function rebuildLogoSection(section, sheetSection) {
     if (!section || section.dataset.layout9006 === VERSION) return;
 
     const headingRow = section.firstElementChild;
@@ -305,8 +310,7 @@
       'EXPAND',
     ]);
     modal.querySelectorAll('button').forEach((button) => {
-      const text = normalize(button.textContent);
-      if (labels.has(text)) button.classList.add('project9006-hidden-action');
+      if (labels.has(normalize(button.textContent))) button.classList.add('project9006-hidden-action');
     });
   }
 
@@ -347,7 +351,7 @@
     const campaign = sectionByTitles(modal, SECTION_TITLES.campaign);
     const posters = sectionByTitles(modal, SECTION_TITLES.posters);
 
-    rebuildLogoSection(modal, identity, sheet);
+    rebuildLogoSection(identity, sheet);
     simplifyMerchSection(merch);
     restorePhotoshoot(campaign);
     hideTextActions(modal);
@@ -359,14 +363,24 @@
     setHeading(posters, COPY[lang].posters);
   }
 
-  const observer = new MutationObserver(enhance);
+  let scheduled = false;
+  function scheduleEnhance() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      enhance();
+    });
+  }
+
+  const observer = new MutationObserver(scheduleEnhance);
   observer.observe(document.body, { childList: true, subtree: true });
-  window.addEventListener('load', enhance);
+  window.addEventListener('load', scheduleEnhance);
   document.addEventListener('click', (event) => {
     if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
-      setTimeout(enhance, 0);
-      setTimeout(enhance, 80);
+      setTimeout(scheduleEnhance, 0);
+      setTimeout(scheduleEnhance, 80);
     }
   });
-  enhance();
+  scheduleEnhance();
 })();
