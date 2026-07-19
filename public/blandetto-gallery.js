@@ -19,7 +19,7 @@
   loadScript('script[src^="/nightflower-playground.js"]', '/nightflower-playground.js?v=playground-1');
   loadScript('script[src^="/nightflower-playground-mount-fix.js"]', '/nightflower-playground-mount-fix.js?v=playground-1');
   loadScript('script[src^="/font-panic-override.js"]', '/font-panic-override.js?v=font-panic-2');
-  loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-1');
+  loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-2');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
