@@ -9,10 +9,11 @@
     (document.currentScript || document.body).after(script);
   };
 
-  loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-5');
+  loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-8');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-3');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
+  loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-3');
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-16');
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
