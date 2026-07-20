@@ -1,6 +1,6 @@
 (() => {
-  if (window.__portfolioStaticAssetsV1) return;
-  window.__portfolioStaticAssetsV1 = true;
+  if (window.__portfolioStaticAssetsV2) return;
+  window.__portfolioStaticAssetsV2 = true;
 
   const FABLE = Array.from({ length: 40 }, (_, index) =>
     `public/works/fable/fprint-${String(index + 1).padStart(2, '0')}.jpg`
@@ -96,6 +96,35 @@
     download_url: toLocalUrl(path),
   }));
 
+  const RAW_PREFIX = 'https://raw.githubusercontent.com/Nightf1ower/portfolio/main/public/';
+  const localizeImageUrl = (value) => {
+    if (typeof value !== 'string' || !value.startsWith(RAW_PREFIX)) return value;
+    return `/${value.slice(RAW_PREFIX.length)}`;
+  };
+
+  const imageSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+  if (imageSrcDescriptor?.get && imageSrcDescriptor?.set) {
+    Object.defineProperty(HTMLImageElement.prototype, 'src', {
+      configurable: true,
+      enumerable: imageSrcDescriptor.enumerable,
+      get() {
+        return imageSrcDescriptor.get.call(this);
+      },
+      set(value) {
+        imageSrcDescriptor.set.call(this, localizeImageUrl(value));
+      },
+    });
+  }
+
+  const originalSetAttribute = HTMLImageElement.prototype.setAttribute;
+  HTMLImageElement.prototype.setAttribute = function setAttribute(name, value) {
+    return originalSetAttribute.call(
+      this,
+      name,
+      String(name).toLowerCase() === 'src' ? localizeImageUrl(value) : value,
+    );
+  };
+
   const originalFetch = window.fetch.bind(window);
 
   window.fetch = (input, init) => {
@@ -114,7 +143,7 @@
     const treeMatch = parsed.pathname.match(/^\/repos\/Nightf1ower\/portfolio\/git\/trees\/main$/i);
     if (treeMatch) {
       return Promise.resolve(new Response(JSON.stringify({
-        sha: 'static-portfolio-assets-v1',
+        sha: 'static-portfolio-assets-v2',
         truncated: false,
         tree: TREE,
       }), {
