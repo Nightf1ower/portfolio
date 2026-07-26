@@ -11,8 +11,8 @@
 
   loadScript('script[src^="/portfolio-static-assets.js"]', '/portfolio-static-assets.js?v=static-assets-2');
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
-  loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-1');
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-1');
+  loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-1');
   loadScript('script[src^="/carnival-records-bootstrap.js"]', '/carnival-records-bootstrap.js?v=carnival-bootstrap-1');
   loadScript('script[src^="/carnival-records-gallery.js"]', '/carnival-records-gallery.js?v=carnival-2');
   loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-3');
