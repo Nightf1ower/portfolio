@@ -1,13 +1,13 @@
 (() => {
-  if (window.__nightflowerPlayroomPlaceholderV1) return;
-  window.__nightflowerPlayroomPlaceholderV1 = true;
+  if (window.__nightflowerPlaygroundPlaceholderV2) return;
+  window.__nightflowerPlaygroundPlaceholderV2 = true;
 
-  const VERSION = 'playroom-placeholder-1';
+  const VERSION = 'playground-placeholder-2';
 
   function injectStyles() {
-    if (document.getElementById('nightflower-playroom-placeholder-style')) return;
+    if (document.getElementById('nightflower-playground-placeholder-style')) return;
     const style = document.createElement('style');
-    style.id = 'nightflower-playroom-placeholder-style';
+    style.id = 'nightflower-playground-placeholder-style';
     style.textContent = `
       #nightflower-playground {
         position: relative !important;
@@ -64,7 +64,7 @@
     if (section.dataset.placeholderVersion !== VERSION) {
       section.innerHTML = `
         <div class="nfp-development">
-          <h2 class="nfp-development-title">NIGHTFLOWER PLAYROOM <span class="nfp-development-star">*</span></h2>
+          <h2 class="nfp-development-title">NIGHTFLOWER PLAYGROUND <span class="nfp-development-star">*</span></h2>
           <p class="nfp-development-status">IN DEVELOPMENT</p>
         </div>
       `;
