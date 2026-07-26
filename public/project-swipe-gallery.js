@@ -1,6 +1,6 @@
 (() => {
-  if (window.__projectSwipeGalleryV1) return;
-  window.__projectSwipeGalleryV1 = true;
+  if (window.__projectSwipeGalleryV2) return;
+  window.__projectSwipeGalleryV2 = true;
 
   const MODAL_SELECTORS = [
     '.cr-modal',
@@ -14,7 +14,7 @@
     '.merch9-modal',
     '.project9006-modal',
     '.pink-punk-fullscreen',
-    '.z-\\[100\\].fixed.inset-0'
+    '.z-\\[100\\].fixed.inset-0',
   ];
 
   const CLOSE_SELECTORS = [
@@ -31,10 +31,10 @@
     '.p9006-close',
     '.pink-punk-fullscreen > div > .sticky button',
     '.project9006-modal > div > .sticky button',
-    '.z-\\[100\\].fixed.inset-0 > div > .sticky button'
+    '.z-\\[100\\].fixed.inset-0 > div > .sticky button',
   ];
 
-  const EXISTING_LIGHTBOXES = [
+  const LIGHTBOX_SELECTORS = [
     '.psg-lightbox',
     '.cr-light',
     '.zny-light',
@@ -45,8 +45,28 @@
     '.m10-light',
     '.merch9-light',
     '.project9006-lightbox',
-    '.z-\\[150\\].fixed.inset-0'
+    '.z-\\[150\\].fixed.inset-0',
   ];
+
+  const EXPLICIT_GROUP_SELECTOR = [
+    '.cr-card',
+    '.pink-punk-frame',
+    '.pink-punk-frame--hover',
+    '[data-images]',
+    '[data-hover-src]',
+    '[data-worn-src]',
+  ].join(',');
+
+  const CONTROL_SELECTOR = [
+    ...CLOSE_SELECTORS,
+    '.psg-close',
+    '.psg-nav',
+    '.project-scroll-top',
+    'a',
+    'input',
+    'select',
+    'textarea',
+  ].join(',');
 
   const style = document.createElement('style');
   style.id = 'project-swipe-gallery-style';
@@ -56,16 +76,15 @@
       inset: 0;
       z-index: 950000;
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-columns: auto minmax(0,1fr) auto;
       align-items: center;
-      gap: clamp(.5rem, 2vw, 1.25rem);
-      padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+      gap: clamp(.5rem,2vw,1.25rem);
+      padding: max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));
       background: rgba(0,0,0,.97);
       color: #fff;
       overscroll-behavior: none;
       touch-action: none;
     }
-
     .psg-stage {
       min-width: 0;
       height: calc(100dvh - 2rem);
@@ -74,7 +93,6 @@
       justify-content: center;
       overflow: hidden;
     }
-
     .psg-image {
       display: block;
       max-width: 100%;
@@ -86,60 +104,45 @@
       -webkit-user-drag: none;
       transition: opacity .16s ease, transform .16s ease;
     }
-
-    .psg-nav,
-    .psg-close {
+    .psg-nav,.psg-close {
       border: 1px solid rgba(255,255,255,.8);
       border-radius: 0;
       background: #050505;
       color: #fff;
-      font: 900 1.45rem/1 Arial, Helvetica, sans-serif;
+      font: 900 1.45rem/1 Arial,Helvetica,sans-serif;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .psg-nav {
-      width: 3.25rem;
-      height: 3.25rem;
-    }
-
+    .psg-nav { width: 3.25rem; height: 3.25rem; }
     .psg-close {
       position: absolute;
-      top: max(1rem, env(safe-area-inset-top));
-      right: max(1rem, env(safe-area-inset-right));
+      top: max(1rem,env(safe-area-inset-top));
+      right: max(1rem,env(safe-area-inset-right));
       z-index: 2;
       padding: .7rem .9rem;
       font-size: .68rem;
       letter-spacing: .2em;
       text-transform: uppercase;
     }
-
     .psg-counter {
       position: absolute;
       left: 50%;
-      bottom: max(1rem, env(safe-area-inset-bottom));
+      bottom: max(1rem,env(safe-area-inset-bottom));
       transform: translateX(-50%);
       margin: 0;
       padding: .45rem .65rem;
       background: #fff;
       color: #050505;
-      font: 900 .65rem/1 Arial, Helvetica, sans-serif;
+      font: 900 .65rem/1 Arial,Helvetica,sans-serif;
       letter-spacing: .18em;
     }
-
-    @media (hover: none), (pointer: coarse), (max-width: 700px) {
+    @media (hover:none),(pointer:coarse),(max-width:700px) {
       .psg-lightbox {
         grid-template-columns: 1fr;
-        padding: max(.75rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left));
+        padding: max(.75rem,env(safe-area-inset-top)) max(.75rem,env(safe-area-inset-right)) max(.75rem,env(safe-area-inset-bottom)) max(.75rem,env(safe-area-inset-left));
       }
-
-      .psg-nav {
-        display: none !important;
-      }
-
-      .psg-stage {
-        height: calc(100dvh - 1.5rem);
-      }
+      .psg-nav { display: none !important; }
+      .psg-stage { height: calc(100dvh - 1.5rem); }
     }
   `;
   document.head.append(style);
@@ -157,15 +160,18 @@
   }
 
   function activeLightbox() {
-    return [...document.querySelectorAll(EXISTING_LIGHTBOXES.join(','))].filter(isVisible).at(-1) || null;
+    return [...document.querySelectorAll(LIGHTBOX_SELECTORS.join(','))].filter(isVisible).at(-1) || null;
   }
 
   function normalizeUrl(value) {
     if (!value) return '';
     const clean = String(value).trim().replace(/^['"]|['"]$/g, '');
     if (!clean || clean === 'none') return '';
-    try { return new URL(clean, location.href).href; }
-    catch { return clean; }
+    try {
+      return new URL(clean, location.href).href;
+    } catch {
+      return clean;
+    }
   }
 
   function backgroundUrls(node) {
@@ -192,13 +198,18 @@
       }
 
       [
-        'data-hover-src', 'data-alt-src', 'data-worn-src', 'data-active-src',
-        'data-image', 'data-src', 'data-full', 'data-large'
+        'data-hover-src',
+        'data-alt-src',
+        'data-worn-src',
+        'data-active-src',
+        'data-image',
+        'data-src',
+        'data-full',
+        'data-large',
       ].forEach((name) => urls.push(normalizeUrl(item.getAttribute(name))));
 
       const list = item.getAttribute('data-images');
       if (list) urls.push(...list.split(/[|,]/).map(normalizeUrl));
-
       urls.push(...backgroundUrls(item));
     });
 
@@ -207,36 +218,49 @@
 
   function isLayeredGroup(node) {
     const images = [...node.querySelectorAll('img')];
-    if (images.length < 2) return false;
-
-    const visibleRects = images
-      .map((image) => ({ image, rect: image.getBoundingClientRect(), css: getComputedStyle(image) }))
-      .filter(({ rect }) => rect.width > 2 && rect.height > 2);
+    if (images.length < 2 || images.length > 20) return false;
 
     const hasLayerStyles = images.some((image) => {
       const css = getComputedStyle(image);
       return css.position === 'absolute' || css.display === 'none' || Number(css.opacity || 1) < .98;
     });
 
-    const sameBox = visibleRects.length >= 2 && visibleRects.every(({ rect }) => {
-      const first = visibleRects[0].rect;
-      return Math.abs(rect.left - first.left) < 10 && Math.abs(rect.top - first.top) < 10 && Math.abs(rect.width - first.width) < 14 && Math.abs(rect.height - first.height) < 14;
-    });
+    if (hasLayerStyles) return true;
 
-    return hasLayerStyles || sameBox;
+    const rects = images
+      .map((image) => image.getBoundingClientRect())
+      .filter((rect) => rect.width > 2 && rect.height > 2);
+
+    if (rects.length < 2) return false;
+    const first = rects[0];
+    return rects.every((rect) =>
+      Math.abs(rect.left - first.left) < 10
+      && Math.abs(rect.top - first.top) < 10
+      && Math.abs(rect.width - first.width) < 14
+      && Math.abs(rect.height - first.height) < 14
+    );
   }
 
   function hoverGroup(target, modal) {
-    let node = target instanceof Element ? target : null;
-    if (node?.tagName === 'IMG') node = node.parentElement;
+    if (!(target instanceof Element)) return null;
 
-    while (node && node !== modal) {
-      const urls = sourceUrls(node);
-      const explicit = node.matches('.cr-card,.pink-punk-frame,.pink-punk-frame--hover,[data-images],[data-hover-src],[data-worn-src]');
-      if (urls.length > 1 && urls.length <= 20 && (explicit || isLayeredGroup(node))) {
-        return { node, urls };
+    const explicit = target.closest(EXPLICIT_GROUP_SELECTOR);
+    if (explicit && modal.contains(explicit)) {
+      const urls = sourceUrls(explicit);
+      if (urls.length > 1 && urls.length <= 20) return { node: explicit, urls };
+    }
+
+    let node = target.closest('img')?.parentElement || target;
+    let depth = 0;
+
+    while (node && node !== modal && depth < 5) {
+      if (node.matches('button') && !node.matches(EXPLICIT_GROUP_SELECTOR)) return null;
+      if (isLayeredGroup(node)) {
+        const urls = sourceUrls(node);
+        if (urls.length > 1 && urls.length <= 20) return { node, urls };
       }
       node = node.parentElement;
+      depth += 1;
     }
 
     return null;
@@ -249,31 +273,26 @@
 
     let index = Math.max(0, images.indexOf(normalizeUrl(startUrl)));
     const overlay = document.createElement('div');
-    overlay.className = 'psg-lightbox';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-
-    const prev = document.createElement('button');
+    const previous = document.createElement('button');
     const next = document.createElement('button');
     const close = document.createElement('button');
     const stage = document.createElement('div');
     const image = document.createElement('img');
     const counter = document.createElement('p');
 
-    prev.type = next.type = close.type = 'button';
-    prev.className = 'psg-nav psg-prev';
+    overlay.className = 'psg-lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    previous.type = next.type = close.type = 'button';
+    previous.className = 'psg-nav psg-prev';
     next.className = 'psg-nav psg-next';
     close.className = 'psg-close';
     stage.className = 'psg-stage';
     image.className = 'psg-image';
     counter.className = 'psg-counter';
-    prev.textContent = '←';
+    previous.textContent = '←';
     next.textContent = '→';
     close.textContent = document.documentElement.lang === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
-    prev.setAttribute('aria-label', 'Предыдущее изображение');
-    next.setAttribute('aria-label', 'Следующее изображение');
-    close.setAttribute('aria-label', 'Закрыть изображение');
-    image.alt = '';
     image.draggable = false;
 
     const draw = (direction = 0) => {
@@ -295,37 +314,30 @@
     };
 
     const remove = () => overlay.remove();
-    prev.onclick = (event) => { event.stopPropagation(); step(-1); };
+    previous.onclick = (event) => { event.stopPropagation(); step(-1); };
     next.onclick = (event) => { event.stopPropagation(); step(1); };
-    close.onclick = remove;
+    close.onclick = (event) => { event.stopPropagation(); remove(); };
     stage.onclick = (event) => event.stopPropagation();
     image.onclick = (event) => { event.stopPropagation(); step(1); };
     overlay.onclick = remove;
 
     let startX = 0;
     let startY = 0;
-    let tracking = false;
-
     overlay.addEventListener('touchstart', (event) => {
       if (event.touches.length !== 1) return;
-      tracking = true;
       startX = event.touches[0].clientX;
       startY = event.touches[0].clientY;
     }, { passive: true });
-
     overlay.addEventListener('touchend', (event) => {
-      if (!tracking || !event.changedTouches.length) return;
-      tracking = false;
+      if (!event.changedTouches.length) return;
       const dx = event.changedTouches[0].clientX - startX;
       const dy = event.changedTouches[0].clientY - startY;
-      const horizontal = Math.abs(dx) > Math.abs(dy) * 1.15;
-
-      if (horizontal && Math.abs(dx) > 48) step(dx < 0 ? 1 : -1);
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.15) step(dx < 0 ? 1 : -1);
       else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.2) remove();
     }, { passive: true });
 
     stage.append(image);
-    overlay.append(prev, stage, next, close, counter);
+    overlay.append(previous, stage, next, close, counter);
     document.body.append(overlay);
     draw();
   }
@@ -333,6 +345,13 @@
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
     if (event.target.closest('.psg-lightbox')) return;
+
+    const closeControl = event.target.closest(CLOSE_SELECTORS.join(','));
+    if (closeControl) return;
+
+    const explicitGroup = event.target.closest(EXPLICIT_GROUP_SELECTOR);
+    const genericControl = event.target.closest(CONTROL_SELECTOR);
+    if (genericControl && !explicitGroup) return;
 
     const modal = closestModal(event.target);
     if (!modal || activeLightbox()) return;
@@ -356,9 +375,11 @@
       overlay.remove();
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
+      event.stopImmediatePropagation();
       overlay.querySelector('.psg-prev')?.click();
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
+      event.stopImmediatePropagation();
       overlay.querySelector('.psg-next')?.click();
     }
   }, true);
