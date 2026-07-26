@@ -17,6 +17,7 @@
   loadScript('script[src^="/posters-gallery.js"]', '/posters-gallery.js?v=posters-1');
   loadScript('script[src^="/posters-final-layout.js"]', '/posters-final-layout.js?v=posters-final-1');
   loadScript('script[src^="/album-covers-gallery.js"]', '/album-covers-gallery.js?v=album-covers-2');
+  loadScript('script[src^="/album-covers-description.js"]', '/album-covers-description.js?v=album-covers-description-1');
   loadScript('script[src^="/carnival-records-bootstrap.js"]', '/carnival-records-bootstrap.js?v=carnival-bootstrap-1');
   loadScript('script[src^="/carnival-records-gallery.js"]', '/carnival-records-gallery.js?v=carnival-2');
   loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-3');
