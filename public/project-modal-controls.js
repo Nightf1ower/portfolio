@@ -1,9 +1,10 @@
 (() => {
-  if (window.__projectModalControlsV2) return;
-  window.__projectModalControlsV2 = true;
+  if (window.__projectModalControlsV3) return;
+  window.__projectModalControlsV3 = true;
 
-  const VERSION = 'modal-controls-2';
+  const VERSION = 'modal-controls-3';
   const MODAL_SELECTORS = [
+    '.posters-modal',
     '.album-covers-modal',
     '.zny-modal',
     '.fable-modal',
@@ -19,6 +20,7 @@
   ];
 
   const LIGHTBOX_CLOSE_SELECTORS = [
+    '.posters-light .posters-light-close',
     '.album-covers-light .album-covers-light-close',
     '.zny-light button',
     '.fable-light button',
@@ -32,6 +34,7 @@
   ];
 
   const MODAL_CLOSE_SELECTORS = [
+    '.posters-close',
     '.album-covers-close',
     '.zny-close',
     '.fable-close',
@@ -49,7 +52,7 @@
   ];
 
   const PROJECT_TITLES = new Set([
-    'ALBUM COVERS', 'ZNY', 'FABLE', 'PINK PUNK', 'BLANDETTO', '90.06', 'MERCH', 'STAY UGLY', 'STAYUGLY'
+    'POSTERS', 'ALBUM COVERS', 'ZNY', 'FABLE', 'PINK PUNK', 'BLANDETTO', '90.06', 'MERCH', 'STAY UGLY', 'STAYUGLY'
   ]);
 
   const style = document.createElement('style');
@@ -136,7 +139,8 @@
   }
 
   function updateButton() {
-    const shouldShow = Boolean(activeModal && activeModal.scrollTop > 420 && !document.querySelector('.album-covers-light, .psg-lightbox'));
+    const hasLightbox = document.querySelector('.posters-light, .album-covers-light, .psg-lightbox');
+    const shouldShow = Boolean(activeModal && activeModal.scrollTop > 420 && !hasLightbox);
     button.classList.toggle('is-visible', shouldShow);
   }
 
@@ -199,7 +203,7 @@
     const title = card?.querySelector('h3')?.textContent?.trim().toUpperCase();
     const closeControl = event.target.closest(MODAL_CLOSE_SELECTORS.join(','));
 
-    if (PROJECT_TITLES.has(title) || closeControl || event.target.closest('.album-covers-card')) scheduleRefresh();
+    if (PROJECT_TITLES.has(title) || closeControl || event.target.closest('.posters-card, .album-covers-card')) scheduleRefresh();
   }, true);
 
   window.addEventListener('load', refresh);
