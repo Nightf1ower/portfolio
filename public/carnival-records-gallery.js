@@ -1,17 +1,17 @@
 (() => {
-  if (window.__carnivalRecordsGalleryV1) return;
-  window.__carnivalRecordsGalleryV1 = true;
+  if (window.__carnivalRecordsGalleryV2) return;
+  window.__carnivalRecordsGalleryV2 = true;
 
-  const V = 'carnival-1';
+  const V = 'carnival-2';
   const ROOT = '/works/carnival-records';
   const HOVER = matchMedia('(hover:hover) and (pointer:fine)');
   const range = (n) => Array.from({ length: n }, (_, i) => i + 1);
-  const path = (folder, file) => `${ROOT}/${folder}/${file}?v=${V}`;
+  const asset = (folder, file) => `${ROOT}/${folder}/${file}?v=${V}`;
 
   const CARNIVAL = {
     1: ['another-1', 'another-2', 'tee-1', 'tee-2'],
     2: ['tee-1', 'tee-2'],
-    3: ['tee-4'],
+    3: ['carnival_print-tee-1.jpg', 'carnival_print-tee-2.jpg', 'carnival_print-tee-3.jpg', 'tee-4'],
     4: ['tee-1', 'tee-2', 'tee-3', 'tee-4', 'tee-5'],
     5: ['tee-1', 'tee-2', 'tee-3'],
     6: ['tee-1', 'tee-2'],
@@ -24,15 +24,12 @@
   };
 
   const CALEC = {
-    1: ['tee-1', 'carnival_print-1-tee-2.jpg'],
-    2: ['tee-1', 'carnival_print-2-tee-1.jpg'],
-    3: ['tee-1', 'carnival_print-3-tee-4.jpg'],
+    1: ['tee-1'],
+    2: ['tee-1'],
+    3: ['tee-1'],
     4: ['tee-1'],
     5: ['tee-1'],
-    6: ['tee-1', 'carnival_print-6-tee-2.jpg'],
-    7: ['carnival_print-7-tee-1.jpg', 'carnival_print-7-tee-2.jpg'],
-    8: ['carnival_print-8-tee-1.jpg'],
-    9: ['carnival_print-9-tee-4.jpg'],
+    6: ['tee-1'],
     12: ['another-1', 'another-2', 'tee-1', 'tee-2', 'tee-3'],
     13: ['another-1', 'tee-1', 'tee-2', 'tee-3', 'tee-4', 'tee-5'],
     14: ['tee-1'],
@@ -63,9 +60,7 @@
   let modal = null;
   let bodyOverflow = '';
   let htmlOverflow = '';
-  const lang = () => document.documentElement.lang === 'ru' || document.documentElement.lang === 'en'
-    ? document.documentElement.lang
-    : localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en';
+  const lang = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
   const el = (tag, cls, text) => {
     const node = document.createElement(tag);
     if (cls) node.className = cls;
@@ -73,21 +68,16 @@
     return node;
   };
 
-  function printGroups(prefix, folder, total, variants, singles = []) {
-    const groups = range(total).map((n) => {
+  function printGroups(prefix, folder, total, variants) {
+    return range(total).map((n) => {
       const files = [`${prefix}-${n}.jpg`, ...(variants[n] || []).map((token) =>
         token.endsWith('.jpg') ? token : `${prefix}-${n}-${token}.jpg`
       )];
       return {
         label: `${prefix.replace('_', ' ').toUpperCase()} ${String(n).padStart(2, '0')}`,
-        images: files.map((file) => path(folder, file)),
+        images: files.map((file) => asset(folder, file)),
       };
     });
-    singles.forEach((file, i) => groups.push({
-      label: `${prefix.replace('_', ' ').toUpperCase()} TEE ${String(i + 1).padStart(2, '0')}`,
-      images: [path(folder, file)],
-    }));
-    return groups;
   }
 
   function styles() {
@@ -150,11 +140,11 @@
     next.setAttribute('aria-label', copy.next);
     const draw = () => { image.src = images[index]; counter.textContent = `${index + 1} / ${images.length}`; };
     const step = (n) => { index = (index + n + images.length) % images.length; draw(); };
-    prev.onclick = (e) => { e.stopPropagation(); step(-1); };
-    next.onclick = (e) => { e.stopPropagation(); step(1); };
+    prev.onclick = (event) => { event.stopPropagation(); step(-1); };
+    next.onclick = (event) => { event.stopPropagation(); step(1); };
     close.onclick = () => overlay.remove();
-    image.onclick = (e) => { e.stopPropagation(); step(1); };
-    stage.onclick = (e) => e.stopPropagation();
+    image.onclick = (event) => { event.stopPropagation(); step(1); };
+    stage.onclick = (event) => event.stopPropagation();
     overlay.onclick = () => overlay.remove();
     stage.append(image);
     overlay.append(prev, stage, next, close, counter);
@@ -166,44 +156,54 @@
     const button = el('button', 'cr-card');
     const media = el('span', 'cr-media');
     button.type = 'button';
-    const layers = item.images.map((src, i) => {
-      const image = el('img', `cr-img${i === 0 ? ' active' : ''}`);
+    const layers = item.images.map((src, index) => {
+      const image = el('img', `cr-img${index === 0 ? ' active' : ''}`);
       image.src = src;
-      image.alt = `${item.label} ${i + 1}`;
-      image.loading = eager && i === 0 ? 'eager' : 'lazy';
+      image.alt = `${item.label} ${index + 1}`;
+      image.loading = eager && index === 0 ? 'eager' : 'lazy';
       image.decoding = 'async';
       media.append(image);
       return image;
     });
     let active = 0;
     let timer = null;
-    const show = (i) => { active = i; layers.forEach((layer, n) => layer.classList.toggle('active', n === i)); };
+    const show = (index) => {
+      active = index;
+      layers.forEach((layer, layerIndex) => layer.classList.toggle('active', layerIndex === index));
+    };
     if (layers.length > 1 && HOVER.matches) {
       button.onmouseenter = () => {
         clearInterval(timer);
         show(1);
         timer = setInterval(() => show(active + 1 >= layers.length ? 1 : active + 1), 900);
       };
-      button.onmouseleave = () => { clearInterval(timer); timer = null; show(0); };
+      button.onmouseleave = () => {
+        clearInterval(timer);
+        timer = null;
+        show(0);
+      };
     }
-    button.onclick = (e) => { e.stopPropagation(); lightbox(item.images); };
+    button.onclick = (event) => {
+      event.stopPropagation();
+      lightbox(item.images);
+    };
     button.append(media, el('span', 'cr-card-label', item.label));
     return button;
   }
 
   function grid(items) {
     const node = el('div', 'cr-grid');
-    items.forEach((item, i) => node.append(card(item, i < 2)));
+    items.forEach((item, index) => node.append(card(item, index < 2)));
     return node;
-  }
-  function staticItems(folder, prefix, total) {
-    return range(total).map((n) => ({ label: `${prefix} ${String(n).padStart(2, '0')}`, images: [path(folder, `${prefix.toLowerCase()}-${n}.jpg`)] }));
   }
   function section(title, content, note = false) {
     const copy = COPY[lang()];
     const node = el('section', 'cr-section');
     node.append(el('h2', 'cr-h', title));
-    if (note) node.append(el('p', 'cr-note cr-note-desktop', copy.hover), el('p', 'cr-note cr-note-mobile', copy.tap));
+    if (note) node.append(
+      el('p', 'cr-note cr-note-desktop', copy.hover),
+      el('p', 'cr-note cr-note-mobile', copy.tap),
+    );
     node.append(content);
     return node;
   }
@@ -226,28 +226,41 @@
     close.onclick = closeModal;
     header.append(el('p', 'cr-label', 'CARNIVAL RECORDS'), close);
     const hero = el('section', 'cr-hero');
-    hero.append(el('p', 'cr-kicker', copy.kicker), el('h1', 'cr-title', 'CARNIVAL RECORDS'), el('p', 'cr-lead', copy.lead));
+    hero.append(
+      el('p', 'cr-kicker', copy.kicker),
+      el('h1', 'cr-title', 'CARNIVAL RECORDS'),
+      el('p', 'cr-lead', copy.lead),
+    );
 
-    const carnival = printGroups('carnival_print', 'carnival-print', 12, CARNIVAL, ['carnival_print-tee-1.jpg', 'carnival_print-tee-2.jpg', 'carnival_print-tee-3.jpg']);
-    const calec = printGroups('calec-print', 'calec-print', 17, CALEC, ['calec-print-tee.jpg']);
+    const carnival = printGroups('carnival_print', 'carnival-print', 12, CARNIVAL);
+    const calec = printGroups('calec-print', 'calec-print', 17, CALEC);
     const album = el('div');
     album.append(
-      subgroup(copy.covers, range(8).map((n) => ({ label: `ALBUM ${String(n).padStart(2, '0')}`, images: [path('album', `album-${n}.jpg`)] }))),
-      subgroup(copy.vinyl, range(8).map((n) => ({ label: `VINYL ${String(n).padStart(2, '0')}`, images: [path('album', `vinyl-${n}.jpg`)] }))),
-      subgroup(copy.albumMerch, range(5).map((n) => ({ label: `MERCHALBUM ${String(n).padStart(2, '0')}`, images: [path('album', `merchalbum-${n}.jpg`)] }))),
+      subgroup(copy.covers, range(8).map((n) => ({ label: `ALBUM ${String(n).padStart(2, '0')}`, images: [asset('album', `album-${n}.jpg`)] }))),
+      subgroup(copy.vinyl, range(8).map((n) => ({ label: `VINYL ${String(n).padStart(2, '0')}`, images: [asset('album', `vinyl-${n}.jpg`)] }))),
+      subgroup(copy.albumMerch, range(5).map((n) => ({ label: `MERCHALBUM ${String(n).padStart(2, '0')}`, images: [asset('album', `merchalbum-${n}.jpg`)] }))),
     );
     const merch = [
-      { label: 'MERCH 01', images: [path('merch', 'merch-1.jpg'), path('merch', 'merch-1-another-1.jpg')] },
-      ...range(3).map((n) => ({ label: `MERCH ${String(n + 1).padStart(2, '0')}`, images: [path('merch', `merch-${n + 1}.jpg`)] })),
+      { label: 'MERCH 01', images: [asset('merch', 'merch-1.jpg'), asset('merch', 'merch-1-another-1.jpg')] },
+      ...range(3).map((n) => ({ label: `MERCH ${String(n + 1).padStart(2, '0')}`, images: [asset('merch', `merch-${n + 1}.jpg`)] })),
     ];
 
-    inner.append(header, hero, section(copy.carnival, grid(carnival), true), section(copy.calec, grid(calec), true), section(copy.album, album), section(copy.merch, grid(merch), true));
+    inner.append(
+      header,
+      hero,
+      section(copy.carnival, grid(carnival), true),
+      section(copy.calec, grid(calec), true),
+      section(copy.album, album),
+      section(copy.merch, grid(merch), true),
+    );
     modal.append(inner);
     document.body.append(modal);
   }
 
   function findCard() {
-    return [...document.querySelectorAll('#works article,#works button')].find((node) => node.querySelector('h3')?.textContent?.trim().toUpperCase() === 'CARNIVAL RECORDS');
+    return [...document.querySelectorAll('#works article,#works button')].find((node) =>
+      node.querySelector('h3')?.textContent?.trim().toUpperCase() === 'CARNIVAL RECORDS'
+    );
   }
   function markCard() {
     const project = findCard();
@@ -256,20 +269,22 @@
     project.tabIndex = 0;
     project.setAttribute('role', 'button');
     project.setAttribute('aria-label', lang() === 'ru' ? 'Открыть проект CARNIVAL RECORDS' : 'Open CARNIVAL RECORDS project');
-    [...project.querySelectorAll('div')].find((node) => /плейсхолдер|placeholder/i.test(node.textContent || ''))?.replaceChildren(document.createTextNode(lang() === 'ru' ? 'ОТКРЫТЬ ПРОЕКТ' : 'OPEN PROJECT'));
   }
 
   [0, 150, 600, 1400].forEach((delay) => setTimeout(markCard, delay));
   addEventListener('load', markCard);
-  document.addEventListener('click', (e) => {
-    const project = e.target.closest('#works article,#works button');
+  document.addEventListener('click', (event) => {
+    const project = event.target.closest('#works article,#works button');
     if (project?.querySelector('h3')?.textContent?.trim().toUpperCase() !== 'CARNIVAL RECORDS') return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    event.preventDefault();
+    event.stopImmediatePropagation();
     openModal();
   }, true);
-  document.addEventListener('keydown', (e) => {
-    if ((e.key === 'Enter' || e.key === ' ') && e.target?.classList?.contains('cr-project-card')) { e.preventDefault(); openModal(); }
+  document.addEventListener('keydown', (event) => {
+    if ((event.key === 'Enter' || event.key === ' ') && event.target?.classList?.contains('cr-project-card')) {
+      event.preventDefault();
+      openModal();
+    }
   });
   new MutationObserver(() => {
     markCard();
