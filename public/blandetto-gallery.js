@@ -29,7 +29,7 @@
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-16');
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
-  loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playroom-placeholder-1');
+  loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playground-placeholder-2');
   loadScript('script[src^="/font-panic-override.js"]', '/font-panic-override.js?v=font-panic-2');
   loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-2');
 
