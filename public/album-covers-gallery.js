@@ -1,8 +1,8 @@
 (() => {
-  if (window.__albumCoversGalleryV1) return;
-  window.__albumCoversGalleryV1 = true;
+  if (window.__albumCoversGalleryV2) return;
+  window.__albumCoversGalleryV2 = true;
 
-  const VERSION = 'album-covers-1';
+  const VERSION = 'album-covers-2';
   const IMAGES = Array.from({ length: 15 }, (_, index) => ({
     src: `/works/album-covers/cover-${String(index + 1).padStart(2, '0')}.jpg?v=${VERSION}`,
     alt: `Album cover ${String(index + 1).padStart(2, '0')}`,
@@ -142,7 +142,6 @@
     next.setAttribute('aria-label', 'Next image');
     close.setAttribute('aria-label', 'Close image');
     image.draggable = false;
-
     prev.onclick = (event) => { event.stopPropagation(); stepLightbox(-1); };
     next.onclick = (event) => { event.stopPropagation(); stepLightbox(1); };
     close.onclick = closeLightbox;
@@ -232,29 +231,37 @@
     }, { passive: true });
   }
 
-  function findCard(target = document) {
-    return [...target.querySelectorAll?.('#works article, #works button') || []]
+  function findCard() {
+    return [...document.querySelectorAll('#works article, #works button')]
       .find((card) => card.querySelector('h3')?.textContent?.trim().toUpperCase() === 'ALBUM COVERS') || null;
   }
 
   function enhanceCard() {
     const card = findCard();
-    if (!card || card.dataset.albumCoversReady === 'true') return Boolean(card);
+    if (!card) return false;
     card.dataset.albumCoversReady = 'true';
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
     card.setAttribute('aria-label', copy().open);
     card.style.cursor = 'pointer';
-    const placeholder = [...card.querySelectorAll('div')].find((node) => /плейсхолдер|placeholder/i.test(node.textContent?.trim() || ''));
+    const placeholder = [...card.querySelectorAll('div')].find((node) =>
+      /^(визуальный плейсхолдер|placeholder visual|открыть проект|open project)$/i.test(node.textContent?.trim() || '')
+    );
     if (placeholder) placeholder.textContent = copy().open;
     return true;
   }
 
   document.addEventListener('click', (event) => {
     const card = event.target.closest('#works article, #works button');
-    if (card?.querySelector('h3')?.textContent?.trim().toUpperCase() !== 'ALBUM COVERS') return;
-    event.preventDefault();
-    openModal();
+    if (card?.querySelector('h3')?.textContent?.trim().toUpperCase() === 'ALBUM COVERS') {
+      event.preventDefault();
+      openModal();
+      return;
+    }
+    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+      setTimeout(enhanceCard, 0);
+      setTimeout(enhanceCard, 120);
+    }
   }, true);
 
   document.addEventListener('keydown', (event) => {
@@ -270,8 +277,11 @@
     }
   }, true);
 
-  const observer = new MutationObserver(() => enhanceCard());
-  observer.observe(document.body, { childList: true, subtree: true });
+  let attempts = 0;
+  const retry = window.setInterval(() => {
+    attempts += 1;
+    if (enhanceCard() || attempts >= 30) window.clearInterval(retry);
+  }, 120);
   window.addEventListener('load', enhanceCard);
   enhanceCard();
 })();
