@@ -11,6 +11,7 @@
 
   loadScript('script[src^="/portfolio-static-assets.js"]', '/portfolio-static-assets.js?v=static-assets-2');
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
+  loadScript('script[src^="/project-unified-lightbox.js"]', '/project-unified-lightbox.js?v=project-unified-lightbox-1');
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/gallery-first-image-fix.js"]', '/gallery-first-image-fix.js?v=first-image-1');
   loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-3');
