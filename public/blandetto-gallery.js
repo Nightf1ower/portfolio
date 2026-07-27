@@ -11,7 +11,7 @@
 
   loadScript('script[src^="/portfolio-static-assets.js"]', '/portfolio-static-assets.js?v=static-assets-2');
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
-  loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-2');
+  loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-3');
   loadScript('script[src^="/homepage-polish-v2.js"]', '/homepage-polish-v2.js?v=homepage-polish-2');
   loadScript('script[src^="/posters-gallery.js"]', '/posters-gallery.js?v=posters-1');
