@@ -19,6 +19,8 @@
   };
 
   let ankaModal = null;
+  let previousBodyOverflow = '';
+  let previousHtmlOverflow = '';
   const language = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
   const copy = () => COPY[language()];
   const normalized = (value) => (value || '').trim().toUpperCase().replace(/\s+/g, ' ');
@@ -104,7 +106,7 @@
     if (!card) return false;
     const heading = card.querySelector('h3');
     if (heading && heading.textContent !== 'NINETY Z S') heading.textContent = 'NINETY Z S';
-    card.setAttribute('aria-label', 'Open NINETY Z S project');
+    if (card.getAttribute('aria-label') !== 'Open NINETY Z S project') card.setAttribute('aria-label', 'Open NINETY Z S project');
     card.dataset.ninetyZsProject = 'true';
     return true;
   }
@@ -122,23 +124,23 @@
   function setCardCopy(card) {
     const current = copy();
     const heading = card.querySelector('h3');
-    if (heading) heading.textContent = 'ANKA PERESILD';
+    if (heading && heading.textContent !== 'ANKA PERESILD') heading.textContent = 'ANKA PERESILD';
 
     const type = heading?.nextElementSibling;
-    if (type?.tagName === 'P') type.textContent = current.type;
+    if (type?.tagName === 'P' && type.textContent !== current.type) type.textContent = current.type;
 
     const mark = [...card.querySelectorAll('span')].find((node) => /^\d{2}$/.test(node.textContent?.trim() || ''));
-    if (mark) mark.textContent = '13';
+    if (mark && mark.textContent !== '13') mark.textContent = '13';
 
     const visualText = [...card.querySelectorAll('div')].find((node) =>
       /^(визуальный плейсхолдер|placeholder visual|открыть проект|open project)$/i.test(node.textContent?.trim() || '')
     );
-    if (visualText) visualText.textContent = current.open;
+    if (visualText && visualText.textContent !== current.open) visualText.textContent = current.open;
 
     const chipWrap = type?.nextElementSibling;
     if (chipWrap) chipWrap.remove();
 
-    card.setAttribute('aria-label', 'Open ANKA PERESILD project');
+    if (card.getAttribute('aria-label') !== 'Open ANKA PERESILD project') card.setAttribute('aria-label', 'Open ANKA PERESILD project');
   }
 
   function createAnkaCard() {
@@ -166,14 +168,16 @@
   function closeAnka() {
     ankaModal?.remove();
     ankaModal = null;
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
+    document.documentElement.style.overflow = previousHtmlOverflow;
+    document.body.style.overflow = previousBodyOverflow;
   }
 
   function openAnka() {
     closeAnka();
     injectStyles();
     const current = copy();
+    previousHtmlOverflow = document.documentElement.style.overflow;
+    previousBodyOverflow = document.body.style.overflow;
 
     const modal = document.createElement('div');
     modal.className = 'anka-peresild-modal';
@@ -244,8 +248,8 @@
       const current = copy();
       const close = ankaModal.querySelector('.anka-peresild-close');
       const status = ankaModal.querySelector('.anka-peresild-status');
-      if (close) close.textContent = current.close;
-      if (status) status.textContent = current.status;
+      if (close && close.textContent !== current.close) close.textContent = current.close;
+      if (status && status.textContent !== current.status) status.textContent = current.status;
     }
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
