@@ -38,6 +38,7 @@
   loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playground-placeholder-2');
   loadScript('script[src^="/font-panic-override.js"]', '/font-panic-override.js?v=font-panic-2');
   loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-2');
+  loadScript('script[src^="/carnival-card-preview-fix.js"]', '/carnival-card-preview-fix.js?v=carnival-card-preview-fix-1');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
