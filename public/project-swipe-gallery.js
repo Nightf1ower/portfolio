@@ -1,6 +1,6 @@
 (() => {
-  if (window.__projectSwipeGalleryV2) return;
-  window.__projectSwipeGalleryV2 = true;
+  if (window.__projectSwipeGalleryV3) return;
+  window.__projectSwipeGalleryV3 = true;
 
   const MODAL_SELECTORS = [
     '.cr-modal',
@@ -62,6 +62,7 @@
     '.psg-close',
     '.psg-nav',
     '.project-scroll-top',
+    'button',
     'a',
     'input',
     'select',
@@ -165,7 +166,7 @@
 
   function normalizeUrl(value) {
     if (!value) return '';
-    const clean = String(value).trim().replace(/^['"]|['"]$/g, '');
+    const clean = String(value).trim().replace(/^[\'\"]|[\'\"]$/g, '');
     if (!clean || clean === 'none') return '';
     try {
       return new URL(clean, location.href).href;
@@ -176,7 +177,7 @@
 
   function backgroundUrls(node) {
     const value = getComputedStyle(node).backgroundImage || '';
-    return [...value.matchAll(/url\((['"]?)(.*?)\1\)/g)].map((match) => normalizeUrl(match[2]));
+    return [...value.matchAll(/url\(([\'\"]?)(.*?)\1\)/g)].map((match) => normalizeUrl(match[2]));
   }
 
   function sourceUrls(node) {
@@ -345,9 +346,6 @@
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
     if (event.target.closest('.psg-lightbox')) return;
-
-    const closeControl = event.target.closest(CLOSE_SELECTORS.join(','));
-    if (closeControl) return;
 
     const explicitGroup = event.target.closest(EXPLICIT_GROUP_SELECTOR);
     const genericControl = event.target.closest(CONTROL_SELECTOR);
