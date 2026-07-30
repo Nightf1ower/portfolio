@@ -15,7 +15,7 @@
   loadScript('script[src^="/project-unified-lightbox.js"]', '/project-unified-lightbox.js?v=project-unified-lightbox-1');
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/gallery-first-image-fix.js"]', '/gallery-first-image-fix.js?v=first-image-1');
-  loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-3');
+  loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-4');
   loadScript('script[src^="/homepage-polish-v2.js"]', '/homepage-polish-v2.js?v=homepage-polish-2');
   loadScript('script[src^="/posters-gallery.js"]', '/posters-gallery.js?v=posters-1');
   loadScript('script[src^="/posters-final-layout.js"]', '/posters-final-layout.js?v=posters-final-1');
@@ -28,7 +28,7 @@
   loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-1');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-8');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-9');
-  loadScript('script[src^="/fable-navigation-layout-fix.js"]', '/fable-navigation-layout-fix.js?v=fable-navigation-layout-1');
+  loadScript('script[src^="/fable-navigation-layout-fix.js"]', '/fable-navigation-layout-fix.js?v=fable-navigation-layout-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
   loadScript('script[src^="/vtb-design-team-gallery.js"]', '/vtb-design-team-gallery.js?v=vtb-gallery-1');
   loadScript('script[src^="/collages-gallery.js"]', '/collages-gallery.js?v=collages-gallery-1');
