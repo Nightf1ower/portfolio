@@ -1,17 +1,59 @@
 (() => {
-  if (window.__fableGalleryV7) return;
-  window.__fableGalleryV7 = true;
+  if (window.__fableGalleryV8) return;
+  window.__fableGalleryV8 = true;
 
-  const V = 'fable-7';
+  const V = 'fable-8';
   const ROOT = '/works/fable';
 
-  const PRINTS = Array.from({ length: 39 }, (_, index) => {
-    const number = String(index + 2).padStart(2, '0');
-    return {
-      src: `${ROOT}/fprint-${number}.jpg?v=${V}`,
-      alt: `FABLE print ${number}`,
-    };
+  const makePrint = (name, extension = 'jpg') => ({
+    src: `${ROOT}/${name}.${extension}?v=${V}`,
+    alt: `FABLE ${name}`,
   });
+
+  const VINTAGE_PRINTS = [
+    makePrint('fprint-01'),
+    makePrint('fprint-03'),
+    makePrint('fprint-02'),
+    makePrint('fprint-19'),
+    makePrint('print-05', 'webp'),
+    makePrint('fprint-35'),
+    makePrint('fprint-14'),
+    makePrint('fprint-04'),
+    makePrint('fprint-29'),
+  ];
+
+  const MODERN_PRINTS = [
+    'fprint-08',
+    'fprint-09',
+    'fprint-10',
+    'fprint-13',
+    'fprint-15',
+    'fprint-20',
+    'fprint-16',
+    'fprint-17',
+    'fprint-18',
+    'fprint-22',
+    'fprint-21',
+    'fprint-23',
+    'fprint-25',
+    'fprint-24',
+    'fprint-27',
+    'fprint-28',
+    'fprint-26',
+    'fprint-31',
+    'fprint-30',
+    'fprint-33',
+    'fprint-32',
+    'fprint-38',
+    'fprint-34',
+    'fprint-40',
+    'fprint-07',
+    'fprint-39',
+    'fprint-36',
+    'fprint-06',
+    'fprint-11',
+    'fprint-12',
+  ].map((name) => makePrint(name));
 
   const CLOTHES = [
     'clothes-01.webp',
@@ -43,8 +85,8 @@
   }));
 
   const COPY = {
-    ru: { close: 'ЗАКРЫТЬ', prints: 'ПРИНТЫ', clothes: 'CLOTHES', saint: 'SAINT' },
-    en: { close: 'CLOSE', prints: 'PRINTS', clothes: 'CLOTHES', saint: 'SAINT' },
+    ru: { close: 'ЗАКРЫТЬ', vintage: 'VINTAGE', modern: 'MODERN', clothes: 'CLOTHES', saint: 'SAINT' },
+    en: { close: 'CLOSE', vintage: 'VINTAGE', modern: 'MODERN', clothes: 'CLOTHES', saint: 'SAINT' },
   };
 
   let modal = null;
@@ -73,15 +115,18 @@
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
   }
+
   function unlockPageScroll() {
     document.body.style.overflow = previousBodyOverflow;
     document.documentElement.style.overflow = previousHtmlOverflow;
   }
+
   function closeLightbox() {
     lightbox?.remove();
     lightbox = null;
     activeItems = [];
   }
+
   function closeModal() {
     closeLightbox();
     modal?.remove();
@@ -91,27 +136,33 @@
 
   function injectStyles() {
     document.getElementById('fable-style')?.remove();
+    document.getElementById('fable-gradient-sections-style')?.remove();
+
     const style = el('style');
     style.id = 'fable-style';
     style.dataset.version = V;
     style.textContent = `
       html:has(.fable-modal), body:has(.fable-modal) {
         overflow: hidden !important;
-        background: linear-gradient(180deg,#fff 0%,#f6f6f6 100%) !important;
+        background: #fff !important;
       }
       .fable-modal {
         position: fixed; inset: 0; z-index: 335; width: 100vw; height: 100dvh;
         min-height: 100svh; overflow-y: auto; overflow-x: hidden;
         padding: max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));
-        background: linear-gradient(180deg,#fff 0%,#f6f6f6 100%); color: #050505; overscroll-behavior: contain;
+        background: #fff; color: #050505; overscroll-behavior: contain;
       }
       .fable-inner { width: min(100%,80rem); margin: 0 auto; }
       .fable-head { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem 0 1rem; border-bottom: 1px solid rgba(5,5,5,.22); background: rgba(255,255,255,.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
       .fable-label,.fable-close,.fable-count { font-family: Arial,Helvetica,sans-serif; font-size: .68rem; font-weight: 900; letter-spacing: .28em; text-transform: uppercase; }
       .fable-label { margin: 0; background: #050505; color: #fff; padding: .45rem .75rem; }
       .fable-close { border: 0; background: #050505; color: #fff; padding: .65rem 1rem; cursor: pointer; }
-      .fable-section { border-top: 1px solid rgba(5,5,5,.22); padding: clamp(2rem,5vw,4rem) 0 clamp(4rem,8vw,7rem); }
+      .fable-section { position: relative; border-top: 1px solid rgba(5,5,5,.22); padding: clamp(2rem,5vw,4rem) 0 clamp(4rem,8vw,7rem); }
       .fable-section:first-of-type { border-top: 0; }
+      .fable-section.is-clothes,.fable-section.is-saint { isolation: isolate; }
+      .fable-section.is-clothes::before,.fable-section.is-saint::before { content: ''; position: absolute; z-index: -1; inset: 0 auto 0 50%; width: 100vw; transform: translateX(-50%); pointer-events: none; }
+      .fable-section.is-clothes::before { background: linear-gradient(180deg,#fff 0%,#f9f9f9 28%,#f6f6f6 82%,#f6f6f6 100%); }
+      .fable-section.is-saint::before { background: #f6f6f6; }
       .fable-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
       .fable-title { margin: 0; font-family: Arial,Helvetica,sans-serif; font-size: clamp(3.6rem,9vw,9rem); font-weight: 900; line-height: .78; letter-spacing: -.09em; text-transform: uppercase; }
       .fable-count { margin: 0; color: rgba(5,5,5,.48); white-space: nowrap; }
@@ -148,15 +199,18 @@
     image.alt = item.alt;
     lightbox.querySelector('.fable-light-count').textContent = `${activeIndex + 1} / ${activeItems.length}`;
   }
+
   function stepLightbox(amount) {
     activeIndex = (activeIndex + amount + activeItems.length) % activeItems.length;
     renderLightbox();
   }
+
   function openLightbox(items, index = 0) {
     if (!items.length) return;
     closeLightbox();
     activeItems = items;
     activeIndex = Math.max(0, Math.min(index, items.length - 1));
+
     const overlay = el('div','fable-light');
     const close = el('button','fable-light-close',t().close);
     const previous = el('button','fable-light-nav','←');
@@ -164,6 +218,7 @@
     const image = el('img','fable-light-image');
     const next = el('button','fable-light-nav','→');
     const count = el('p','fable-light-count');
+
     close.type = previous.type = next.type = 'button';
     image.draggable = false;
     close.onclick = (event) => { event.stopPropagation(); closeLightbox(); };
@@ -171,8 +226,14 @@
     next.onclick = (event) => { event.stopPropagation(); stepLightbox(1); };
     stage.onclick = (event) => event.stopPropagation();
     overlay.onclick = closeLightbox;
-    let startX = 0, startY = 0;
-    overlay.addEventListener('touchstart',(event) => { if (event.touches.length === 1) { startX = event.touches[0].clientX; startY = event.touches[0].clientY; } },{ passive:true });
+
+    let startX = 0;
+    let startY = 0;
+    overlay.addEventListener('touchstart',(event) => {
+      if (event.touches.length !== 1) return;
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+    },{ passive:true });
     overlay.addEventListener('touchend',(event) => {
       if (!event.changedTouches.length) return;
       const dx = event.changedTouches[0].clientX - startX;
@@ -180,6 +241,7 @@
       if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.15) stepLightbox(dx < 0 ? 1 : -1);
       else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.2) closeLightbox();
     },{ passive:true });
+
     stage.append(image);
     overlay.append(close,previous,stage,next,count);
     document.body.append(overlay);
@@ -201,8 +263,9 @@
     button.onclick = (event) => { event.stopPropagation(); openLightbox(items,index); };
     return button;
   }
+
   function createSection(title, items, options = {}) {
-    const section = el('section','fable-section');
+    const section = el('section',`fable-section${options.sectionClass ? ` ${options.sectionClass}` : ''}`);
     const head = el('div','fable-section-head');
     const heading = el('h2','fable-title',title);
     if (options.copyKey) heading.dataset.fableCopy = options.copyKey;
@@ -212,8 +275,9 @@
     section.append(head,grid);
     return section;
   }
+
   function createSaintSection() {
-    const section = el('section','fable-section');
+    const section = el('section','fable-section is-saint');
     const head = el('div','fable-section-head');
     const heading = el('h2','fable-title',t().saint);
     heading.dataset.fableCopy = 'saint';
@@ -224,32 +288,46 @@
     section.append(grid);
     return section;
   }
+
   function updateLanguage() {
     if (!modal) return;
     const copy = t();
     const close = modal.querySelector('.fable-close');
     if (close) close.textContent = copy.close;
-    modal.querySelectorAll('[data-fable-copy]').forEach((node) => { const key = node.dataset.fableCopy; if (copy[key]) node.textContent = copy[key]; });
+    modal.querySelectorAll('[data-fable-copy]').forEach((node) => {
+      const key = node.dataset.fableCopy;
+      if (copy[key]) node.textContent = copy[key];
+    });
     const lightClose = document.querySelector('.fable-light-close');
     if (lightClose) lightClose.textContent = copy.close;
   }
+
   function open() {
     injectStyles();
     closeModal();
     lockPageScroll();
+
     const inner = el('div','fable-inner');
     const header = el('div','fable-head');
     const close = el('button','fable-close',t().close);
     close.type = 'button';
     close.onclick = (event) => { event.stopPropagation(); closeModal(); };
     header.append(el('p','fable-label','FABLE'),close);
+
     modal = el('div','fable-modal');
     modal.append(inner);
-    inner.append(header,createSection(t().prints,PRINTS,{ copyKey:'prints',eagerCount:6 }),createSection(t().clothes,CLOTHES,{ copyKey:'clothes',eagerCount:3 }),createSaintSection());
+    inner.append(
+      header,
+      createSection(t().vintage,VINTAGE_PRINTS,{ copyKey:'vintage',eagerCount:6,sectionClass:'is-vintage' }),
+      createSection(t().modern,MODERN_PRINTS,{ copyKey:'modern',eagerCount:6,sectionClass:'is-modern' }),
+      createSection(t().clothes,CLOTHES,{ copyKey:'clothes',eagerCount:3,sectionClass:'is-clothes' }),
+      createSaintSection(),
+    );
     document.body.append(modal);
   }
 
   new MutationObserver(updateLanguage).observe(document.documentElement,{ attributes:true,attributeFilter:['lang'] });
+
   document.addEventListener('keydown',(event) => {
     if (lightbox) {
       if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); closeLightbox(); }
@@ -259,6 +337,7 @@
     }
     if (event.key === 'Escape' && modal) { event.preventDefault(); event.stopImmediatePropagation(); closeModal(); }
   },true);
+
   document.addEventListener('click',(event) => {
     const card = event.target.closest('#works article,#works button');
     if (!card) return;
