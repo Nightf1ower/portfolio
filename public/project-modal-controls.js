@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectModalControlsV3) return;
-  window.__projectModalControlsV3 = true;
+  if (window.__projectModalControlsV4) return;
+  window.__projectModalControlsV4 = true;
 
-  const VERSION = 'modal-controls-3';
+  const VERSION = 'modal-controls-4';
   const MODAL_SELECTORS = [
     '.posters-modal',
     '.album-covers-modal',
@@ -52,9 +52,10 @@
   ];
 
   const PROJECT_TITLES = new Set([
-    'POSTERS', 'ALBUM COVERS', 'ZNY', 'FABLE', 'PINK PUNK', 'BLANDETTO', '90.06', 'MERCH', 'STAY UGLY', 'STAYUGLY'
+    'POSTERS', 'ALBUM COVERS', 'ZNY', 'FABLE', 'F | ABLE', 'PINK PUNK', 'BLANDETTO', '90.06', 'MERCH', 'STAY UGLY', 'STAYUGLY'
   ]);
 
+  document.getElementById('project-modal-controls-style')?.remove();
   const style = document.createElement('style');
   style.id = 'project-modal-controls-style';
   style.dataset.version = VERSION;
@@ -111,8 +112,7 @@
   `;
   document.head.append(style);
 
-  const oldButton = document.querySelector('.project-scroll-top');
-  oldButton?.remove();
+  document.querySelectorAll('.project-scroll-top').forEach((node) => node.remove());
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'project-scroll-top';
@@ -139,7 +139,7 @@
   }
 
   function updateButton() {
-    const hasLightbox = document.querySelector('.posters-light, .album-covers-light, .psg-lightbox');
+    const hasLightbox = document.querySelector('.posters-light, .album-covers-light, .psg-lightbox, .fable-light');
     const shouldShow = Boolean(activeModal && activeModal.scrollTop > 420 && !hasLightbox);
     button.classList.toggle('is-visible', shouldShow);
   }
@@ -205,6 +205,16 @@
 
     if (PROJECT_TITLES.has(title) || closeControl || event.target.closest('.posters-card, .album-covers-card')) scheduleRefresh();
   }, true);
+
+  let mutationQueued = false;
+  new MutationObserver(() => {
+    if (mutationQueued) return;
+    mutationQueued = true;
+    requestAnimationFrame(() => {
+      mutationQueued = false;
+      refresh();
+    });
+  }).observe(document.body, { childList: true, subtree: true });
 
   window.addEventListener('load', refresh);
   window.addEventListener('resize', updateButton, { passive: true });
