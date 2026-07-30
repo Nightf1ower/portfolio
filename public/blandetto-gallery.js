@@ -28,6 +28,7 @@
   loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-1');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-8');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-6');
+  loadScript('script[src^="/fable-gradient-sections.js"]', '/fable-gradient-sections.js?v=fable-gradient-sections-1');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
   loadScript('script[src^="/vtb-design-team-gallery.js"]', '/vtb-design-team-gallery.js?v=vtb-gallery-1');
   loadScript('script[src^="/collages-gallery.js"]', '/collages-gallery.js?v=collages-gallery-1');
