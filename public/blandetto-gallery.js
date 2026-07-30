@@ -29,6 +29,7 @@
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-8');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-4');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
+  loadScript('script[src^="/vtb-design-team-gallery.js"]', '/vtb-design-team-gallery.js?v=vtb-gallery-1');
   loadScript('script[src^="/project-card-layout-v5.js"]', '/project-card-layout-v5.js?v=project-card-layout-5');
   loadScript('script[src^="/collages-english-only.js"]', '/collages-english-only.js?v=collages-english-only-1');
   loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-3');
