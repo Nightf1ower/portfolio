@@ -1,8 +1,8 @@
 (() => {
-  if (window.__fableGalleryV5) return;
-  window.__fableGalleryV5 = true;
+  if (window.__fableGalleryV7) return;
+  window.__fableGalleryV7 = true;
 
-  const V = 'fable-5';
+  const V = 'fable-7';
   const ROOT = '/works/fable';
 
   const PRINTS = Array.from({ length: 39 }, (_, index) => {
@@ -13,13 +13,17 @@
     };
   });
 
-  const CLOTHES = Array.from({ length: 6 }, (_, index) => {
-    const number = String(index + 2).padStart(2, '0');
-    return {
-      src: `${ROOT}/clothes/clothes-${number}.webp?v=${V}`,
-      alt: `FABLE clothes ${number}`,
-    };
-  });
+  const CLOTHES = [
+    'clothes-01.webp',
+    'clothes-02.webp',
+    'clothes-03.webp',
+    'clothes-04.webp',
+    'clothes-05.webp',
+    'clothes-07.webp',
+  ].map((name) => ({
+    src: `${ROOT}/clothes/${name}?v=${V}`,
+    alt: `FABLE ${name.replace('.webp', '')}`,
+  }));
 
   const SAINT_LOGO = {
     src: `${ROOT}/clothes/SAINT-LOGO-NEW.png?v=${V}`,
