@@ -51,10 +51,11 @@
       padding-bottom: 1.25rem !important;
     }
   `;
+  document.getElementById('project-modal-final-fixes')?.remove();
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = '/blandetto-final.js?v=direct-2';
+  script.src = '/blandetto-final.js?v=direct-3';
   script.async = false;
   (document.currentScript || document.body).after(script);
 })();
