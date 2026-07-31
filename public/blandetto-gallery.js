@@ -13,6 +13,7 @@
   loadScript('script[src^="/image-asset-fallback.js"]', '/image-asset-fallback.js?v=image-asset-fallback-1');
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
   loadScript('script[src^="/project-unified-lightbox.js"]', '/project-unified-lightbox.js?v=project-unified-lightbox-1');
+  loadScript('script[src^="/pink-punk-lightbox-fix.js"]', '/pink-punk-lightbox-fix.js?v=pink-punk-lightbox-fix-1');
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/gallery-first-image-fix.js"]', '/gallery-first-image-fix.js?v=first-image-1');
   loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-4');
@@ -39,6 +40,7 @@
   loadScript('script[src^="/gradient-layer-fix.js"]', '/gradient-layer-fix.js?v=gradient-layer-2');
   loadScript('script[src^="/portfolio-polish-v1.js"]', '/portfolio-polish-v1.js?v=portfolio-polish-1');
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
+  loadScript('script[src^="/merch-lazy-images.js"]', '/merch-lazy-images.js?v=merch-lazy-images-1');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-16');
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
   loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playground-placeholder-2');
