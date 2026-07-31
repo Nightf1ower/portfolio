@@ -1,6 +1,6 @@
 (() => {
-  if (window.__galleryFirstImageFixV2) return;
-  window.__galleryFirstImageFixV2 = true;
+  if (window.__galleryFirstImageFixV3) return;
+  window.__galleryFirstImageFixV3 = true;
 
   const style = document.createElement('style');
   style.id = 'gallery-first-image-fix-style';
@@ -51,14 +51,19 @@
     }
 
     #works .blandetto-title-fit {
+      display: block !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
       max-width: 100% !important;
+      margin-right: 0 !important;
       white-space: nowrap !important;
       overflow: visible !important;
       word-break: normal !important;
       overflow-wrap: normal !important;
-      font-size: clamp(2rem, 5vw, 5.25rem) !important;
       line-height: .84 !important;
-      letter-spacing: -.07em !important;
+      letter-spacing: -.075em !important;
+      transform: none !important;
+      transform-origin: left center !important;
     }
 
     @media (max-width: 650px) {
@@ -68,20 +73,57 @@
         letter-spacing: .11em !important;
         padding: .4rem .55rem !important;
       }
-
-      #works .blandetto-title-fit {
-        white-space: normal !important;
-        font-size: clamp(2rem, 11vw, 3.8rem) !important;
-      }
     }
   `;
+  document.getElementById('gallery-first-image-fix-style')?.remove();
   document.head.append(style);
+
+  const observedTitles = new WeakSet();
+  const titleResizeObserver = typeof ResizeObserver === 'function'
+    ? new ResizeObserver(entries => {
+        entries.forEach(entry => fitBlandettoTitle(entry.target));
+      })
+    : null;
+
+  function fitBlandettoTitle(title) {
+    if (!(title instanceof HTMLElement) || !title.isConnected) return;
+
+    const container = title.parentElement;
+    const availableWidth = Math.floor(container?.clientWidth || title.clientWidth || 0) - 2;
+    if (availableWidth <= 0) return;
+
+    title.classList.add('blandetto-title-fit');
+    title.style.setProperty('font-size', '84px', 'important');
+
+    let size = 84;
+    while (title.scrollWidth > availableWidth && size > 20) {
+      size -= 1;
+      title.style.setProperty('font-size', `${size}px`, 'important');
+    }
+
+    if (title.scrollWidth > availableWidth) {
+      const scale = Math.max(.72, availableWidth / title.scrollWidth);
+      title.style.setProperty('transform', `scaleX(${scale})`, 'important');
+      title.style.setProperty('width', `${100 / scale}%`, 'important');
+    } else {
+      title.style.setProperty('transform', 'none', 'important');
+      title.style.setProperty('width', '100%', 'important');
+    }
+  }
+
+  function bindBlandettoTitle(title) {
+    if (observedTitles.has(title)) return;
+    observedTitles.add(title);
+    titleResizeObserver?.observe(title.parentElement || title);
+    requestAnimationFrame(() => fitBlandettoTitle(title));
+  }
 
   function updateBlandetto() {
     document.querySelectorAll('#works article, #works button').forEach(card => {
       const title = card.querySelector('h3');
       if (title?.textContent?.trim().toUpperCase() === 'BLANDETTO') {
-        title.classList.add('blandetto-title-fit');
+        bindBlandettoTitle(title);
+        fitBlandettoTitle(title);
       }
     });
 
@@ -99,6 +141,10 @@
     childList: true,
     subtree: true,
   });
+
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('#works .blandetto-title-fit').forEach(fitBlandettoTitle);
+  }, { passive: true });
 
   updateBlandetto();
 })();
