@@ -36,7 +36,7 @@
   loadScript('script[src^="/project-card-layout-v5.js"]', '/project-card-layout-v5.js?v=project-card-layout-5');
   loadScript('script[src^="/vtb-placeholder-disable.js"]', '/vtb-placeholder-disable.js?v=vtb-placeholder-disable-1');
   loadScript('script[src^="/collages-english-only.js"]', '/collages-english-only.js?v=collages-english-only-1');
-  loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-3');
+  loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-4');
   loadScript('script[src^="/gradient-layer-fix.js"]', '/gradient-layer-fix.js?v=gradient-layer-2');
   loadScript('script[src^="/portfolio-polish-v1.js"]', '/portfolio-polish-v1.js?v=portfolio-polish-1');
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
