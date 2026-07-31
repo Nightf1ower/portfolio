@@ -1,6 +1,6 @@
 (() => {
-  if (window.__galleryFirstImageFixV3) return;
-  window.__galleryFirstImageFixV3 = true;
+  if (window.__galleryFirstImageFixV4) return;
+  window.__galleryFirstImageFixV4 = true;
 
   const style = document.createElement('style');
   style.id = 'gallery-first-image-fix-style';
@@ -52,18 +52,14 @@
 
     #works .blandetto-title-fit {
       display: block !important;
-      box-sizing: border-box !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin-right: 0 !important;
+      margin: 0 !important;
       white-space: nowrap !important;
-      overflow: visible !important;
       word-break: normal !important;
       overflow-wrap: normal !important;
       line-height: .84 !important;
       letter-spacing: -.075em !important;
-      transform: none !important;
       transform-origin: left center !important;
+      max-width: none !important;
     }
 
     @media (max-width: 650px) {
@@ -81,7 +77,10 @@
   const observedTitles = new WeakSet();
   const titleResizeObserver = typeof ResizeObserver === 'function'
     ? new ResizeObserver(entries => {
-        entries.forEach(entry => fitBlandettoTitle(entry.target));
+        entries.forEach(entry => {
+          const title = entry.target.querySelector?.('h3.blandetto-title-fit');
+          if (title) fitBlandettoTitle(title);
+        });
       })
     : null;
 
@@ -89,31 +88,31 @@
     if (!(title instanceof HTMLElement) || !title.isConnected) return;
 
     const container = title.parentElement;
-    const availableWidth = Math.floor(container?.clientWidth || title.clientWidth || 0) - 2;
+    const availableWidth = Math.floor(container?.clientWidth || 0) - 2;
     if (availableWidth <= 0) return;
 
     title.classList.add('blandetto-title-fit');
-    title.style.setProperty('font-size', '84px', 'important');
 
-    let size = 84;
-    while (title.scrollWidth > availableWidth && size > 20) {
-      size -= 1;
-      title.style.setProperty('font-size', `${size}px`, 'important');
-    }
+    // Keep the title visually large like the other project cards.
+    // Only compress it horizontally enough to fit the real card width.
+    const baseSize = Math.max(54, Math.min(64, availableWidth * 0.23));
+    title.style.setProperty('font-size', `${baseSize}px`, 'important');
+    title.style.setProperty('width', 'max-content', 'important');
+    title.style.setProperty('transform', 'none', 'important');
 
-    if (title.scrollWidth > availableWidth) {
-      const scale = Math.max(.72, availableWidth / title.scrollWidth);
-      title.style.setProperty('transform', `scaleX(${scale})`, 'important');
-      title.style.setProperty('width', `${100 / scale}%`, 'important');
-    } else {
-      title.style.setProperty('transform', 'none', 'important');
-      title.style.setProperty('width', '100%', 'important');
-    }
+    const naturalWidth = Math.ceil(title.getBoundingClientRect().width);
+    const scale = naturalWidth > availableWidth
+      ? Math.max(0.68, availableWidth / naturalWidth)
+      : 1;
+
+    title.style.setProperty('transform', `scaleX(${scale})`, 'important');
+    title.style.setProperty('width', `${naturalWidth}px`, 'important');
   }
 
   function bindBlandettoTitle(title) {
     if (observedTitles.has(title)) return;
     observedTitles.add(title);
+    title.classList.add('blandetto-title-fit');
     titleResizeObserver?.observe(title.parentElement || title);
     requestAnimationFrame(() => fitBlandettoTitle(title));
   }
