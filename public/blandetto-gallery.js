@@ -21,7 +21,7 @@
   loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-4');
   loadScript('script[src^="/homepage-polish-v2.js"]', '/homepage-polish-v2.js?v=homepage-polish-4');
   loadScript('script[src^="/posters-gallery.js"]', '/posters-gallery.js?v=posters-1');
-  loadScript('script[src^="/posters-final-layout.js"]', '/posters-final-layout.js?v=posters-final-1');
+  loadScript('script[src^="/posters-final-layout.js"]', '/posters-final-layout.js?v=posters-final-2');
   loadScript('script[src^="/album-covers-gallery.js"]', '/album-covers-gallery.js?v=album-covers-2');
   loadScript('script[src^="/album-covers-description.js"]', '/album-covers-description.js?v=album-covers-description-1');
   loadScript('script[src^="/carnival-records-bootstrap.js"]', '/carnival-records-bootstrap.js?v=carnival-bootstrap-1');
