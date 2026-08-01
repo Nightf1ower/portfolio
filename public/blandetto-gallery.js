@@ -38,6 +38,7 @@
   loadScript('script[src^="/vtb-design-team-gallery.js"]', '/vtb-design-team-gallery.js?v=vtb-gallery-1');
   loadScript('script[src^="/collages-gallery.js"]', '/collages-gallery.js?v=collages-gallery-1');
   loadScript('script[src^="/project-card-layout-v5.js"]', '/project-card-layout-v5.js?v=project-card-layout-5');
+  loadScript('script[src^="/project-card-previews-v1.js"]', '/project-card-previews-v1.js?v=project-card-previews-1');
   loadScript('script[src^="/vtb-placeholder-disable.js"]', '/vtb-placeholder-disable.js?v=vtb-placeholder-disable-1');
   loadScript('script[src^="/collages-english-only.js"]', '/collages-english-only.js?v=collages-english-only-1');
   loadScript('script[src^="/pink-punk-layout.js"]', '/pink-punk-layout.js?v=pink-layout-4');
