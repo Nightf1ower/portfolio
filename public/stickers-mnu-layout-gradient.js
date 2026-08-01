@@ -1,8 +1,8 @@
 (() => {
-  if (window.__stickersMnuLayoutGradientV1) return;
-  window.__stickersMnuLayoutGradientV1 = true;
+  if (window.__stickersMnuLayoutGradientV2) return;
+  window.__stickersMnuLayoutGradientV2 = true;
 
-  const VERSION = 'stickers-mnu-layout-gradient-1';
+  const VERSION = 'stickers-mnu-layout-gradient-2';
   const ORDER = {
     left: ['real-4', 'real-5', 'real-1'],
     right: ['real-2', 'real-3'],
@@ -33,7 +33,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        z-index: -1;
+        z-index: 0;
         width: 100%;
         pointer-events: none;
         background: linear-gradient(
@@ -48,6 +48,10 @@
       .stk-modal > .stk-inner {
         position: relative;
         z-index: 1;
+      }
+
+      .stk-modal .stk-head {
+        background: rgba(225, 225, 223, .78) !important;
       }
 
       .stk-project[data-stickers-project="mnu"] .stk-grid--real.stk-grid--mnu-real {
@@ -91,7 +95,10 @@
     const grid = mnu?.querySelector('.stk-grid--real');
     if (!grid || grid.dataset.mnuLayoutVersion === VERSION) return;
 
-    const cards = [...grid.querySelectorAll(':scope > .stk-card')];
+    const existingLayout = grid.querySelector(':scope > .stk-mnu-real-layout');
+    const cards = existingLayout
+      ? [...existingLayout.querySelectorAll('.stk-card')]
+      : [...grid.querySelectorAll(':scope > .stk-card')];
     if (!cards.length) return;
 
     const byName = new Map(cards.map((card) => [normalizeName(card), card]));
@@ -152,7 +159,8 @@
       updateGradient(modal);
 
       modal.querySelectorAll('img').forEach((image) => {
-        if (image.complete) return;
+        if (image.complete || image.dataset.stkGradientWatched === VERSION) return;
+        image.dataset.stkGradientWatched = VERSION;
         image.addEventListener('load', () => updateGradient(modal), { once: true });
       });
     });
