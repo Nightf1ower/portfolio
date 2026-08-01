@@ -1,8 +1,8 @@
 (() => {
-  if (window.__carnivalRecordsCleanupV1) return;
-  window.__carnivalRecordsCleanupV1 = true;
+  if (window.__carnivalRecordsCleanupV2) return;
+  window.__carnivalRecordsCleanupV2 = true;
 
-  const VERSION = 'carnival-cleanup-1';
+  const VERSION = 'carnival-cleanup-2';
 
   function injectStyles() {
     document.getElementById('carnival-records-cleanup-style')?.remove();
@@ -59,8 +59,17 @@
     return true;
   }
 
+  function loadSectionOrder() {
+    if (document.querySelector('script[src^="/carnival-records-section-order.js"]')) return;
+    const script = document.createElement('script');
+    script.src = '/carnival-records-section-order.js?v=carnival-section-order-1';
+    script.async = false;
+    document.head.append(script);
+  }
+
   injectStyles();
   cleanup();
+  loadSectionOrder();
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
