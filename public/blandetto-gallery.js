@@ -28,6 +28,7 @@
   loadScript('script[src^="/carnival-records-final-copy.js"]', '/carnival-records-final-copy.js?v=carnival-final-copy-1');
   loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-1');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-9');
+  loadScript('script[src^="/zny-print-order.js"]', '/zny-print-order.js?v=zny-print-order-1');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-9');
   loadScript('script[src^="/fable-navigation-layout-fix.js"]', '/fable-navigation-layout-fix.js?v=fable-navigation-layout-2');
   loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
