@@ -29,6 +29,22 @@
     });
   }
 
+  const loadingDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'loading');
+  if (loadingDescriptor?.get && loadingDescriptor?.set) {
+    Object.defineProperty(HTMLImageElement.prototype, 'loading', {
+      configurable: true,
+      enumerable: loadingDescriptor.enumerable,
+      get() {
+        return loadingDescriptor.get.call(this);
+      },
+      set(value) {
+        const source = srcDescriptor?.get?.call(this) || this.getAttribute('src') || '';
+        const nextValue = value === 'eager' && isMerchSource(String(source)) ? 'lazy' : value;
+        loadingDescriptor.set.call(this, nextValue);
+      },
+    });
+  }
+
   const previousSetAttribute = HTMLImageElement.prototype.setAttribute;
   HTMLImageElement.prototype.setAttribute = function setAttribute(name, value) {
     if (String(name).toLowerCase() === 'src' && isMerchSource(String(value))) {
