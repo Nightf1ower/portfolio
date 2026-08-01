@@ -1,8 +1,9 @@
 (() => {
-  if (window.__merchStabilityRestoreV2) return;
-  window.__merchStabilityRestoreV2 = true;
+  if (window.__merchStabilityRestoreV3) return;
+  window.__merchStabilityRestoreV3 = true;
 
   const STYLE_ID = 'merch-stability-restore-style';
+  const resizeObservers = new WeakMap();
 
   function injectStyles() {
     document.getElementById(STYLE_ID)?.remove();
@@ -17,24 +18,21 @@
         background-image: none !important;
       }
 
-      .m10-section.is-billboards {
-        position: relative !important;
-        z-index: 0 !important;
+      .m10-modal {
         isolation: isolate !important;
-        margin-bottom: 0 !important;
-        padding-bottom: clamp(7rem, 12vw, 12rem) !important;
       }
 
-      .m10-section.is-billboards::before {
+      .m10-modal::before {
         content: '';
         position: absolute;
-        z-index: -1;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        width: 100vw;
-        transform: translateX(-50%);
+        z-index: 0;
+        top: var(--merch-gradient-top, 0px);
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: var(--merch-gradient-height, 0px);
         pointer-events: none;
+        opacity: 0;
         background: linear-gradient(
           180deg,
           #87CEEB 0%,
@@ -47,6 +45,29 @@
           #df5559 84%,
           #e5312b 100%
         );
+      }
+
+      .m10-modal[data-merch-gradient-ready='true']::before {
+        opacity: 1;
+      }
+
+      .m10-modal > .m10-inner {
+        position: relative !important;
+        z-index: 1 !important;
+      }
+
+      .m10-section.is-billboards {
+        position: relative !important;
+        z-index: auto !important;
+        isolation: auto !important;
+        margin-bottom: 0 !important;
+        padding-bottom: clamp(7rem, 12vw, 12rem) !important;
+        background: transparent !important;
+      }
+
+      .m10-section.is-billboards::before {
+        display: none !important;
+        content: none !important;
       }
 
       .m10-dxs-zone {
@@ -70,6 +91,32 @@
     document.head.append(style);
   }
 
+  function updateGradient(modal, billboardSection, dxsZone) {
+    if (!(modal instanceof Element) || !(billboardSection instanceof Element) || !(dxsZone instanceof Element)) return;
+
+    const modalRect = modal.getBoundingClientRect();
+    const billboardRect = billboardSection.getBoundingClientRect();
+    const dxsRect = dxsZone.getBoundingClientRect();
+    const scrollTop = modal.scrollTop || 0;
+    const top = Math.max(0, billboardRect.top - modalRect.top + scrollTop);
+    const height = Math.max(1, dxsRect.top - billboardRect.top);
+
+    modal.style.setProperty('--merch-gradient-top', `${top}px`);
+    modal.style.setProperty('--merch-gradient-height', `${height + 2}px`);
+    modal.dataset.merchGradientReady = 'true';
+  }
+
+  function observeGradient(modal, billboardSection, dxsZone) {
+    resizeObservers.get(modal)?.disconnect();
+
+    if (typeof ResizeObserver !== 'function') return;
+    const observer = new ResizeObserver(() => updateGradient(modal, billboardSection, dxsZone));
+    observer.observe(modal);
+    observer.observe(billboardSection);
+    observer.observe(dxsZone);
+    resizeObservers.set(modal, observer);
+  }
+
   function markBillboards(modal) {
     if (!(modal instanceof Element)) return;
 
@@ -79,13 +126,19 @@
       return title.includes('BILLBOARD');
     });
 
+    const dxsZone = modal.querySelector('.m10-dxs-zone');
+
     if (!billboardSection) {
-      const dxs = modal.querySelector('.m10-dxs-zone');
-      const previous = dxs?.previousElementSibling;
+      const previous = dxsZone?.previousElementSibling;
       if (previous?.classList.contains('m10-section')) billboardSection = previous;
     }
 
     sections.forEach((section) => section.classList.toggle('is-billboards', section === billboardSection));
+
+    if (billboardSection && dxsZone) {
+      updateGradient(modal, billboardSection, dxsZone);
+      observeGradient(modal, billboardSection, dxsZone);
+    }
   }
 
   function restoreImages(modal) {
@@ -101,8 +154,9 @@
         image.setAttribute('src', deferredSource);
       }
 
-      image.loading = index < 8 ? 'eager' : 'lazy';
+      image.loading = 'lazy';
       image.decoding = 'async';
+      try { image.fetchPriority = index < 2 ? 'high' : 'low'; } catch {}
     });
   }
 
@@ -114,10 +168,23 @@
     });
   }
 
-  new MutationObserver(apply).observe(document.body, {
+  let scheduled = false;
+  const schedule = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      apply();
+    });
+  };
+
+  new MutationObserver(schedule).observe(document.body, {
     childList: true,
     subtree: true,
   });
+
+  window.addEventListener('resize', schedule, { passive: true });
+  document.addEventListener('load', schedule, true);
 
   apply();
 })();
