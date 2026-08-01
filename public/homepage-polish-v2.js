@@ -1,8 +1,25 @@
 (() => {
-  if (window.__homepagePolishV3) return;
-  window.__homepagePolishV3 = true;
+  if (window.__homepagePolishV4) return;
+  window.__homepagePolishV4 = true;
 
-  const VERSION = 'homepage-polish-3';
+  const VERSION = 'homepage-polish-4';
+  const PROJECT_ROOTS = [
+    '.zny-modal',
+    '.fable-modal',
+    '.bf',
+    '.pink-punk-fullscreen',
+    '.cr-modal',
+    '.posters-modal',
+    '.album-covers-modal',
+    '.vtb-modal',
+    '.collages-modal',
+    '.m10-modal',
+    '.merch9-modal',
+    '.su-modal',
+    '.project9006-modal',
+    '.bld-modal',
+    '.blandetto-modal'
+  ].join(',');
 
   const COPY = {
     ru: {
@@ -38,6 +55,41 @@
         background: #a6ff00 !important;
         color: #050505 !important;
         text-shadow: none !important;
+      }
+
+      .nf-wide-heading {
+        display: block !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        margin-right: 0 !important;
+        padding-right: 0 !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        hyphens: none !important;
+        text-wrap: balance !important;
+        font-size: clamp(3rem, 5.3vw, 6.6rem) !important;
+        line-height: .84 !important;
+      }
+
+      .nf-wide-heading.nf-heading-long {
+        font-size: clamp(2.65rem, 4.35vw, 5.35rem) !important;
+        line-height: .87 !important;
+      }
+
+      .nf-wide-heading.nf-heading-very-long {
+        font-size: clamp(2.3rem, 3.7vw, 4.6rem) !important;
+        line-height: .9 !important;
+      }
+
+      .nf-wide-copy {
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin-right: 0 !important;
+        text-wrap: pretty !important;
       }
 
       .nf-noise-panel {
@@ -116,11 +168,27 @@
       .nf-noise-panel:hover .nf-noise-shapes > div:nth-child(4) { transform: rotate(-1deg) translate(-.1rem,.2rem); }
       .nf-noise-panel:hover .nf-noise-shapes > div:nth-child(5) { transform: rotate(-8deg) translate(.15rem,-.15rem); }
 
-      @media (max-width: 640px) {
+      @media (max-width: 650px) {
+        .nf-wide-heading {
+          font-size: clamp(2.45rem, 11vw, 4.2rem) !important;
+          line-height: .87 !important;
+          text-wrap: pretty !important;
+        }
+
+        .nf-wide-heading.nf-heading-long {
+          font-size: clamp(2.15rem, 9.5vw, 3.75rem) !important;
+        }
+
+        .nf-wide-heading.nf-heading-very-long {
+          font-size: clamp(1.95rem, 8.4vw, 3.35rem) !important;
+          line-height: .92 !important;
+        }
+
         .nf-noise-label {
           font-size: .62rem !important;
           letter-spacing: .22em !important;
         }
+
         .nf-noise-shapes {
           height: 15rem !important;
           margin-top: 1.4rem !important;
@@ -128,6 +196,26 @@
       }
     `;
     document.head.append(style);
+  }
+
+  function applyProjectTypography() {
+    document.querySelectorAll(PROJECT_ROOTS).forEach((root) => {
+      root.querySelectorAll('h2,h3').forEach((heading) => {
+        if (heading.closest('button,[class*="light"],[class*="close"]')) return;
+        const length = (heading.textContent || '').trim().length;
+        if (!length) return;
+        heading.classList.add('nf-wide-heading');
+        heading.classList.toggle('nf-heading-long', length > 22 && length <= 36);
+        heading.classList.toggle('nf-heading-very-long', length > 36);
+      });
+
+      root.querySelectorAll(
+        'p[class*="copy"],p[class*="note"],p[class*="description"],div[class*="copy"]'
+      ).forEach((copy) => {
+        if (copy.closest('button,[class*="light"],[class*="count"]')) return;
+        copy.classList.add('nf-wide-copy');
+      });
+    });
   }
 
   function findHeroPanel() {
@@ -186,6 +274,7 @@
     updateHero();
     updateProjectsLabel();
     updateFooter();
+    applyProjectTypography();
   }
 
   let attempts = 0;
@@ -197,6 +286,12 @@
     }
   }, 120);
 
+  let typographyFrame = 0;
+  new MutationObserver(() => {
+    window.cancelAnimationFrame(typographyFrame);
+    typographyFrame = window.requestAnimationFrame(applyProjectTypography);
+  }).observe(document.body, { childList: true, subtree: true });
+
   const languageObserver = new MutationObserver(apply);
   languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
@@ -207,6 +302,7 @@
     }
   }, true);
 
+  window.addEventListener('resize', applyProjectTypography, { passive: true });
   window.addEventListener('load', apply);
   apply();
 })();
