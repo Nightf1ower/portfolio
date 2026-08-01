@@ -1,11 +1,12 @@
 (() => {
-  if (window.__carnivalRecordsSectionOrderV2) return;
-  window.__carnivalRecordsSectionOrderV2 = true;
+  if (window.__carnivalRecordsSectionOrderV3) return;
+  window.__carnivalRecordsSectionOrderV3 = true;
 
   const SECTION_ORDER_KEY = 'vinyl-merch-carnival-calec-caps';
-  const CALEC_ORDER = ['2', '4', '5', '3', '1', '6', '14', '11', '15', '9', '8', '12', '16', '17', '13'];
-  const CALEC_ORDER_KEY = `${CALEC_ORDER.join('-')}-tee`;
-  const CALEC_TEE_SRC = '/works/carnival-records/calec-print/calec-print-tee.jpg?v=calec-order-2';
+  const CALEC_ORDER = ['2', '4', '1', '3', '5', '6', '14', '11', '15', '9', '8', '12', '16', '17', '13'];
+  const CALEC_CENTER_ORDER = ['10', '7'];
+  const CALEC_ORDER_KEY = `${CALEC_ORDER.join('-')}-center-${CALEC_CENTER_ORDER.join('-')}-tee`;
+  const CALEC_TEE_SRC = '/works/carnival-records/calec-print/calec-print-tee.jpg?v=calec-order-3';
 
   function normalize(value) {
     return String(value || '').trim().toUpperCase();
@@ -19,10 +20,24 @@
   }
 
   function injectStyles() {
-    if (document.getElementById('carnival-records-calec-order-style')) return;
+    document.getElementById('carnival-records-calec-order-style')?.remove();
     const style = document.createElement('style');
     style.id = 'carnival-records-calec-order-style';
     style.textContent = `
+      .cr-modal .cr-calec-center-row {
+        grid-column: 1 / -1 !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 1rem !important;
+        width: calc(66.666667% - .333333rem) !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        align-items: start !important;
+      }
+      .cr-modal .cr-calec-center-row > .cr-card {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
       .cr-modal .cr-calec-tee-card {
         grid-column: 1 / -1 !important;
         width: 100% !important;
@@ -44,6 +59,11 @@
         opacity: 1 !important;
         object-fit: contain !important;
         background: transparent !important;
+      }
+      @media (max-width: 900px) {
+        .cr-modal .cr-calec-center-row {
+          width: 100% !important;
+        }
       }
     `;
     document.head.append(style);
@@ -131,6 +151,12 @@
     const grid = calecSection?.querySelector(':scope > .cr-grid') || calecSection?.querySelector('.cr-grid');
     if (!grid) return false;
 
+    const oldCenterRow = grid.querySelector(':scope > .cr-calec-center-row');
+    if (oldCenterRow) {
+      [...oldCenterRow.children].forEach((card) => grid.insertBefore(card, oldCenterRow));
+      oldCenterRow.remove();
+    }
+
     const byNumber = new Map();
     const numberedCards = [];
 
@@ -143,9 +169,10 @@
       byNumber.set(String(Number(match[1])), card);
     });
 
-    if (CALEC_ORDER.some((number) => !byNumber.has(number))) return false;
+    const required = [...CALEC_ORDER, ...CALEC_CENTER_ORDER];
+    if (required.some((number) => !byNumber.has(number))) return false;
 
-    const allowed = new Set(CALEC_ORDER);
+    const allowed = new Set(required);
     numberedCards.forEach((card) => {
       const image = card.querySelector('.cr-img[src*="/calec-print/calec-print-"]');
       const match = image?.src?.match(/\/calec-print-(\d+)\.jpg(?:\?|$)/i);
@@ -154,6 +181,11 @@
     });
 
     CALEC_ORDER.forEach((number) => grid.append(byNumber.get(number)));
+
+    const centerRow = document.createElement('div');
+    centerRow.className = 'cr-calec-center-row';
+    CALEC_CENTER_ORDER.forEach((number) => centerRow.append(byNumber.get(number)));
+    grid.append(centerRow);
 
     let teeCard = grid.querySelector(':scope > .cr-calec-tee-card');
     if (!teeCard) teeCard = createCalecTeeCard();
