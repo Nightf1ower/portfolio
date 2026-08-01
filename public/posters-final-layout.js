@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersFinalLayoutV1) return;
-  window.__postersFinalLayoutV1 = true;
+  if (window.__postersFinalLayoutV2) return;
+  window.__postersFinalLayoutV2 = true;
 
-  const VERSION = 'posters-final-1';
+  const VERSION = 'posters-final-2';
   const ROOT = '/works/posters';
 
   const italo = Array.from({ length: 18 }, (_, index) => {
@@ -14,15 +14,6 @@
     };
   });
 
-  const soc = Array.from({ length: 6 }, (_, index) => {
-    const number = String(index + 1).padStart(2, '0');
-    return [
-      { src: `${ROOT}/soc-poster-${number}.jpg?v=${VERSION}`, alt: `SOC poster ${number}` },
-      { src: `${ROOT}/soc-poster-${number}-scetch.jpg?v=${VERSION}`, alt: `SOC poster ${number} sketch` },
-      { src: `${ROOT}/soc-poster-${number}-variant.jpg?v=${VERSION}`, alt: `SOC poster ${number} variant` },
-    ];
-  }).flat();
-
   const flawa = Array.from({ length: 3 }, (_, index) => {
     const number = String(index + 1).padStart(2, '0');
     return {
@@ -31,16 +22,17 @@
     };
   });
 
-  const allImages = [...italo, ...soc, ...flawa];
+  const allImages = [...italo, ...flawa];
   let lightbox = null;
   let activeIndex = 0;
 
   function injectStyles() {
-    if (document.getElementById('posters-final-layout-style')) return;
+    document.getElementById('posters-final-layout-style')?.remove();
     const style = document.createElement('style');
     style.id = 'posters-final-layout-style';
     style.textContent = `
       .posters-section .posters-hint { display: none !important; }
+      .posters-section:has(.posters-section-title) { visibility: visible; }
       .posters-final-grid {
         display: grid !important;
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
@@ -89,13 +81,20 @@
     ) || null;
   }
 
+  function removeSocSection(modal) {
+    sectionByTitle(modal, 'SOC POSTERS')?.remove();
+    modal.querySelectorAll('[src*="soc-poster" i], [alt*="SOC poster" i]').forEach((node) => {
+      node.closest('.posters-card, .posters-final-card, .posters-section')?.remove();
+    });
+  }
+
   function closeLightbox() {
     lightbox?.remove();
     lightbox = null;
   }
 
   function renderLightbox() {
-    if (!lightbox) return;
+    if (!lightbox || !allImages.length) return;
     const image = lightbox.querySelector('.posters-light-image');
     const counter = lightbox.querySelector('.posters-light-count');
     const item = allImages[activeIndex];
@@ -105,11 +104,13 @@
   }
 
   function stepLightbox(amount) {
+    if (!allImages.length) return;
     activeIndex = (activeIndex + amount + allImages.length) % allImages.length;
     renderLightbox();
   }
 
   function openLightbox(item) {
+    if (!item || !allImages.length) return;
     closeLightbox();
     activeIndex = Math.max(0, allImages.findIndex((entry) => entry.src === item.src));
 
@@ -206,11 +207,14 @@
   function applyModal() {
     injectStyles();
     const modal = document.querySelector('.posters-modal');
-    if (!modal || modal.dataset.postersFinalized === VERSION) return false;
+    if (!modal) return false;
+
+    removeSocSection(modal);
+    if (modal.dataset.postersFinalized === VERSION) return true;
 
     rebuildSection(sectionByTitle(modal, 'ITALO POSTERS'), italo, 6);
-    rebuildSection(sectionByTitle(modal, 'SOC POSTERS'), soc, 0);
     rebuildSection(sectionByTitle(modal, 'FLAWA POSTERS'), flawa, 0);
+    removeSocSection(modal);
 
     modal.dataset.postersFinalized = VERSION;
     return true;
@@ -221,14 +225,19 @@
     const title = card?.querySelector('h3')?.textContent?.trim().toUpperCase();
     if (title === 'POSTERS') {
       window.setTimeout(applyModal, 0);
-      window.setTimeout(applyModal, 80);
-      window.setTimeout(applyModal, 240);
+      window.setTimeout(applyModal, 40);
+      window.setTimeout(applyModal, 120);
+      window.setTimeout(applyModal, 300);
     }
   }, true);
 
   document.addEventListener('keydown', (event) => {
     if (!lightbox) return;
-    if (event.key === 'ArrowLeft') {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      closeLightbox();
+    } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
       event.stopImmediatePropagation();
       stepLightbox(-1);
@@ -238,6 +247,11 @@
       stepLightbox(1);
     }
   }, true);
+
+  new MutationObserver(() => {
+    const modal = document.querySelector('.posters-modal');
+    if (modal) applyModal();
+  }).observe(document.body, { childList: true, subtree: true });
 
   injectStyles();
   applyModal();
