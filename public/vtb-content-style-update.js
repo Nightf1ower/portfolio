@@ -1,8 +1,26 @@
 (() => {
-  if (window.__vtbContentStyleUpdateV1) return;
-  window.__vtbContentStyleUpdateV1 = true;
+  if (window.__vtbContentStyleUpdateV2) return;
+  window.__vtbContentStyleUpdateV2 = true;
 
-  const VERSION = 'vtb-content-style-1';
+  const VERSION = 'vtb-content-style-2';
+  const ROOT = '/works/VTB%20DESIGN%20TEAM/print';
+  const PRINT_FILES = [
+    ['print-1.jpg', 'print-1-variant.jpg', 'print-1-tee-1.jpg', 'print-1-tee-2.jpg', 'print-1-tee-3.jpg', 'print-1-tee-4.jpg', 'print-1-tee-5.jpg', 'print-1-tee-6.jpg'],
+    ['print-2.jpg', 'print-2-tee-1.jpg', 'print-2-tee-2.jpg'],
+    ['print-3.jpg', 'print-3-variant.jpg', 'print-3-tee-1.jpg', 'print-3-tee-2.jpg', 'print-3-tee-3.jpg', 'print-3-tee-4.jpg', 'print-3-tee-5.jpg'],
+    ['print-4.jpg', 'print-4-tee-1.jpg', 'print-4-tee-2.jpg'],
+    ['print-5.jpg', 'print-5-variant.jpg', 'print-5-tee-1.jpg', 'print-5-tee-2.jpg', 'print-5-tee-3.jpg'],
+    ['print-6.jpg', 'print-6-tee-1.jpg', 'print-6-tee-2.jpg'],
+    ['print-7.jpg', 'print-7-tee-1.jpg', 'print-7-tee-2.jpg', 'print-7-tee-3.jpg'],
+    ['print-8-1.jpg', 'print-8-tee-1.jpg', 'print-8-tee-2.jpg'],
+    ['print-9-1.jpg', 'print-9-variant-1.jpg', 'print-9-variant-2.jpg', 'print-9-tee-1.jpg', 'print-9-tee-2.jpg', 'print-9-tee-3.jpg', 'print-9-tee-4.jpg'],
+  ];
+
+  const PRINT_SERIES = PRINT_FILES.map((series, seriesIndex) => series.map((name, itemIndex) => ({
+    src: `${ROOT}/${encodeURIComponent(name)}?v=vtb-gallery-1`,
+    alt: `VTB DESIGN TEAM print ${seriesIndex + 1}${itemIndex ? ` variation ${itemIndex}` : ''}`,
+  })));
+
   const COPY = {
     ru: {
       aboutTitle: 'О ПРОЕКТЕ',
@@ -169,9 +187,61 @@
     printCopy.textContent = copy.printsText;
   }
 
+  function restorePrintHover(modal) {
+    if (!(modal instanceof Element)) return;
+    const cards = [...modal.querySelectorAll('.vtb-print-card')];
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    cards.forEach((card, seriesIndex) => {
+      if (card.dataset.vtbStableHover === VERSION) return;
+      const series = PRINT_SERIES[seriesIndex];
+      if (!series?.length) return;
+
+      const clickHandler = card.onclick;
+      const cleanCard = card.cloneNode(true);
+      cleanCard.onclick = clickHandler;
+      cleanCard.dataset.vtbStableHover = VERSION;
+      cleanCard.querySelectorAll('.vtb-hover-badge').forEach((node) => node.remove());
+      card.replaceWith(cleanCard);
+
+      const image = cleanCard.querySelector('img');
+      if (!image || !canHover || series.length < 2) return;
+
+      let timer = 0;
+      let index = 0;
+      const render = () => {
+        image.src = series[index].src;
+        image.alt = series[index].alt;
+      };
+      const stop = () => {
+        window.clearInterval(timer);
+        timer = 0;
+        index = 0;
+        render();
+      };
+
+      cleanCard.addEventListener('mouseenter', () => {
+        stop();
+        series.slice(1).forEach((item) => {
+          const preload = new Image();
+          preload.src = item.src;
+        });
+        timer = window.setInterval(() => {
+          index = (index + 1) % series.length;
+          render();
+        }, 700);
+      });
+      cleanCard.addEventListener('mouseleave', stop);
+      cleanCard.addEventListener('blur', stop);
+    });
+  }
+
   function apply() {
     injectStyles();
-    document.querySelectorAll('.vtb-modal').forEach(applyCopy);
+    document.querySelectorAll('.vtb-modal').forEach((modal) => {
+      applyCopy(modal);
+      restorePrintHover(modal);
+    });
   }
 
   let scheduled = false;
