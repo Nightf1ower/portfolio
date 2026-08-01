@@ -1,8 +1,8 @@
 (() => {
-  if (window.__carnivalRecordsCleanupV2) return;
-  window.__carnivalRecordsCleanupV2 = true;
+  if (window.__carnivalRecordsCleanupV3) return;
+  window.__carnivalRecordsCleanupV3 = true;
 
-  const VERSION = 'carnival-cleanup-2';
+  const VERSION = 'carnival-cleanup-3';
 
   function injectStyles() {
     document.getElementById('carnival-records-cleanup-style')?.remove();
@@ -62,7 +62,7 @@
   function loadSectionOrder() {
     if (document.querySelector('script[src^="/carnival-records-section-order.js"]')) return;
     const script = document.createElement('script');
-    script.src = '/carnival-records-section-order.js?v=carnival-section-order-1';
+    script.src = '/carnival-records-section-order.js?v=carnival-section-order-2';
     script.async = false;
     document.head.append(script);
   }
