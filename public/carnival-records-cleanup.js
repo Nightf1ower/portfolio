@@ -1,8 +1,8 @@
 (() => {
-  if (window.__carnivalRecordsCleanupV4) return;
-  window.__carnivalRecordsCleanupV4 = true;
+  if (window.__carnivalRecordsCleanupV5) return;
+  window.__carnivalRecordsCleanupV5 = true;
 
-  const VERSION = 'carnival-cleanup-4';
+  const VERSION = 'carnival-cleanup-5';
 
   function injectStyles() {
     document.getElementById('carnival-records-cleanup-style')?.remove();
@@ -59,17 +59,18 @@
     return true;
   }
 
-  function loadSectionOrder() {
-    if (document.querySelector('script[src^="/carnival-records-section-order.js"]')) return;
+  function loadScript(selector, src) {
+    if (document.querySelector(selector)) return;
     const script = document.createElement('script');
-    script.src = '/carnival-records-section-order.js?v=carnival-section-order-3';
+    script.src = src;
     script.async = false;
     document.head.append(script);
   }
 
   injectStyles();
   cleanup();
-  loadSectionOrder();
+  loadScript('script[src^="/carnival-records-section-order.js"]', '/carnival-records-section-order.js?v=carnival-section-order-3');
+  loadScript('script[src^="/carnival-records-copy-update.js"]', '/carnival-records-copy-update.js?v=carnival-copy-update-1');
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
