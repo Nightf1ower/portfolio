@@ -1,6 +1,6 @@
 (() => {
-  if (window.__pinkPunkLightboxFixV1) return;
-  window.__pinkPunkLightboxFixV1 = true;
+  if (window.__pinkPunkLightboxFixV2) return;
+  window.__pinkPunkLightboxFixV2 = true;
 
   let overlay = null;
   let images = [];
@@ -113,9 +113,20 @@
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
     if (event.target.closest('.ppf-light')) return;
+
     const modal = event.target.closest('.pink-punk-fullscreen');
+    if (!modal) return;
+
     const card = event.target.closest('.pink-punk-frame');
-    if (!modal || !card) return;
+    if (!card) {
+      const control = event.target.closest('button, a, input, select, textarea, .project-scroll-top');
+      const gallery = event.target.closest('.pink-punk-gallery');
+      if (!control && gallery) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+      return;
+    }
 
     const own = cardImages(card);
     let items = own;
