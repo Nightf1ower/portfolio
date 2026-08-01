@@ -1,8 +1,8 @@
 (() => {
-  if (window.__stayUglyAssetsLayoutUpdateV1) return;
-  window.__stayUglyAssetsLayoutUpdateV1 = true;
+  if (window.__stayUglyAssetsLayoutUpdateV2) return;
+  window.__stayUglyAssetsLayoutUpdateV2 = true;
 
-  const VERSION = 'stayugly-assets-layout-1';
+  const VERSION = 'stayugly-assets-layout-2';
   const ASSETS = {
     conceptMain: '/works/stayugly/concept/concept-01.jpg',
     conceptSteps: [
@@ -32,7 +32,14 @@
       : 'en'
   );
 
-  const versioned = (src) => `${src}?v=${VERSION}`;
+  const versioned = (src) => `${src}${src.includes('?') ? '&' : '?'}v=${VERSION}`;
+  const isRemovedPhoto = (src) => {
+    try {
+      return /(?:^|\/)photo-(?:10|11)(?:\.[a-z0-9]+)?(?:[?#]|$)/i.test(decodeURIComponent(src));
+    } catch {
+      return /(?:^|\/)photo-(?:10|11)(?:\.[a-z0-9]+)?(?:[?#]|$)/i.test(src);
+    }
+  };
 
   function injectStyles() {
     const old = document.getElementById('stayugly-assets-layout-update-style');
@@ -72,9 +79,16 @@
 
       .su-concept-update__flow {
         display: grid;
-        grid-template-columns: minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);
+        width: calc(100% + 2rem);
+        margin-left: -1rem;
+        grid-template-columns:
+          minmax(0, 1fr)
+          clamp(2rem, 2.8vw, 3rem)
+          minmax(0, 1fr)
+          clamp(2rem, 2.8vw, 3rem)
+          minmax(0, 1fr);
         align-items: center;
-        gap: clamp(.8rem, 1.6vw, 1.5rem);
+        gap: clamp(.15rem, .45vw, .45rem);
       }
 
       .su-concept-update__item {
@@ -87,13 +101,13 @@
         justify-self: center;
         display: block;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: clamp(3rem, 5.5vw, 6.5rem);
+        font-size: clamp(1.8rem, 3vw, 3.35rem);
         font-weight: 1000;
-        line-height: .75;
+        line-height: .8;
         letter-spacing: -.12em;
-        transform: scaleX(1.18);
+        transform: scaleX(1.08);
         color: #050505;
-        -webkit-text-stroke: 1px #050505;
+        -webkit-text-stroke: .45px #050505;
       }
 
       .su-concept-update .su-concept-caption {
@@ -102,26 +116,69 @@
 
       .su-package-update {
         display: grid;
-        grid-template-columns: minmax(0,.82fr) minmax(0,1.18fr);
+        grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
         align-items: center;
-        gap: clamp(2rem, 5vw, 5.5rem);
+        gap: clamp(2.5rem, 4vw, 4.5rem);
       }
 
       .su-package-update__copy {
         min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        padding-right: clamp(.5rem, 1.5vw, 1.5rem);
       }
 
       .su-package-update__copy .su-section-head {
+        max-width: 100%;
         margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
       }
 
-      .su-package-update__copy .su-text {
-        max-width: 34rem;
+      .su-package-update__copy .su-h {
+        max-width: 100%;
         margin: 0;
+        font-size: clamp(2.8rem, 4.6vw, 4.75rem);
+        line-height: .84;
+        letter-spacing: -.075em;
+        white-space: nowrap;
+      }
+
+      .su-package-update__copy .su-text {
+        width: 100%;
+        max-width: 31rem;
+        margin: 0;
+        font-size: clamp(1rem, 1.45vw, 1.25rem);
+        line-height: 1.08;
+        overflow-wrap: anywhere;
       }
 
       .su-package-update__media {
         min-width: 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      .su-photoshoot-update {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .su-photoshoot-update__card {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: #fcfcfa;
+        cursor: zoom-in;
+      }
+
+      .su-photoshoot-update__card img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
       }
 
       .su-assets-lightbox {
@@ -159,14 +216,22 @@
         cursor: pointer;
       }
 
+      @media (max-width: 1050px) {
+        .su-package-update__copy .su-h {
+          font-size: clamp(2.65rem, 6vw, 4rem);
+        }
+      }
+
       @media (max-width: 900px) {
         .su-concept-update__flow {
+          width: 100%;
+          margin-left: 0;
           grid-template-columns: 1fr;
         }
 
         .su-concept-update__arrow {
-          transform: rotate(90deg) scaleX(1.18);
-          margin: .15rem 0;
+          transform: rotate(90deg) scaleX(1.08);
+          margin: .1rem 0;
         }
 
         .su-concept-update .su-concept-caption {
@@ -177,8 +242,27 @@
           grid-template-columns: 1fr;
         }
 
+        .su-package-update__copy {
+          overflow: visible;
+          padding-right: 0;
+        }
+
+        .su-package-update__copy .su-h {
+          white-space: normal;
+        }
+
         .su-package-update__copy .su-text {
           max-width: 52rem;
+        }
+
+        .su-photoshoot-update {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 560px) {
+        .su-photoshoot-update {
+          grid-template-columns: 1fr;
         }
       }
     `;
@@ -203,6 +287,35 @@
     overlay.onclick = () => overlay.remove();
     overlay.append(image, close);
     document.body.append(overlay);
+  }
+
+  function openGalleryLightbox(list, startIndex = 0) {
+    if (!list.length) return;
+    document.querySelector('.su-assets-lightbox')?.remove();
+    let index = Math.max(0, Math.min(startIndex, list.length - 1));
+    const overlay = document.createElement('div');
+    const image = document.createElement('img');
+    const close = document.createElement('button');
+    overlay.className = 'su-assets-lightbox';
+    close.type = 'button';
+    close.textContent = language() === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
+    const render = () => {
+      image.src = list[index];
+      image.alt = `STAY UGLY photoshoot ${index + 1}`;
+    };
+    close.onclick = (event) => {
+      event.stopPropagation();
+      overlay.remove();
+    };
+    image.onclick = (event) => {
+      event.stopPropagation();
+      index = (index + 1) % list.length;
+      render();
+    };
+    overlay.onclick = () => overlay.remove();
+    overlay.append(image, close);
+    document.body.append(overlay);
+    render();
   }
 
   function imageButton(className, src, alt) {
@@ -298,10 +411,48 @@
     section.append(layout);
   }
 
+  function rebuildPhotoshoot(section) {
+    if (!(section instanceof Element)) return;
+    if (section.querySelector(':scope > .su-photoshoot-update')) return;
+
+    const oldGrid = [...section.children].find((child) => child.classList.contains('su-grid'));
+    if (!oldGrid) return;
+
+    const sources = [...oldGrid.querySelectorAll('img')]
+      .map((image) => image.currentSrc || image.getAttribute('src') || image.src || '')
+      .filter(Boolean)
+      .filter((src) => !isRemovedPhoto(src));
+
+    oldGrid.remove();
+    const grid = document.createElement('div');
+    grid.className = 'su-photoshoot-update';
+    grid.dataset.stayUglyAssets = VERSION;
+
+    sources.forEach((src, index) => {
+      const button = document.createElement('button');
+      const image = document.createElement('img');
+      button.type = 'button';
+      button.className = 'su-photoshoot-update__card';
+      image.src = src;
+      image.alt = `STAY UGLY photoshoot ${index + 1}`;
+      image.loading = 'lazy';
+      image.decoding = 'async';
+      button.append(image);
+      button.onclick = (event) => {
+        event.stopPropagation();
+        openGalleryLightbox(sources, index);
+      };
+      grid.append(button);
+    });
+
+    section.append(grid);
+  }
+
   function apply() {
     injectStyles();
     document.querySelectorAll('.su-modal').forEach((modal) => {
       rebuildConcept(modal.querySelector('.su-section[data-su-section="concept"]'));
+      rebuildPhotoshoot(modal.querySelector('.su-section[data-su-section="photoshoot"]'));
       rebuildPackage(modal.querySelector('.su-section[data-su-section="packaging"]'));
     });
   }
