@@ -1,8 +1,8 @@
 (() => {
-  if (window.__carnivalRecordsCopyUpdateV1) return;
-  window.__carnivalRecordsCopyUpdateV1 = true;
+  if (window.__carnivalRecordsCopyUpdateV2) return;
+  window.__carnivalRecordsCopyUpdateV2 = true;
 
-  const VERSION = 'carnival-copy-update-1';
+  const VERSION = 'carnival-copy-update-2';
   const COPY = {
     ru: {
       aboutTitle: 'ABOUT CARNIVAL RECORDS',
@@ -31,25 +31,54 @@
     style.dataset.version = VERSION;
     style.textContent = `
       .cr-modal .cr-about {
-        max-width: 61rem;
-        margin-top: clamp(2.5rem, 5vw, 4.5rem);
-        padding-top: 1.15rem;
-        border-top: 1px solid rgba(5,5,5,.24);
-      }
-      .cr-modal .cr-about__title {
-        margin: 0 0 1rem;
-        color: #050505;
-        font: 900 .72rem/1 Arial,Helvetica,sans-serif;
-        letter-spacing: .24em;
-        text-transform: uppercase;
-      }
-      .cr-modal .cr-about__copy {
         width: 100%;
         max-width: none;
-        margin: 0;
-        color: #050505;
-        font: 650 clamp(1.05rem,1.75vw,1.45rem)/1.2 Arial,Helvetica,sans-serif;
-        letter-spacing: -.025em;
+        margin-top: clamp(2.3rem,5vw,4rem);
+        padding-top: 0;
+        border-top: 0;
+      }
+      .cr-modal .cr-about__title {
+        display: block !important;
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 0 .85rem !important;
+        padding: 0 !important;
+        color: #050505 !important;
+        font-family: Arial,Helvetica,sans-serif !important;
+        font-size: .72rem !important;
+        font-weight: 900 !important;
+        line-height: 1 !important;
+        letter-spacing: .27em !important;
+        text-transform: uppercase !important;
+        text-wrap: initial !important;
+      }
+      .cr-modal .cr-about__copy {
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        color: rgba(5,5,5,.78) !important;
+        font-family: Arial,Helvetica,sans-serif !important;
+        font-size: clamp(1rem,1.45vw,1.25rem) !important;
+        font-weight: 600 !important;
+        line-height: 1.48 !important;
+        letter-spacing: -.018em !important;
+        text-wrap: pretty !important;
+      }
+      .cr-modal .cr-section-caps {
+        margin-top: clamp(2rem,4vw,3.5rem) !important;
+      }
+      @media (max-width: 650px) {
+        .cr-modal .cr-about {
+          margin-top: 2.25rem;
+        }
+        .cr-modal .cr-about__title {
+          font-size: .66rem !important;
+          letter-spacing: .23em !important;
+        }
+        .cr-modal .cr-section-caps {
+          margin-top: 1.5rem !important;
+        }
       }
     `;
     document.head.append(style);
@@ -72,6 +101,21 @@
     description.textContent = value;
   }
 
+  function ensureAboutLabel(about) {
+    let title = about.querySelector(':scope > .cr-about__title');
+    if (title?.tagName === 'P') return title;
+
+    const label = document.createElement('p');
+    label.className = 'cr-about__title';
+    if (title) {
+      label.textContent = title.textContent;
+      title.replaceWith(label);
+    } else {
+      about.prepend(label);
+    }
+    return label;
+  }
+
   function apply(modal = document.querySelector('.cr-modal')) {
     if (!modal) return false;
     injectStyles();
@@ -85,7 +129,7 @@
     if (!about) {
       about = document.createElement('div');
       about.className = 'cr-about';
-      const title = document.createElement('h2');
+      const title = document.createElement('p');
       title.className = 'cr-about__title';
       const paragraph = document.createElement('p');
       paragraph.className = 'cr-about__copy';
@@ -93,11 +137,21 @@
       hero.append(about);
     }
 
-    about.querySelector('.cr-about__title').textContent = copy.aboutTitle;
-    about.querySelector('.cr-about__copy').textContent = copy.aboutText;
+    const aboutTitle = ensureAboutLabel(about);
+    let aboutCopy = about.querySelector(':scope > .cr-about__copy');
+    if (!aboutCopy) {
+      aboutCopy = document.createElement('p');
+      aboutCopy.className = 'cr-about__copy';
+      about.append(aboutCopy);
+    }
+    aboutTitle.textContent = copy.aboutTitle;
+    aboutCopy.textContent = copy.aboutText;
 
     setDescription(findSection(modal, 'VINYL ALBUM COVER DESIGN'), copy.vinylText);
     setDescription(findSection(modal, 'ВЛАСТЕЛИН КАЛЕК COLLECTION'), copy.calecText);
+
+    const caps = findSection(modal, 'CAPS');
+    caps?.classList.add('cr-section-caps');
 
     modal.dataset.carnivalCopyUpdate = `${VERSION}-${lang}`;
     return true;
