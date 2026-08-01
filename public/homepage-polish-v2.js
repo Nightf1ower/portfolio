@@ -1,8 +1,8 @@
 (() => {
-  if (window.__homepagePolishV2) return;
-  window.__homepagePolishV2 = true;
+  if (window.__homepagePolishV3) return;
+  window.__homepagePolishV3 = true;
 
-  const VERSION = 'homepage-polish-2';
+  const VERSION = 'homepage-polish-3';
 
   const COPY = {
     ru: {
@@ -28,6 +28,18 @@
     style.id = 'homepage-polish-v2-style';
     style.dataset.version = VERSION;
     style.textContent = `
+      ::selection {
+        background: #a6ff00 !important;
+        color: #050505 !important;
+        text-shadow: none !important;
+      }
+
+      ::-moz-selection {
+        background: #a6ff00 !important;
+        color: #050505 !important;
+        text-shadow: none !important;
+      }
+
       .nf-noise-panel {
         overflow: hidden !important;
         isolation: isolate;
