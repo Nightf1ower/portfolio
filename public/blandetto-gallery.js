@@ -33,7 +33,7 @@
   loadScript('script[src^="/zny-print-order.js"]', '/zny-print-order.js?v=zny-print-order-1');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-9');
   loadScript('script[src^="/fable-navigation-layout-fix.js"]', '/fable-navigation-layout-fix.js?v=fable-navigation-layout-2');
-  loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-4');
+  loadScript('script[src^="/project9006-layout.js"]', '/project9006-layout.js?v=9006-layout-5');
   loadScript('script[src^="/vtb-design-team-gallery.js"]', '/vtb-design-team-gallery.js?v=vtb-gallery-1');
   loadScript('script[src^="/collages-gallery.js"]', '/collages-gallery.js?v=collages-gallery-1');
   loadScript('script[src^="/project-card-layout-v5.js"]', '/project-card-layout-v5.js?v=project-card-layout-5');
