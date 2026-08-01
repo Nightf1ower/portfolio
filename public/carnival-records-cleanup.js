@@ -1,8 +1,8 @@
 (() => {
-  if (window.__carnivalRecordsCleanupV5) return;
-  window.__carnivalRecordsCleanupV5 = true;
+  if (window.__carnivalRecordsCleanupV6) return;
+  window.__carnivalRecordsCleanupV6 = true;
 
-  const VERSION = 'carnival-cleanup-5';
+  const VERSION = 'carnival-cleanup-6';
 
   function injectStyles() {
     document.getElementById('carnival-records-cleanup-style')?.remove();
@@ -70,7 +70,7 @@
   injectStyles();
   cleanup();
   loadScript('script[src^="/carnival-records-section-order.js"]', '/carnival-records-section-order.js?v=carnival-section-order-3');
-  loadScript('script[src^="/carnival-records-copy-update.js"]', '/carnival-records-copy-update.js?v=carnival-copy-update-1');
+  loadScript('script[src^="/carnival-records-copy-update.js"]', '/carnival-records-copy-update.js?v=carnival-copy-update-2');
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
