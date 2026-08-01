@@ -17,7 +17,7 @@
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/gallery-first-image-fix.js"]', '/gallery-first-image-fix.js?v=first-image-4');
   loadScript('script[src^="/project-modal-controls.js"]', '/project-modal-controls.js?v=modal-controls-4');
-  loadScript('script[src^="/homepage-polish-v2.js"]', '/homepage-polish-v2.js?v=homepage-polish-2');
+  loadScript('script[src^="/homepage-polish-v2.js"]', '/homepage-polish-v2.js?v=homepage-polish-3');
   loadScript('script[src^="/posters-gallery.js"]', '/posters-gallery.js?v=posters-1');
   loadScript('script[src^="/posters-final-layout.js"]', '/posters-final-layout.js?v=posters-final-1');
   loadScript('script[src^="/album-covers-gallery.js"]', '/album-covers-gallery.js?v=album-covers-2');
