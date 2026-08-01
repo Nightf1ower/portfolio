@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbContentStyleUpdateV2) return;
-  window.__vtbContentStyleUpdateV2 = true;
+  if (window.__vtbContentStyleUpdateV3) return;
+  window.__vtbContentStyleUpdateV3 = true;
 
-  const VERSION = 'vtb-content-style-2';
+  const VERSION = 'vtb-content-style-3';
   const ROOT = '/works/VTB%20DESIGN%20TEAM/print';
   const PRINT_FILES = [
     ['print-1.jpg', 'print-1-variant.jpg', 'print-1-tee-1.jpg', 'print-1-tee-2.jpg', 'print-1-tee-3.jpg', 'print-1-tee-4.jpg', 'print-1-tee-5.jpg', 'print-1-tee-6.jpg'],
@@ -124,6 +124,47 @@
         color: #fff !important;
       }
 
+      .vtb-crossfade-frame {
+        position: relative;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .vtb-print-card .vtb-crossfade-image {
+        position: absolute !important;
+        inset: 0 !important;
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: contain !important;
+        opacity: 0;
+        transform: scale(1.025);
+        transition:
+          opacity .68s cubic-bezier(.22,.61,.36,1),
+          transform 1.25s cubic-bezier(.22,.61,.36,1);
+        will-change: opacity, transform;
+        pointer-events: none;
+      }
+
+      .vtb-print-card .vtb-crossfade-image.is-visible {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .vtb-print-card:hover .vtb-crossfade-image.is-visible {
+        transform: scale(1.014);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .vtb-print-card .vtb-crossfade-image {
+          transition-duration: .01ms !important;
+        }
+      }
+
       @media (max-width: 560px) {
         .vtb-project-intro {
           padding-bottom: 3.5rem;
@@ -187,14 +228,21 @@
     printCopy.textContent = copy.printsText;
   }
 
+  function getSeriesForCard(card) {
+    const label = card.getAttribute('aria-label') || '';
+    const match = label.match(/print\s+(\d+)/i);
+    const number = match ? Number(match[1]) : 0;
+    return PRINT_SERIES[number - 1] || null;
+  }
+
   function restorePrintHover(modal) {
     if (!(modal instanceof Element)) return;
     const cards = [...modal.querySelectorAll('.vtb-print-card')];
     const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    cards.forEach((card, seriesIndex) => {
+    cards.forEach((card) => {
       if (card.dataset.vtbStableHover === VERSION) return;
-      const series = PRINT_SERIES[seriesIndex];
+      const series = getSeriesForCard(card);
       if (!series?.length) return;
 
       const clickHandler = card.onclick;
@@ -204,32 +252,114 @@
       cleanCard.querySelectorAll('.vtb-hover-badge').forEach((node) => node.remove());
       card.replaceWith(cleanCard);
 
-      const image = cleanCard.querySelector('img');
-      if (!image || !canHover || series.length < 2) return;
+      const originalImage = cleanCard.querySelector('img');
+      if (!originalImage) return;
 
-      let timer = 0;
-      let index = 0;
-      const render = () => {
-        image.src = series[index].src;
-        image.alt = series[index].alt;
+      const rect = originalImage.getBoundingClientRect();
+      const frame = document.createElement('span');
+      frame.className = 'vtb-crossfade-frame';
+      frame.style.aspectRatio = rect.width > 0 && rect.height > 0
+        ? `${rect.width} / ${rect.height}`
+        : '1 / 1';
+
+      const firstLayer = originalImage.cloneNode(true);
+      const secondLayer = originalImage.cloneNode(true);
+      firstLayer.className = 'vtb-crossfade-image is-visible';
+      secondLayer.className = 'vtb-crossfade-image';
+      firstLayer.src = series[0].src;
+      firstLayer.alt = series[0].alt;
+      secondLayer.removeAttribute('src');
+      secondLayer.alt = '';
+      firstLayer.loading = 'eager';
+      secondLayer.loading = 'eager';
+      firstLayer.decoding = 'async';
+      secondLayer.decoding = 'async';
+      frame.append(firstLayer, secondLayer);
+      originalImage.replaceWith(frame);
+
+      const updateRatio = () => {
+        if (firstLayer.naturalWidth > 0 && firstLayer.naturalHeight > 0) {
+          frame.style.aspectRatio = `${firstLayer.naturalWidth} / ${firstLayer.naturalHeight}`;
+        }
       };
+      if (firstLayer.complete) updateRatio();
+      else firstLayer.addEventListener('load', updateRatio, { once: true });
+
+      if (!canHover || series.length < 2) return;
+
+      const layers = [firstLayer, secondLayer];
+      let activeLayer = 0;
+      let currentIndex = 0;
+      let sequenceIndex = 0;
+      let intervalId = 0;
+      let delayId = 0;
+      let transitionId = 0;
+      let hovering = false;
+
+      const loadLayer = async (image, item) => {
+        image.src = item.src;
+        image.alt = item.alt;
+        try {
+          await image.decode();
+        } catch {
+          if (!image.complete) {
+            await new Promise((resolve) => {
+              image.addEventListener('load', resolve, { once: true });
+              image.addEventListener('error', resolve, { once: true });
+            });
+          }
+        }
+      };
+
+      const show = async (nextIndex) => {
+        if (nextIndex === currentIndex) return;
+        const requestId = ++transitionId;
+        const nextLayer = activeLayer === 0 ? 1 : 0;
+        await loadLayer(layers[nextLayer], series[nextIndex]);
+        if (requestId !== transitionId) return;
+
+        requestAnimationFrame(() => {
+          layers[nextLayer].classList.add('is-visible');
+          layers[activeLayer].classList.remove('is-visible');
+          activeLayer = nextLayer;
+          currentIndex = nextIndex;
+        });
+      };
+
+      const advance = () => {
+        sequenceIndex = (sequenceIndex + 1) % series.length;
+        show(sequenceIndex);
+      };
+
+      const clearTimers = () => {
+        window.clearTimeout(delayId);
+        window.clearInterval(intervalId);
+        delayId = 0;
+        intervalId = 0;
+      };
+
       const stop = () => {
-        window.clearInterval(timer);
-        timer = 0;
-        index = 0;
-        render();
+        hovering = false;
+        clearTimers();
+        sequenceIndex = 0;
+        show(0);
       };
 
       cleanCard.addEventListener('mouseenter', () => {
-        stop();
+        hovering = true;
+        clearTimers();
+        sequenceIndex = currentIndex;
         series.slice(1).forEach((item) => {
           const preload = new Image();
+          preload.decoding = 'async';
           preload.src = item.src;
         });
-        timer = window.setInterval(() => {
-          index = (index + 1) % series.length;
-          render();
-        }, 700);
+
+        delayId = window.setTimeout(() => {
+          if (!hovering) return;
+          advance();
+          intervalId = window.setInterval(advance, 1250);
+        }, 260);
       });
       cleanCard.addEventListener('mouseleave', stop);
       cleanCard.addEventListener('blur', stop);
