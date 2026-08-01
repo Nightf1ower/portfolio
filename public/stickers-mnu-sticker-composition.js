@@ -1,18 +1,14 @@
 (() => {
-  if (window.__stickersMnuStickerCompositionV1) return;
-  window.__stickersMnuStickerCompositionV1 = true;
+  if (window.__stickersMnuStickerCompositionV2) return;
+  window.__stickersMnuStickerCompositionV2 = true;
 
-  const VERSION = 'stickers-mnu-sticker-composition-1';
-  const SLOT_ORDER = {
-    topLeft: 'sticker-mnu-01',
-    topCenter: 'sticker-mnu-04',
-    topRight: 'sticker-mnu-02',
-    middleLeft: 'sticker-mnu-07',
-    center: 'sticker-mnu-05',
-    middleRight: 'sticker-mnu-08',
-    bottomLeft: 'sticker-mnu-06',
-    bottomRight: 'sticker-mnu-03',
-  };
+  const VERSION = 'stickers-mnu-sticker-composition-2';
+  const ROWS = [
+    ['sticker-mnu-05', 'sticker-mnu-02', 'sticker-mnu-04'],
+    ['sticker-mnu-09', 'sticker-mnu-01', 'sticker-mnu-10'],
+    ['sticker-mnu-07', 'sticker-mnu-08'],
+    ['sticker-mnu-03', 'sticker-mnu-06'],
+  ];
 
   function filename(card) {
     const image = card?.querySelector('img');
@@ -44,39 +40,43 @@
       }
 
       .stk-mnu-composition {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(1rem, 2vw, 1.8rem);
+        width: 100%;
+      }
+
+      .stk-mnu-composition__row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
-        grid-template-areas:
-          "top-left top-center top-right"
-          "middle-left center middle-right"
-          "bottom-left bottom-left bottom-right";
         align-items: center;
+        justify-content: center;
         gap: clamp(.8rem, 1.8vw, 1.6rem);
         width: 100%;
       }
 
-      .stk-mnu-composition__slot {
-        min-width: 0;
+      .stk-mnu-composition__row--three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stk-mnu-composition__row--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: min(100%, 74rem);
+        margin-inline: auto;
+      }
+
+      .stk-mnu-composition__cell {
         display: flex;
         align-items: center;
         justify-content: center;
+        min-width: 0;
       }
 
-      .stk-mnu-composition__slot--top-left { grid-area: top-left; }
-      .stk-mnu-composition__slot--top-center { grid-area: top-center; }
-      .stk-mnu-composition__slot--top-right { grid-area: top-right; }
-      .stk-mnu-composition__slot--middle-left { grid-area: middle-left; }
-      .stk-mnu-composition__slot--center { grid-area: center; }
-      .stk-mnu-composition__slot--middle-right { grid-area: middle-right; }
-      .stk-mnu-composition__slot--bottom-left { grid-area: bottom-left; }
-      .stk-mnu-composition__slot--bottom-right { grid-area: bottom-right; }
-
-      .stk-mnu-composition__slot .stk-card {
+      .stk-mnu-composition__cell .stk-card {
         width: 100%;
         overflow: visible !important;
       }
 
-      .stk-mnu-composition__slot .stk-card img {
+      .stk-mnu-composition__cell .stk-card img {
         display: block;
         width: 100%;
         height: auto !important;
@@ -85,14 +85,22 @@
         background: transparent !important;
       }
 
-      .stk-mnu-composition__slot--top-center .stk-card { width: min(82%, 17rem); }
-      .stk-mnu-composition__slot--middle-left .stk-card,
-      .stk-mnu-composition__slot--middle-right .stk-card { width: min(72%, 15rem); }
-      .stk-mnu-composition__slot--center .stk-card { width: min(100%, 29rem); }
-      .stk-mnu-composition__slot--bottom-left,
-      .stk-mnu-composition__slot--bottom-right { align-self: start; }
-      .stk-mnu-composition__slot--bottom-left .stk-card,
-      .stk-mnu-composition__slot--bottom-right .stk-card { width: min(100%, 30rem); }
+      .stk-mnu-composition__row--top .stk-mnu-composition__cell:nth-child(2) .stk-card {
+        width: min(78%, 18rem);
+      }
+
+      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(1) .stk-card,
+      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(3) .stk-card {
+        width: min(72%, 16rem);
+      }
+
+      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(2) .stk-card {
+        width: min(100%, 31rem);
+      }
+
+      .stk-mnu-composition__row--pair .stk-card {
+        width: min(100%, 31rem);
+      }
 
       .stk-mnu-composition__extras {
         display: grid;
@@ -102,39 +110,18 @@
       }
 
       @media (max-width: 760px) {
-        .stk-mnu-composition {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          grid-template-areas:
-            "top-left top-right"
-            "top-center top-center"
-            "middle-left middle-right"
-            "center center"
-            "bottom-left bottom-right";
-        }
-
-        .stk-mnu-composition__slot--top-center .stk-card,
-        .stk-mnu-composition__slot--middle-left .stk-card,
-        .stk-mnu-composition__slot--middle-right .stk-card {
+        .stk-mnu-composition__row--three,
+        .stk-mnu-composition__row--two {
+          grid-template-columns: 1fr;
           width: 100%;
         }
-      }
 
-      @media (max-width: 520px) {
-        .stk-mnu-composition {
-          grid-template-columns: 1fr;
-          grid-template-areas:
-            "top-left"
-            "top-center"
-            "top-right"
-            "middle-left"
-            "center"
-            "middle-right"
-            "bottom-left"
-            "bottom-right";
-        }
-
-        .stk-mnu-composition__extras {
-          grid-template-columns: 1fr;
+        .stk-mnu-composition__row--top .stk-mnu-composition__cell:nth-child(2) .stk-card,
+        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(1) .stk-card,
+        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(2) .stk-card,
+        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(3) .stk-card,
+        .stk-mnu-composition__row--pair .stk-card {
+          width: 100%;
         }
       }
     `;
@@ -148,11 +135,20 @@
     }) || null;
   }
 
-  function createSlot(className, card) {
-    const slot = document.createElement('div');
-    slot.className = `stk-mnu-composition__slot stk-mnu-composition__slot--${className}`;
-    if (card) slot.append(card);
-    return slot;
+  function makeCell(card) {
+    const cell = document.createElement('div');
+    cell.className = 'stk-mnu-composition__cell';
+    if (card) cell.append(card);
+    return cell;
+  }
+
+  function makeRow(cards, index) {
+    const row = document.createElement('div');
+    const type = cards.length === 3 ? 'three' : 'two';
+    const role = index === 0 ? 'top' : index === 1 ? 'middle' : 'pair';
+    row.className = `stk-mnu-composition__row stk-mnu-composition__row--${type} stk-mnu-composition__row--${role}`;
+    cards.forEach((card) => row.append(makeCell(card)));
+    return row;
   }
 
   function arrange(modal) {
@@ -166,30 +162,19 @@
       : [...grid.querySelectorAll(':scope > .stk-card')];
     if (!cards.length) return;
 
-    const selected = {};
-    Object.entries(SLOT_ORDER).forEach(([slot, wanted]) => {
-      selected[slot] = findCard(cards, wanted);
-    });
-
-    const used = new Set(Object.values(selected).filter(Boolean));
+    const selectedRows = ROWS.map((row) => row.map((wanted) => findCard(cards, wanted)));
+    const used = new Set(selectedRows.flat().filter(Boolean));
     const remaining = cards.filter((card) => !used.has(card));
-    const fallbackSlots = Object.keys(SLOT_ORDER).filter((slot) => !selected[slot]);
-    fallbackSlots.forEach((slot) => {
-      selected[slot] = remaining.shift() || null;
+
+    selectedRows.forEach((row) => {
+      row.forEach((card, index) => {
+        if (!card && remaining.length) row[index] = remaining.shift();
+      });
     });
 
     const composition = document.createElement('div');
     composition.className = 'stk-mnu-composition';
-    composition.append(
-      createSlot('top-left', selected.topLeft),
-      createSlot('top-center', selected.topCenter),
-      createSlot('top-right', selected.topRight),
-      createSlot('middle-left', selected.middleLeft),
-      createSlot('center', selected.center),
-      createSlot('middle-right', selected.middleRight),
-      createSlot('bottom-left', selected.bottomLeft),
-      createSlot('bottom-right', selected.bottomRight),
-    );
+    selectedRows.forEach((row, index) => composition.append(makeRow(row, index)));
 
     grid.replaceChildren(composition);
     if (remaining.length) {
