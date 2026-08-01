@@ -48,7 +48,7 @@
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
   loadScript('script[src^="/merch-stability-restore.js"]', '/merch-stability-restore.js?v=merch-stability-restore-2');
   loadScript('script[src^="/merch-copy-update.js"]', '/merch-copy-update.js?v=merch-copy-update-1');
-  loadScript('script[src^="/merch-layout-update-v2.js"]', '/merch-layout-update-v2.js?v=merch-layout-update-2');
+  loadScript('script[src^="/merch-layout-update-v3.js"]', '/merch-layout-update-v3.js?v=merch-layout-update-3');
   loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playground-placeholder-2');
   loadScript('script[src^="/font-panic-override.js"]', '/font-panic-override.js?v=font-panic-2');
   loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-2');
