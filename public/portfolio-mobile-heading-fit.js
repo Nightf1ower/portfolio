@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioMobileHeadingFitV1) return;
-  window.__portfolioMobileHeadingFitV1 = true;
+  if (window.__portfolioMobileHeadingFitV2) return;
+  window.__portfolioMobileHeadingFitV2 = true;
 
-  const VERSION = 'portfolio-mobile-heading-fit-1';
+  const VERSION = 'portfolio-mobile-heading-fit-2';
   const MAX_MOBILE_WIDTH = 820;
   const MIN_FONT_SIZE = 27;
   const FIT_MARK = 'portfolioMobileHeadingFit';
@@ -20,7 +20,6 @@
     '.zny-modal',
     '.album-covers-modal',
     '.collages-modal',
-    '.project9006-modal',
     '[class$="-modal"]',
     '[class*="-modal "]',
     '.fixed.inset-0',
@@ -48,7 +47,10 @@
   ].join(',');
 
   function installStyles() {
-    document.getElementById('portfolio-mobile-heading-fit-style')?.remove();
+    const existing = document.getElementById('portfolio-mobile-heading-fit-style');
+    if (existing?.dataset.version === VERSION) return;
+    existing?.remove();
+
     const style = document.createElement('style');
     style.id = 'portfolio-mobile-heading-fit-style';
     style.dataset.version = VERSION;
@@ -79,15 +81,22 @@
     document.head.append(style);
   }
 
-  function resetHeading(heading) {
-    if (!(heading instanceof HTMLElement) || !heading.dataset[FIT_MARK]) return;
+  function clearFit(heading, clearTypography = false) {
+    if (!(heading instanceof HTMLElement)) return;
     heading.style.removeProperty('font-size');
-    heading.style.removeProperty('line-height');
-    heading.style.removeProperty('letter-spacing');
     heading.style.removeProperty('overflow-wrap');
     heading.style.removeProperty('word-break');
+    heading.style.removeProperty('white-space');
+    heading.style.removeProperty('width');
+    heading.style.removeProperty('max-width');
+    heading.style.removeProperty('min-width');
+
+    if (clearTypography) {
+      heading.style.removeProperty('line-height');
+      heading.style.removeProperty('letter-spacing');
+    }
+
     delete heading.dataset[FIT_MARK];
-    delete heading.dataset.portfolioOriginalFontSize;
   }
 
   function getAvailableWidth(heading) {
@@ -100,23 +109,21 @@
   }
 
   function isOverflowing(heading, availableWidth) {
-    const rect = heading.getBoundingClientRect();
-    return (
-      heading.scrollWidth > Math.ceil(availableWidth + 1) ||
-      rect.right > window.innerWidth - 8 ||
-      rect.left < 8
-    );
+    const ownWidth = heading.clientWidth || availableWidth;
+    const limit = Math.max(1, Math.min(ownWidth, availableWidth));
+    return heading.scrollWidth > Math.ceil(limit + 1);
   }
 
   function fitHeading(heading) {
     if (!(heading instanceof HTMLElement)) return;
-    if (!heading.isConnected || heading.closest('[class*="lightbox"], [class*="lightbox"], .m10-light, .m10-layout-light')) return;
+    if (!heading.isConnected || heading.closest('[class*="lightbox"], .m10-light, .m10-layout-light')) return;
 
     const text = heading.textContent?.replace(/\s+/g, ' ').trim() || '';
     if (!text) return;
 
-    const computed = getComputedStyle(heading);
-    const initialSize = parseFloat(computed.fontSize || '0');
+    clearFit(heading);
+
+    const initialSize = parseFloat(getComputedStyle(heading).fontSize || '0');
     if (!Number.isFinite(initialSize) || initialSize < 32) return;
 
     const availableWidth = getAvailableWidth(heading);
@@ -130,15 +137,12 @@
     heading.style.setProperty('overflow-wrap', 'normal', 'important');
     heading.style.setProperty('line-height', '.9', 'important');
     heading.style.setProperty('letter-spacing', '.018em', 'important');
-
-    const originalSize = Number(heading.dataset.portfolioOriginalFontSize) || initialSize;
-    heading.dataset.portfolioOriginalFontSize = String(originalSize);
+    heading.style.setProperty('font-size', `${initialSize}px`, 'important');
     heading.dataset[FIT_MARK] = VERSION;
-    heading.style.setProperty('font-size', `${originalSize}px`, 'important');
 
-    let currentSize = originalSize;
+    let currentSize = initialSize;
     let guard = 0;
-    while (isOverflowing(heading, availableWidth) && currentSize > MIN_FONT_SIZE && guard < 120) {
+    while (isOverflowing(heading, availableWidth) && currentSize > MIN_FONT_SIZE && guard < 140) {
       currentSize -= 1;
       heading.style.setProperty('font-size', `${currentSize}px`, 'important');
       guard += 1;
@@ -162,22 +166,14 @@
 
   function apply() {
     installStyles();
-    const mobile = window.innerWidth <= MAX_MOBILE_WIDTH;
     const headings = collectHeadings();
 
-    if (!mobile) {
-      headings.forEach(resetHeading);
+    if (window.innerWidth > MAX_MOBILE_WIDTH) {
+      headings.forEach((heading) => clearFit(heading, true));
       return;
     }
 
-    headings.forEach((heading) => {
-      if (heading.dataset[FIT_MARK]) {
-        heading.style.removeProperty('font-size');
-        heading.style.removeProperty('overflow-wrap');
-        delete heading.dataset[FIT_MARK];
-      }
-      fitHeading(heading);
-    });
+    headings.forEach(fitHeading);
   }
 
   let scheduled = false;
@@ -190,23 +186,17 @@
     });
   }
 
-  const observer = new MutationObserver((mutations) => {
+  new MutationObserver((mutations) => {
     const relevant = mutations.some((mutation) => (
       mutation.type === 'characterData' ||
       [...mutation.addedNodes].some((node) => node instanceof Element)
     ));
     if (relevant) schedule();
-  });
-  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-
-  if ('ResizeObserver' in window) {
-    const resizeObserver = new ResizeObserver(schedule);
-    resizeObserver.observe(document.documentElement);
-  }
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
 
   window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule);
-  window.addEventListener('scroll', schedule, { passive: true });
+  window.visualViewport?.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('load', schedule);
   document.fonts?.ready?.then(schedule).catch(() => {});
 
