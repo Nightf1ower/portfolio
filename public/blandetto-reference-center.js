@@ -1,14 +1,18 @@
 (() => {
-  if (window.__blandettoReferenceCenterV1) return;
-  window.__blandettoReferenceCenterV1 = true;
+  if (window.__blandettoReferenceCenterV2) return;
+  window.__blandettoReferenceCenterV2 = true;
 
   const STYLE_ID = 'blandetto-reference-center-style';
+  const VERSION = 'blandetto-reference-center-2';
 
   function install() {
-    document.getElementById(STYLE_ID)?.remove();
+    const existing = document.getElementById(STYLE_ID);
+    if (existing?.dataset.version === VERSION) return;
+    existing?.remove();
 
     const style = document.createElement('style');
     style.id = STYLE_ID;
+    style.dataset.version = VERSION;
     style.textContent = `
       .bf .bf-ref {
         text-align: center !important;
@@ -57,15 +61,8 @@
     document.head.append(style);
   }
 
-  new MutationObserver((mutations) => {
-    const relevant = mutations.some((mutation) =>
-      [...mutation.addedNodes].some((node) =>
-        node instanceof Element && (node.matches?.('.bf, style') || node.querySelector?.('.bf'))
-      )
-    );
-    if (relevant) install();
-  }).observe(document.documentElement, { childList: true, subtree: true });
-
-  window.addEventListener('load', install);
+  // The CSS works for BLANDETTO even when its modal is created later.
+  // No MutationObserver is needed here; observing added <style> elements caused an infinite loop.
+  window.addEventListener('load', install, { once: true });
   install();
 })();
