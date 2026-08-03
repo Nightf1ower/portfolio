@@ -1,15 +1,10 @@
 (() => {
-  if (window.__stickersGalleryV1) return;
-  window.__stickersGalleryV1 = true;
+  if (window.__stickersGalleryV2) return;
+  window.__stickersGalleryV2 = true;
 
-  const VERSION = 'stickers-gallery-1';
-  const REPO = 'Nightf1ower/portfolio';
-  const BRANCH = 'main';
+  const VERSION = 'stickers-gallery-2';
+  const PROJECT_ORDER = ['mnu', 'flawa'];
   const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
-  const PROJECTS = [
-    { key: 'mnu', title: 'MNU', root: 'public/works/stickers/MNU' },
-    { key: 'flawa', title: 'FLAWA', root: 'public/works/stickers/flawa' },
-  ];
 
   let modal = null;
   let lightbox = null;
@@ -27,15 +22,15 @@
   const COPY = {
     ru: {
       close: 'ЗАКРЫТЬ',
-      loading: 'ЗАГРУЗКА СТИКЕРОВ...',
       empty: 'ИЗОБРАЖЕНИЯ ПОКА НЕ НАЙДЕНЫ',
+      manifestError: 'СПИСОК ИЗОБРАЖЕНИЙ НЕ СОЗДАН',
       stickers: 'СТИКЕРЫ',
       real: 'REAL',
     },
     en: {
       close: 'CLOSE',
-      loading: 'LOADING STICKERS...',
       empty: 'NO IMAGES FOUND YET',
+      manifestError: 'IMAGE LIST WAS NOT GENERATED',
       stickers: 'STICKERS',
       real: 'REAL',
     },
@@ -48,74 +43,73 @@
     return node;
   };
 
-  const naturalSort = (a, b) => (
-    (a.path || a.name || '').localeCompare(
-      b.path || b.name || '',
+  const naturalSort = (left, right) => (
+    (left.path || left.name || '').localeCompare(
+      right.path || right.name || '',
       undefined,
       { numeric: true, sensitivity: 'base' },
     )
   );
 
-  const isRealAsset = (item) => {
+  function isRealAsset(item) {
     const value = `${item.path || ''}/${item.name || ''}`;
     return /(?:^|\/)real(?:\/|$)/i.test(value)
       || /(?:^|[-_\s])real(?:[-_\s.\d]|$)/i.test(item.name || '');
-  };
-
-  const apiUrl = (path) => (
-    `https://api.github.com/repos/${REPO}/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(BRANCH)}`
-  );
-
-  async function fetchDirectory(path, depth = 0) {
-    try {
-      const response = await fetch(apiUrl(path), {
-        cache: 'no-store',
-        headers: { Accept: 'application/vnd.github+json' },
-      });
-      if (!response.ok) return [];
-      const entries = await response.json();
-      if (!Array.isArray(entries)) return [];
-
-      const files = entries
-        .filter((entry) => entry.type === 'file' && IMAGE_RE.test(entry.name || entry.path || ''))
-        .map((entry) => ({
-          name: entry.name,
-          path: entry.path,
-          src: entry.download_url || `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${entry.path}`,
-        }));
-
-      if (depth >= 3) return files;
-      const directories = entries.filter((entry) => entry.type === 'dir');
-      const nested = await Promise.all(
-        directories.map((entry) => fetchDirectory(entry.path, depth + 1)),
-      );
-      return files.concat(...nested);
-    } catch {
-      return [];
-    }
   }
 
-  async function loadProject(project) {
-    const items = await fetchDirectory(project.root);
-    const unique = [...new Map(items.map((item) => [item.path, item])).values()];
-    return {
-      ...project,
-      stickers: unique.filter((item) => !isRealAsset(item)).sort(naturalSort),
-      real: unique.filter(isRealAsset).sort(naturalSort),
-    };
+  function normalizeItem(item) {
+    if (!item || typeof item !== 'object') return null;
+    const name = String(item.name || '').trim();
+    const path = String(item.path || '').trim();
+    const src = String(item.src || '').trim();
+    if (!src || !IMAGE_RE.test(name || path || src.split(/[?#]/)[0])) return null;
+    return { name: name || src.split('/').pop() || 'Sticker image', path: path || src, src };
+  }
+
+  function readManifestProjects() {
+    const manifest = window.STICKERS_ASSET_MANIFEST;
+    const source = manifest?.projects;
+    if (!source || typeof source !== 'object') return [];
+
+    const keys = [
+      ...PROJECT_ORDER.filter((key) => source[key]),
+      ...Object.keys(source).filter((key) => !PROJECT_ORDER.includes(key)).sort(),
+    ];
+
+    return keys.map((key) => {
+      const project = source[key] || {};
+      const unique = [...new Map(
+        (Array.isArray(project.items) ? project.items : [])
+          .map(normalizeItem)
+          .filter(Boolean)
+          .map((item) => [item.path, item]),
+      ).values()].sort(naturalSort);
+
+      return {
+        key,
+        title: project.title || key.toUpperCase(),
+        stickers: unique.filter((item) => !isRealAsset(item)),
+        real: unique.filter(isRealAsset),
+      };
+    });
   }
 
   function injectStyles() {
-    document.getElementById('stickers-gallery-style')?.remove();
+    const existing = document.getElementById('stickers-gallery-style');
+    if (existing?.dataset.version === VERSION) return;
+    existing?.remove();
+
     const style = el('style');
     style.id = 'stickers-gallery-style';
+    style.dataset.version = VERSION;
     style.textContent = `
       html:has(.stk-modal), body:has(.stk-modal) { overflow: hidden !important; }
       .stk-modal {
         position: fixed;
         inset: 0;
         z-index: 760000;
-        width: 100vw;
+        box-sizing: border-box;
+        width: 100%;
         height: 100dvh;
         overflow-y: auto;
         overflow-x: hidden;
@@ -124,7 +118,7 @@
         color: #050505;
         overscroll-behavior: contain;
       }
-      .stk-inner { width: min(100%, 86rem); margin: 0 auto; }
+      .stk-inner { box-sizing: border-box; width: min(100%, 86rem); margin: 0 auto; }
       .stk-head {
         position: sticky;
         top: 0;
@@ -158,7 +152,6 @@
         letter-spacing: -.095em;
         text-transform: uppercase;
       }
-      .stk-loading { margin: 0; padding: 2rem 0; font: 900 .75rem/1.2 Arial, Helvetica, sans-serif; letter-spacing: .22em; text-transform: uppercase; }
       .stk-project { padding: clamp(3rem, 7vw, 6rem) 0; border-top: 1px solid rgba(5,5,5,.25); }
       .stk-project-title {
         margin: 0 0 clamp(2rem, 4vw, 3.5rem);
@@ -171,10 +164,18 @@
       }
       .stk-group + .stk-group { margin-top: clamp(4rem, 8vw, 7rem); }
       .stk-subtitle { margin: 0 0 1.25rem; }
-      .stk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+      .stk-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        align-items: start;
+        width: 100%;
+      }
       .stk-card {
         display: block;
+        box-sizing: border-box;
         width: 100%;
+        min-width: 0;
         margin: 0;
         padding: 0;
         border: 0;
@@ -182,11 +183,19 @@
         cursor: zoom-in;
         overflow: hidden;
       }
-      .stk-card img { display: block; width: 100%; height: auto; }
-      .stk-grid--stickers .stk-card { background: rgba(255,255,255,.55); }
+      .stk-card img {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: auto !important;
+        min-height: 1px;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      .stk-grid--stickers .stk-card { background: transparent; }
       .stk-grid--stickers .stk-card img { object-fit: contain; }
       .stk-grid--real .stk-card img { object-fit: cover; }
-      .stk-empty { margin: 0; color: rgba(5,5,5,.48); }
+      .stk-empty { margin: 0; padding: 1rem 0; color: rgba(5,5,5,.55); }
       .stk-light {
         position: fixed;
         inset: 0;
@@ -248,11 +257,15 @@
     unlockPage();
   }
 
+  function versionedSource(src) {
+    return `${src}${src.includes('?') ? '&' : '?'}v=${VERSION}`;
+  }
+
   function renderLightbox() {
     if (!lightbox || !allItems.length) return;
     const item = allItems[activeIndex];
     const image = lightbox.querySelector('.stk-light-image');
-    image.src = item.src;
+    image.src = versionedSource(item.src);
     image.alt = item.name || 'Sticker image';
     lightbox.querySelector('.stk-light-count').textContent = `${activeIndex + 1} / ${allItems.length}`;
   }
@@ -264,7 +277,7 @@
   }
 
   function openLightbox(index) {
-    if (!allItems.length) return;
+    if (!allItems.length || index < 0) return;
     closeLightbox();
     activeIndex = Math.max(0, Math.min(index, allItems.length - 1));
 
@@ -309,15 +322,20 @@
   function makeGrid(items, type) {
     const copy = COPY[language()];
     if (!items.length) return el('p', 'stk-empty', copy.empty);
+
     const grid = el('div', `stk-grid stk-grid--${type}`);
     items.forEach((item) => {
       const button = el('button', 'stk-card');
       const image = el('img');
       button.type = 'button';
-      image.src = `${item.src}${item.src.includes('?') ? '&' : '?'}v=${VERSION}`;
+      image.src = versionedSource(item.src);
       image.alt = item.name || 'Sticker image';
       image.loading = 'lazy';
       image.decoding = 'async';
+      image.draggable = false;
+      image.addEventListener('error', () => {
+        button.hidden = true;
+      }, { once: true });
       button.append(image);
       button.onclick = (event) => {
         event.stopPropagation();
@@ -349,7 +367,7 @@
     });
   }
 
-  async function openModal() {
+  function openModal() {
     injectStyles();
     closeModal();
     lockPage();
@@ -360,19 +378,20 @@
     const head = el('div', 'stk-head');
     const close = el('button', 'stk-close', copy.close);
     const hero = el('section', 'stk-hero');
-    const loading = el('p', 'stk-loading', copy.loading);
 
     close.type = 'button';
     close.onclick = (event) => { event.stopPropagation(); closeModal(); };
     head.append(el('p', 'stk-label', 'STICKERS'), close);
     hero.append(el('h1', 'stk-title', 'STICKERS'));
-    inner.append(head, hero, loading);
+    inner.append(head, hero);
     modal.append(inner);
     document.body.append(modal);
 
-    const projects = await Promise.all(PROJECTS.map(loadProject));
-    if (!modal || !document.body.contains(modal)) return;
-    loading.remove();
+    const projects = readManifestProjects();
+    if (!projects.length) {
+      inner.append(el('p', 'stk-empty', copy.manifestError));
+      return;
+    }
     renderProjects(inner, projects);
   }
 
@@ -411,4 +430,6 @@
       closeModal();
     }
   }, true);
+
+  injectStyles();
 })();
