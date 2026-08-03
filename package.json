@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "generate:stickers": "node scripts/generate-stickers-manifest.mjs",
+    "dev": "npm run generate:stickers && vite --host 0.0.0.0",
+    "build": "npm run generate:stickers && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
