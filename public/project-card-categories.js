@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardCategoriesV2) return;
-  window.__projectCardCategoriesV2 = true;
+  if (window.__projectCardCategoriesV3) return;
+  window.__projectCardCategoriesV3 = true;
 
-  const VERSION = 'project-card-categories-2';
+  const VERSION = 'project-card-categories-3';
   const STYLE_ID = 'project-card-categories-style';
 
   const CATEGORIES = {
@@ -62,6 +62,8 @@
         justify-content: flex-start !important;
         gap: .5rem !important;
         margin-top: 1rem !important;
+        padding: 0 !important;
+        list-style: none !important;
       }
 
       #works .project-card-category-chip {
@@ -141,14 +143,29 @@
     }
   }
 
+  function isLegacyCategoryBlock(node) {
+    if (!(node instanceof HTMLElement)) return false;
+    if (!node.matches('div, ul, ol')) return false;
+    if (node.classList.contains('project-card-category-row')) return true;
+    if (node.querySelector('h1, h2, h3, h4, p, img, picture, video, canvas, svg, button, a')) return false;
+
+    const labels = [...node.querySelectorAll('span, li')]
+      .map((item) => item.textContent?.trim() || '')
+      .filter(Boolean);
+
+    return labels.length > 0 && labels.every((label) => label.length <= 40);
+  }
+
+  function findTypeParagraph(content, heading) {
+    if (heading.nextElementSibling?.tagName === 'P') return heading.nextElementSibling;
+    return [...content.children].find((node) => node.tagName === 'P') || null;
+  }
+
   function findOrCreateRow(heading) {
     const content = heading.parentElement;
     if (!(content instanceof HTMLElement)) return null;
 
-    const typeParagraph = heading.nextElementSibling?.tagName === 'P'
-      ? heading.nextElementSibling
-      : [...content.children].find((node) => node.tagName === 'P');
-
+    const typeParagraph = findTypeParagraph(content, heading);
     let guard = content.querySelector(':scope > .project-card-category-guard');
     if (!guard) {
       guard = document.createElement('span');
@@ -158,11 +175,17 @@
     }
     protectGuard(guard);
 
-    let row = content.querySelector(':scope > .project-card-category-row');
-    if (!row) {
-      row = document.createElement('div');
-      row.className = 'project-card-category-row';
-    }
+    const existingRows = [...content.querySelectorAll(':scope > .project-card-category-row')];
+    let row = existingRows.shift() || document.createElement('div');
+    row.className = 'project-card-category-row';
+    row.dataset.projectCategoriesFinal = VERSION;
+
+    existingRows.forEach((duplicate) => duplicate.remove());
+
+    [...content.children].forEach((node) => {
+      if (node === heading || node === typeParagraph || node === guard || node === row) return;
+      if (isLegacyCategoryBlock(node)) node.remove();
+    });
 
     const anchor = typeParagraph || heading;
     if (guard.previousElementSibling !== anchor) anchor.after(guard);
@@ -180,10 +203,13 @@
     const row = findOrCreateRow(heading);
     if (!row) return;
 
-    const signature = categories.join('|');
-    if (row.dataset.categorySignature === signature && row.children.length === categories.length) return;
+    const current = [...row.children].map((child) => child.textContent?.trim() || '');
+    const matches = current.length === categories.length
+      && current.every((value, index) => value === categories[index]);
 
-    row.dataset.categorySignature = signature;
+    if (matches && row.dataset.categorySignature === categories.join('|')) return;
+
+    row.dataset.categorySignature = categories.join('|');
     row.replaceChildren(...categories.map((category) => {
       const chip = document.createElement('span');
       chip.className = 'project-card-category-chip';
