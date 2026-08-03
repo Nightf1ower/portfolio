@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardCategoriesV1) return;
-  window.__projectCardCategoriesV1 = true;
+  if (window.__projectCardCategoriesV2) return;
+  window.__projectCardCategoriesV2 = true;
 
-  const VERSION = 'project-card-categories-1';
+  const VERSION = 'project-card-categories-2';
   const STYLE_ID = 'project-card-categories-style';
 
   const CATEGORIES = {
@@ -47,6 +47,10 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
+      #works .project-card-category-guard {
+        display: none !important;
+      }
+
       #works .project-card-category-row {
         box-sizing: border-box !important;
         display: flex !important;
@@ -110,8 +114,12 @@
     document.head.append(style);
   }
 
+  function getGrid() {
+    return document.querySelector('#works .mt-10.grid');
+  }
+
   function getCards() {
-    const grid = document.querySelector('#works .mt-10.grid');
+    const grid = getGrid();
     if (!grid) return [];
     return [...grid.children].filter((node) =>
       node instanceof HTMLElement &&
@@ -120,32 +128,45 @@
     );
   }
 
+  function protectGuard(guard) {
+    if (guard.dataset.removeProtected === VERSION) return;
+    guard.dataset.removeProtected = VERSION;
+    try {
+      Object.defineProperty(guard, 'remove', {
+        configurable: true,
+        value: () => {},
+      });
+    } catch {
+      guard.remove = () => {};
+    }
+  }
+
   function findOrCreateRow(heading) {
     const content = heading.parentElement;
     if (!(content instanceof HTMLElement)) return null;
-
-    let row = content.querySelector(':scope > .project-card-category-row');
-    if (row) return row;
 
     const typeParagraph = heading.nextElementSibling?.tagName === 'P'
       ? heading.nextElementSibling
       : [...content.children].find((node) => node.tagName === 'P');
 
-    const possibleOldRow = typeParagraph?.nextElementSibling;
-    if (
-      possibleOldRow instanceof HTMLElement &&
-      possibleOldRow.tagName === 'DIV' &&
-      !possibleOldRow.querySelector('img, picture, video, h1, h2, h3, p')
-    ) {
-      row = possibleOldRow;
+    let guard = content.querySelector(':scope > .project-card-category-guard');
+    if (!guard) {
+      guard = document.createElement('span');
+      guard.className = 'project-card-category-guard';
+      guard.hidden = true;
+      guard.setAttribute('aria-hidden', 'true');
+    }
+    protectGuard(guard);
+
+    let row = content.querySelector(':scope > .project-card-category-row');
+    if (!row) {
+      row = document.createElement('div');
       row.className = 'project-card-category-row';
-      return row;
     }
 
-    row = document.createElement('div');
-    row.className = 'project-card-category-row';
-    if (typeParagraph) typeParagraph.after(row);
-    else heading.after(row);
+    const anchor = typeParagraph || heading;
+    if (guard.previousElementSibling !== anchor) anchor.after(guard);
+    if (guard.nextElementSibling !== row) guard.after(row);
     return row;
   }
 
@@ -153,8 +174,7 @@
     const heading = card.querySelector('h3');
     if (!(heading instanceof HTMLElement)) return;
 
-    const key = normalize(heading.textContent);
-    const categories = CATEGORIES[key];
+    const categories = CATEGORIES[normalize(heading.textContent)];
     if (!categories) return;
 
     const row = findOrCreateRow(heading);
@@ -187,16 +207,31 @@
     });
   }
 
-  new MutationObserver((mutations) => {
-    const relevant = mutations.some((mutation) =>
-      mutation.type === 'characterData' ||
-      [...mutation.addedNodes].some((node) => node instanceof Element)
-    );
-    if (relevant) schedule();
-  }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  let observer = null;
+  let observedGrid = null;
+  function observeGrid() {
+    const grid = getGrid();
+    if (!grid || grid === observedGrid) return Boolean(grid);
+    observer?.disconnect();
+    observedGrid = grid;
+    observer = new MutationObserver(schedule);
+    observer.observe(grid, { childList: true, subtree: true, characterData: true });
+    return true;
+  }
 
-  document.addEventListener('click', schedule, true);
-  window.addEventListener('load', schedule);
+  let attempts = 0;
+  const retry = window.setInterval(() => {
+    attempts += 1;
+    const ready = observeGrid();
+    schedule();
+    if (ready || attempts >= 40) window.clearInterval(retry);
+  }, 120);
+
+  document.addEventListener('click', () => setTimeout(schedule, 0), true);
+  window.addEventListener('load', () => {
+    observeGrid();
+    schedule();
+  }, { once: true });
   window.addEventListener('resize', schedule, { passive: true });
 
   installStyles();
