@@ -1,11 +1,12 @@
 (() => {
-  if (window.__homepageMobileResponsiveV1) return;
-  window.__homepageMobileResponsiveV1 = true;
+  if (window.__homepageMobileResponsiveV2) return;
+  window.__homepageMobileResponsiveV2 = true;
 
-  const VERSION = 'homepage-mobile-responsive-1';
+  const VERSION = 'homepage-mobile-responsive-2';
   const MAX_WIDTH = 820;
   const STYLE_ID = 'homepage-mobile-responsive-style';
   const FIT_ATTR = 'homepageMobileFit';
+  const PROBE_ID = 'homepage-mobile-responsive-probe';
 
   function installStyles() {
     const existing = document.getElementById(STYLE_ID);
@@ -185,6 +186,25 @@
     document.head.append(style);
   }
 
+  function getProbe() {
+    let probe = document.getElementById(PROBE_ID);
+    if (probe) return probe;
+    probe = document.createElement('span');
+    probe.id = PROBE_ID;
+    probe.setAttribute('aria-hidden', 'true');
+    Object.assign(probe.style, {
+      position: 'fixed',
+      left: '-100000px',
+      top: '0',
+      visibility: 'hidden',
+      whiteSpace: 'nowrap',
+      pointerEvents: 'none',
+      contain: 'layout style paint',
+    });
+    document.body.append(probe);
+    return probe;
+  }
+
   function clearFit(element) {
     if (!(element instanceof HTMLElement)) return;
     if (element.dataset[FIT_ATTR] !== VERSION) return;
@@ -199,12 +219,7 @@
     if (!text) return 0;
 
     const computed = getComputedStyle(element);
-    const probe = document.createElement('span');
-    probe.style.position = 'fixed';
-    probe.style.left = '-100000px';
-    probe.style.top = '0';
-    probe.style.visibility = 'hidden';
-    probe.style.whiteSpace = 'nowrap';
+    const probe = getProbe();
     probe.style.fontFamily = computed.fontFamily;
     probe.style.fontWeight = computed.fontWeight;
     probe.style.fontStyle = computed.fontStyle;
@@ -212,14 +227,13 @@
     probe.style.fontSize = computed.fontSize;
     probe.style.letterSpacing = computed.letterSpacing;
     probe.style.textTransform = computed.textTransform;
-    document.body.append(probe);
 
     let widest = 0;
     text.split(/\s+/).forEach((word) => {
       probe.textContent = word;
       widest = Math.max(widest, probe.getBoundingClientRect().width);
     });
-    probe.remove();
+    probe.textContent = '';
     return widest;
   }
 
@@ -275,18 +289,34 @@
     });
   }
 
-  new MutationObserver((mutations) => {
-    const relevant = mutations.some((mutation) =>
-      mutation.type === 'characterData' ||
-      [...mutation.addedNodes].some((node) => node instanceof Element)
-    );
-    if (relevant) schedule();
-  }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  function observeWorks() {
+    const works = document.getElementById('works');
+    if (!works || works.dataset.homepageMobileObserved === VERSION) return false;
+    works.dataset.homepageMobileObserved = VERSION;
+
+    new MutationObserver(() => schedule()).observe(works, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    return true;
+  }
+
+  let attempts = 0;
+  const retry = window.setInterval(() => {
+    attempts += 1;
+    const ready = observeWorks();
+    schedule();
+    if (ready || attempts >= 40) window.clearInterval(retry);
+  }, 120);
 
   window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule);
   window.visualViewport?.addEventListener('resize', schedule, { passive: true });
-  window.addEventListener('load', schedule);
+  window.addEventListener('load', () => {
+    observeWorks();
+    schedule();
+  }, { once: true });
   document.fonts?.ready?.then(schedule).catch(() => {});
 
   installStyles();
