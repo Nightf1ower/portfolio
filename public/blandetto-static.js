@@ -40,6 +40,29 @@
       box-shadow: none !important;
     }
 
+    /* Minimal logo previews should use their natural horizontal ratio.
+       The old square media box created a large fake blank area above them. */
+    .bf .bf-s[data-bf-section="minimalLogo"] .bf-note {
+      margin-bottom: 1.25rem !important;
+    }
+
+    .bf .bf-s[data-bf-section="minimalLogo"] .bf-m {
+      aspect-ratio: auto !important;
+      min-height: 0 !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+
+    .bf .bf-s[data-bf-section="minimalLogo"] .bf-img {
+      position: static !important;
+      inset: auto !important;
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain !important;
+      object-position: top center !important;
+    }
+
     div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] img[src*="/works/90-06/logo-variations"] {
       max-width: min(72%, 48rem) !important;
       max-height: 56vh !important;
@@ -64,7 +87,7 @@
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = '/blandetto-final.js?v=direct-4';
+  script.src = '/blandetto-final.js?v=direct-5';
   script.async = false;
   (document.currentScript || document.body).after(script);
 })();
