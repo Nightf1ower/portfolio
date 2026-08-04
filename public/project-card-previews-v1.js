@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardPreviewsV2) return;
-  window.__projectCardPreviewsV2 = true;
+  if (window.__projectCardPreviewsV3) return;
+  window.__projectCardPreviewsV3 = true;
 
-  const VERSION = 'project-card-previews-2';
+  const VERSION = 'project-card-previews-3';
   const PREVIEWS = new Map([
     ['POSTERS', '/works/previes/POSTERS.jpg'],
     ['MERCH', '/works/previes/MERCH.jpg'],
@@ -22,15 +22,16 @@
   function injectStyles() {
     document.getElementById('project-card-previews-v1-style')?.remove();
     document.getElementById('project-card-previews-v2-style')?.remove();
+    document.getElementById('project-card-previews-v3-style')?.remove();
 
     const style = document.createElement('style');
-    style.id = 'project-card-previews-v2-style';
+    style.id = 'project-card-previews-v3-style';
     style.textContent = `
-      /* Project cards now contain only the numbered preview window. */
+      /* Hide only the project title and descriptive line. Keep tag chips visible. */
       #works .mt-10.grid > article h3,
       #works .mt-10.grid > button h3,
-      #works .mt-10.grid > article h3 ~ *,
-      #works .mt-10.grid > button h3 ~ * {
+      #works .mt-10.grid > article h3 + p,
+      #works .mt-10.grid > button h3 + p {
         display: none !important;
       }
 
