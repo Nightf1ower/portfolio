@@ -2,6 +2,83 @@
   if (window.__blandettoTitleFinalReset) return;
   window.__blandettoTitleFinalReset = true;
 
+  const FULL_WIDTH_STYLE_ID = 'homepage-full-width-final-style';
+
+  function installFullWidthStyles() {
+    document.getElementById(FULL_WIDTH_STYLE_ID)?.remove();
+
+    const style = document.createElement('style');
+    style.id = FULL_WIDTH_STYLE_ID;
+    style.textContent = `
+      html,
+      body,
+      #root,
+      main {
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      main > header nav,
+      #top > .mx-auto.max-w-7xl,
+      #about > .mx-auto.max-w-7xl,
+      #services > .mx-auto.max-w-7xl,
+      #works > .mx-auto.max-w-7xl,
+      #contacts > .mx-auto.max-w-7xl {
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      #top,
+      #about,
+      #services,
+      #works,
+      #contacts,
+      main > header {
+        box-sizing: border-box !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      #works h2,
+      #about h2,
+      #services h2,
+      #contacts h2 {
+        max-width: none !important;
+      }
+
+      @media (min-width: 1280px) {
+        #top,
+        #about,
+        #services,
+        #works,
+        #contacts,
+        main > header {
+          padding-left: clamp(2rem, 2.25vw, 3.5rem) !important;
+          padding-right: clamp(2rem, 2.25vw, 3.5rem) !important;
+        }
+      }
+
+      @media (max-width: 1279px) {
+        #top,
+        #about,
+        #services,
+        #works,
+        #contacts,
+        main > header {
+          padding-left: clamp(1rem, 3vw, 2rem) !important;
+          padding-right: clamp(1rem, 3vw, 2rem) !important;
+        }
+      }
+    `;
+
+    document.head.append(style);
+  }
+
+  installFullWidthStyles();
+
   const normalize = (value) => String(value || '')
     .toUpperCase()
     .replace(/[^A-ZА-ЯЁ0-9]+/g, ' ')
@@ -20,6 +97,8 @@
   }
 
   function apply() {
+    installFullWidthStyles();
+
     const card = findBlandettoCard();
     const oldHeading = card?.querySelector('h3');
     if (!card || !oldHeading || !oldHeading.parentElement) return false;
