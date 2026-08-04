@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardUnifiedToneV4) return;
-  window.__projectCardUnifiedToneV4 = true;
+  if (window.__projectCardUnifiedToneV5) return;
+  window.__projectCardUnifiedToneV5 = true;
 
-  const VERSION = 'project-card-unified-tone-4';
+  const VERSION = 'project-card-unified-tone-5';
   const normalize = (value) => String(value || '')
     .toUpperCase()
     .replace(/\|/g, '')
@@ -34,55 +34,57 @@
       -webkit-backdrop-filter: none !important;
     }
 
-    #works .mt-10.grid h3,
-    #works .mt-10.grid h3 * {
-      font-family: "Arial Black", Arial, Helvetica, sans-serif !important;
-      font-weight: 900 !important;
+    /* Only BLANDETTO: normal Helvetica/Arial face and a smaller size. */
+    #works h3.blandetto-title-final {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-family: Helvetica, "Helvetica Neue", Arial, sans-serif !important;
+      font-size: clamp(2rem, 3vw, 2.65rem) !important;
+      font-weight: 800 !important;
       font-style: normal !important;
-      font-stretch: 100% !important;
-      font-variation-settings: "wght" 900 !important;
+      font-stretch: normal !important;
+      font-variation-settings: normal !important;
       font-feature-settings: normal !important;
       font-synthesis: none !important;
-      line-height: .88 !important;
-      letter-spacing: -.065em !important;
+      line-height: .92 !important;
+      letter-spacing: -.055em !important;
       text-transform: uppercase !important;
       transform: none !important;
+      scale: none !important;
     }
 
-    /* BLANDETTO is visually too tall: compress only its vertical proportions. */
-    #works [data-project-layout-v5-key="BLANDETTO"] h3,
-    #works [data-project-layout-key="BLANDETTO"] h3,
-    #works [data-project-card-title="BLANDETTO"] h3,
-    #works h3[data-unified-brand-heading="${VERSION}"] {
-      display: block !important;
-      transform: scaleY(.78) !important;
-      transform-origin: left bottom !important;
-      line-height: .78 !important;
-      margin-top: -.08em !important;
-      margin-bottom: -.12em !important;
+    @media (max-width: 820px) {
+      #works h3.blandetto-title-final {
+        font-size: clamp(1.9rem, 9vw, 2.45rem) !important;
+      }
     }
   `;
   document.getElementById('project-card-unified-tone-style')?.remove();
   document.head.append(style);
 
-  function findCard(title) {
-    const accepted = normalize(title);
-    return [...document.querySelectorAll('#works .mt-10.grid > article, #works .mt-10.grid > button')]
-      .find((card) => normalize(card.querySelector('h3')?.textContent) === accepted) || null;
-  }
-
-  function markBlandettoHeading() {
-    const card = findCard('BLANDETTO');
+  function applyBlandettoTitle() {
+    const cards = document.querySelectorAll('#works .mt-10.grid > article, #works .mt-10.grid > button');
+    const card = [...cards].find((item) => normalize(item.querySelector('h3')?.textContent) === 'BLANDETTO');
     const heading = card?.querySelector('h3');
-    if (!card || !heading) return false;
+    if (!heading) return false;
 
-    card.dataset.projectCardTitle = 'BLANDETTO';
-    heading.dataset.unifiedBrandHeading = VERSION;
-    heading.style.setProperty('transform', 'scaleY(.78)', 'important');
-    heading.style.setProperty('transform-origin', 'left bottom', 'important');
-    heading.style.setProperty('line-height', '.78', 'important');
-    heading.style.setProperty('margin-top', '-.08em', 'important');
-    heading.style.setProperty('margin-bottom', '-.12em', 'important');
+    heading.classList.add('blandetto-title-final');
+    heading.removeAttribute('style');
+    heading.textContent = 'BLANDETTO';
+
+    heading.style.setProperty('font-family', 'Helvetica, "Helvetica Neue", Arial, sans-serif', 'important');
+    heading.style.setProperty('font-size', 'clamp(2rem, 3vw, 2.65rem)', 'important');
+    heading.style.setProperty('font-weight', '800', 'important');
+    heading.style.setProperty('font-style', 'normal', 'important');
+    heading.style.setProperty('font-stretch', 'normal', 'important');
+    heading.style.setProperty('font-variation-settings', 'normal', 'important');
+    heading.style.setProperty('line-height', '.92', 'important');
+    heading.style.setProperty('letter-spacing', '-.055em', 'important');
+    heading.style.setProperty('transform', 'none', 'important');
+    heading.style.setProperty('margin', '0', 'important');
     return true;
   }
 
@@ -92,7 +94,7 @@
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
-      markBlandettoHeading();
+      applyBlandettoTitle();
     });
   }
 
