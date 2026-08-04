@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "generate:stickers": "node scripts/generate-stickers-manifest.mjs",
-    "dev": "npm run generate:stickers && vite --host 0.0.0.0",
-    "build": "npm run generate:stickers && vite build",
+    "generate:galleries": "node scripts/generate-portfolio-galleries-manifest.mjs",
+    "generate:assets": "npm run generate:stickers && npm run generate:galleries",
+    "dev": "npm run generate:assets && vite --host 0.0.0.0",
+    "build": "npm run generate:assets && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
