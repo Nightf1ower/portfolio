@@ -82,7 +82,7 @@
   loadScript('script[src^="/merch-ui-performance-v12.js"]', '/merch-ui-performance-v12.js?v=merch-ui-13');
   loadScript('script[src^="/merch-gallery-v10.js"]', '/merch-gallery-v10.js?v=merch-16');
   loadScript('script[src^="/merch-mobile-layout-fix.js"]', '/merch-mobile-layout-fix.js?v=merch-mobile-fix-4');
-  loadScript('script[src^="/merch-stability-restore.js"]', '/merch-stability-restore.js?v=merch-stability-restore-3');
+  loadScript('script[src^="/merch-stability-restore.js"]', '/merch-stability-restore.js?v=merch-stability-restore-4');
   loadScript('script[src^="/merch-copy-update.js"]', '/merch-copy-update.js?v=merch-copy-update-1');
   loadScript('script[src^="/merch-layout-update-v3.js"]', '/merch-layout-update-v3.js?v=merch-layout-update-3');
   loadScript('script[src^="/nightflower-playroom-placeholder.js"]', '/nightflower-playroom-placeholder.js?v=playground-placeholder-2');
