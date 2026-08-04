@@ -41,12 +41,32 @@
     }
 
     .pink-punk-fullscreen > div > .sticky,
-    .pink-punk-fullscreen .sticky,
-    .pink-punk-modal .sticky {
+    .pink-punk-fullscreen > div > .sticky > *,
+    .pink-punk-fullscreen [class*="sticky"][class*="border"],
+    .pink-punk-modal .sticky,
+    .pink-punk-modal .sticky > * {
+      border: 0 !important;
+      border-top: 0 !important;
       border-bottom: 0 !important;
-      border-bottom-color: transparent !important;
+      border-color: transparent !important;
       box-shadow: none !important;
       outline: 0 !important;
+    }
+
+    .pink-punk-fullscreen > div > .sticky::before,
+    .pink-punk-fullscreen > div > .sticky::after,
+    .pink-punk-modal .sticky::before,
+    .pink-punk-modal .sticky::after {
+      content: none !important;
+      display: none !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .pink-punk-fullscreen > div > .sticky + *,
+    .pink-punk-modal .sticky + * {
+      border-top: 0 !important;
+      box-shadow: none !important;
     }
 
     /* Minimal logo previews should use their natural horizontal ratio.
@@ -96,7 +116,7 @@
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = '/blandetto-final.js?v=direct-5';
+  script.src = '/blandetto-final.js?v=direct-6';
   script.async = false;
   (document.currentScript || document.body).after(script);
 })();
