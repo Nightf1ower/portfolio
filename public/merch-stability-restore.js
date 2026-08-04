@@ -1,6 +1,6 @@
 (() => {
-  if (window.__merchStabilityRestoreV3) return;
-  window.__merchStabilityRestoreV3 = true;
+  if (window.__merchStabilityRestoreV4) return;
+  window.__merchStabilityRestoreV4 = true;
 
   const STYLE_ID = 'merch-stability-restore-style';
   const resizeObservers = new WeakMap();
@@ -73,8 +73,17 @@
       .m10-dxs-zone {
         margin-top: 0 !important;
         padding-top: clamp(7rem, 12vw, 11rem) !important;
-        background-color: #e5312b !important;
-        background-image: none !important;
+        background-color: #ef2b27 !important;
+        background-image: linear-gradient(
+          180deg,
+          #e5312b 0%,
+          #e83d34 30%,
+          #eb352e 62%,
+          #ef2b27 100%
+        ) !important;
+        background-size: 100% clamp(15rem, 24vw, 23rem) !important;
+        background-position: top center !important;
+        background-repeat: no-repeat !important;
       }
 
       @media (max-width: 700px) {
@@ -84,6 +93,7 @@
 
         .m10-dxs-zone {
           padding-top: 6rem !important;
+          background-size: 100% 13rem !important;
         }
       }
     `;
