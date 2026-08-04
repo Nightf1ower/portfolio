@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardPreviewsV1) return;
-  window.__projectCardPreviewsV1 = true;
+  if (window.__projectCardPreviewsV2) return;
+  window.__projectCardPreviewsV2 = true;
 
-  const VERSION = 'project-card-previews-1';
+  const VERSION = 'project-card-previews-2';
   const PREVIEWS = new Map([
     ['POSTERS', '/works/previes/POSTERS.jpg'],
     ['MERCH', '/works/previes/MERCH.jpg'],
@@ -21,9 +21,48 @@
 
   function injectStyles() {
     document.getElementById('project-card-previews-v1-style')?.remove();
+    document.getElementById('project-card-previews-v2-style')?.remove();
+
     const style = document.createElement('style');
-    style.id = 'project-card-previews-v1-style';
+    style.id = 'project-card-previews-v2-style';
     style.textContent = `
+      /* Project cards now contain only the numbered preview window. */
+      #works .mt-10.grid > article h3,
+      #works .mt-10.grid > button h3,
+      #works .mt-10.grid > article h3 ~ *,
+      #works .mt-10.grid > button h3 ~ * {
+        display: none !important;
+      }
+
+      #works [data-project-layout-v5-key] {
+        min-height: 0 !important;
+      }
+
+      #works [data-project-layout-v5-key] .my-10.flex.flex-1,
+      #works [data-project-layout-v5-key] > .my-10 {
+        flex: 1 1 auto !important;
+        min-height: clamp(15rem, 24vw, 22rem) !important;
+        margin-top: 1.25rem !important;
+        margin-bottom: 1.25rem !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      #works .project-card-preview-v5,
+      #works .project-card-placeholder-v5 {
+        width: clamp(14rem, 19vw, 18rem) !important;
+        max-width: calc(100% - 2rem) !important;
+      }
+
+      #works [data-project-layout-v5-size="large"] .project-card-preview-v5,
+      #works [data-project-layout-v5-size="large"] .project-card-placeholder-v5 {
+        width: clamp(16rem, 21vw, 20rem) !important;
+      }
+
+      #works .project-card-preview-v5 > img {
+        padding: .35rem !important;
+      }
+
       #works .project-card-avatar-v1 {
         background: #fff !important;
       }
@@ -48,6 +87,22 @@
         object-position: center !important;
         opacity: 1 !important;
         visibility: visible !important;
+      }
+
+      @media (max-width: 700px) {
+        #works [data-project-layout-v5-key] .my-10.flex.flex-1,
+        #works [data-project-layout-v5-key] > .my-10 {
+          min-height: 15rem !important;
+          margin-top: 1rem !important;
+          margin-bottom: 1rem !important;
+        }
+
+        #works .project-card-preview-v5,
+        #works .project-card-placeholder-v5,
+        #works [data-project-layout-v5-size="large"] .project-card-preview-v5,
+        #works [data-project-layout-v5-size="large"] .project-card-placeholder-v5 {
+          width: min(15rem, calc(100% - 1.5rem)) !important;
+        }
       }
     `;
     document.head.append(style);
