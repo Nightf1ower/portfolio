@@ -1,14 +1,14 @@
 (() => {
-  if (window.__project9006LayoutV5) return;
-  window.__project9006LayoutV5 = true;
+  if (window.__project9006LayoutV6) return;
+  window.__project9006LayoutV6 = true;
 
-  const VERSION = '9006-layout-5';
+  const VERSION = '9006-layout-6';
   const BRAND_NAME = 'NINETY Z S';
   const LOGOS = [
     '/works/90-06/logo-variations/LOGO%201.jpg',
     '/works/90-06/logo-variations/LOGO%203.jpg',
+    '/works/90-06/logo-variations/LOGO%204.jpg',
   ];
-  const LOGO_SHEET = '/works/90-06/logo-variations/LOGO%204.jpg';
   const POSTERS = [
     '/works/90-06/posters/nzc1.jpg',
     '/works/90-06/posters/nzc2.jpg',
@@ -76,7 +76,7 @@
         margin: 0 !important;
         color: inherit !important;
         font: 900 clamp(4.6rem,13vw,11.5rem)/.72 Arial,Helvetica,sans-serif !important;
-        letter-spacing: -.095em !important;
+        letter-spacing: -.045em !important;
         text-transform: uppercase !important;
         white-space: nowrap !important;
       }
@@ -114,35 +114,37 @@
       }
       .project9006-modal .project9006-logo-pair {
         display: grid !important;
-        grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+        grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+        align-items: center !important;
         gap: clamp(.75rem,2vw,1.25rem) !important;
       }
       .project9006-modal .project9006-logo-card {
         box-sizing: border-box !important;
         display: block !important;
         width: 100% !important;
-        aspect-ratio: 1/1 !important;
+        aspect-ratio: 2.35/1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
         overflow: hidden !important;
         background: transparent !important;
+        box-shadow: none !important;
       }
       .project9006-modal .project9006-logo-card img {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
-        padding: 0 !important;
-        object-fit: cover !important;
-      }
-      .project9006-modal .project9006-logo-sheet {
-        width: 100% !important;
-        margin-top: clamp(1rem,2.5vw,1.75rem) !important;
-        background: rgba(255,255,255,.04) !important;
-      }
-      .project9006-modal .project9006-logo-sheet img {
-        display: block !important;
-        width: 100% !important;
-        height: auto !important;
+        max-width: none !important;
         max-height: none !important;
-        object-fit: contain !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        transform: scale(1.62) !important;
+        transform-origin: center !important;
       }
       .project9006-modal .project9006-merch-media {
         box-sizing: border-box !important;
@@ -219,6 +221,7 @@
         transform: none !important;
       }
       @media(max-width:900px) {
+        .project9006-modal .project9006-logo-pair,
         .project9006-modal .project9006-posters-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
       }
       @media(max-width:650px) {
@@ -334,19 +337,15 @@
     headingRow?.querySelector('p')?.remove();
     Array.from(section.children).slice(1).forEach((child) => child.remove());
 
-    const pair = document.createElement('div');
-    pair.className = 'project9006-logo-pair';
+    const row = document.createElement('div');
+    row.className = 'project9006-logo-pair';
     LOGOS.forEach((src, index) => {
       const card = document.createElement('div');
       card.className = 'project9006-logo-card';
       card.append(imageNode(src, `NINETY Z S logo ${index + 1}`, index === 0 ? 'eager' : 'lazy'));
-      pair.append(card);
+      row.append(card);
     });
-
-    const sheet = document.createElement('div');
-    sheet.className = 'project9006-logo-sheet';
-    sheet.append(imageNode(LOGO_SHEET, 'NINETY Z S logo sheet'));
-    section.append(pair, sheet);
+    section.append(row);
 
     if (sheetSection) sheetSection.classList.add('project9006-logo-sheet-source');
     section.dataset.layout9006 = VERSION;
