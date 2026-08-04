@@ -48,7 +48,7 @@
   loadScript('script[src^="/global-modal-header-fix.js"]', '/global-modal-header-fix.js?v=modal-head-6');
   loadScript('script[src^="/project-unified-lightbox.js"]', '/project-unified-lightbox.js?v=project-unified-lightbox-1');
   loadScript('script[src^="/pink-punk-lightbox-fix.js"]', '/pink-punk-lightbox-fix.js?v=pink-punk-lightbox-fix-2');
-  loadScript('script[src^="/carnival-records-click-guard.js"]', '/carnival-records-click-guard.js?v=carnival-click-guard-3');
+  loadScript('script[src^="/carnival-records-click-guard.js"]', '/carnival-records-click-guard.js?v=carnival-click-guard-5');
   loadScript('script[src^="/project-swipe-gallery.js"]', '/project-swipe-gallery.js?v=swipe-gallery-3');
   loadScript('script[src^="/gallery-first-image-fix.js"]', '/gallery-first-image-fix.js?v=first-image-4');
   loadScript('script[src^="/blandetto-logo-section-fix.js"]', '/blandetto-logo-section-fix.js?v=blandetto-logo-section-fix-3');
@@ -59,9 +59,9 @@
   loadScript('script[src^="/album-covers-description.js"]', '/album-covers-description.js?v=album-covers-description-1');
   loadScript('script[src^="/carnival-records-bootstrap.js"]', '/carnival-records-bootstrap.js?v=carnival-bootstrap-1');
   loadScript('script[src^="/carnival-records-gallery.js"]', '/carnival-records-gallery.js?v=carnival-2');
-  loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-4');
+  loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-reset-1');
   loadScript('script[src^="/carnival-records-final-copy.js"]', '/carnival-records-final-copy.js?v=carnival-final-copy-1');
-  loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-8');
+  loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-reset-1');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-9');
   loadScript('script[src^="/zny-print-order.js"]', '/zny-print-order.js?v=zny-print-order-1');
   loadScript('script[src^="/fable-gallery.js"]', '/fable-gallery.js?v=fable-9');
