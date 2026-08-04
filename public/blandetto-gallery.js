@@ -59,7 +59,7 @@
   loadScript('script[src^="/album-covers-description.js"]', '/album-covers-description.js?v=album-covers-description-1');
   loadScript('script[src^="/carnival-records-bootstrap.js"]', '/carnival-records-bootstrap.js?v=carnival-bootstrap-1');
   loadScript('script[src^="/carnival-records-gallery.js"]', '/carnival-records-gallery.js?v=carnival-2');
-  loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-3');
+  loadScript('script[src^="/carnival-records-native-layout.js"]', '/carnival-records-native-layout.js?v=carnival-native-4');
   loadScript('script[src^="/carnival-records-final-copy.js"]', '/carnival-records-final-copy.js?v=carnival-final-copy-1');
   loadScript('script[src^="/carnival-records-cleanup.js"]', '/carnival-records-cleanup.js?v=carnival-cleanup-8');
   loadScript('script[src^="/zny-gallery-v7.js"]', '/zny-gallery-v7.js?v=zny-9');
