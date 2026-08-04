@@ -1,9 +1,15 @@
 (() => {
-  if (window.__projectCardUnifiedToneV11) return;
-  window.__projectCardUnifiedToneV11 = true;
+  if (window.__projectCardUnifiedToneV12) return;
+  window.__projectCardUnifiedToneV12 = true;
 
-  const VERSION = 'project-card-unified-tone-11';
+  const VERSION = 'project-card-unified-tone-12';
   const STYLE_ID = 'project-card-unified-tone-style';
+
+  const normalize = (value) => String(value || '')
+    .toUpperCase()
+    .replace(/[^A-ZА-ЯЁ0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
 
   function installStyles() {
     document.getElementById(STYLE_ID)?.remove();
@@ -60,59 +66,84 @@
         overflow: visible !important;
       }
 
-      @media (max-width: 820px) {
-        #works .mt-10.grid h3[data-project-title-system="${VERSION}"] {
-          font-size: 25px !important;
-          line-height: .89 !important;
-          letter-spacing: -.045em !important;
-        }
+      #works h3[data-blandetto-title-rebuilt="${VERSION}"] {
+        white-space: nowrap !important;
       }
     `;
 
     document.head.append(style);
   }
 
-  function applyTitleSystem() {
-    document.querySelectorAll('#works .mt-10.grid h3').forEach((heading) => {
-      if (!(heading instanceof HTMLElement)) return;
+  function findCard(title) {
+    return [...document.querySelectorAll('#works .mt-10.grid > article, #works .mt-10.grid > button')]
+      .find((card) => normalize(card.querySelector('h3')?.textContent) === title) || null;
+  }
 
-      const cleanText = heading.textContent
-        ?.replace(/\s+/g, ' ')
-        .trim();
+  function rebuildBlandettoHeading() {
+    const blandettoCard = findCard('BLANDETTO');
+    const pinkPunkCard = findCard('PINK PUNK');
+    const oldHeading = blandettoCard?.querySelector('h3');
+    const pinkHeading = pinkPunkCard?.querySelector('h3');
 
-      if (cleanText && heading.textContent !== cleanText) {
-        heading.textContent = cleanText;
-      }
+    if (!blandettoCard || !oldHeading || !pinkHeading) return false;
+    if (oldHeading.dataset.blandettoTitleRebuilt === VERSION) return true;
 
-      heading.dataset.projectTitleSystem = VERSION;
-      heading.removeAttribute('data-project-title-fit');
+    const newHeading = document.createElement('h3');
+    newHeading.className = pinkHeading.className;
+    newHeading.textContent = 'BLANDETTO';
+    newHeading.dataset.blandettoTitleRebuilt = VERSION;
+    newHeading.dataset.projectTitleSystem = VERSION;
+    newHeading.setAttribute('aria-label', 'BLANDETTO');
 
-      heading.style.setProperty('display', 'block', 'important');
-      heading.style.setProperty('box-sizing', 'border-box', 'important');
-      heading.style.setProperty('width', '100%', 'important');
-      heading.style.setProperty('max-width', '100%', 'important');
-      heading.style.setProperty('min-width', '0', 'important');
-      heading.style.setProperty('min-height', '1.78em', 'important');
-      heading.style.setProperty('margin', '0', 'important');
-      heading.style.setProperty('padding', '0', 'important');
-      heading.style.setProperty('font-family', '"Arial Black", Arial, Helvetica, sans-serif', 'important');
-      heading.style.setProperty('font-size', '25px', 'important');
-      heading.style.setProperty('font-weight', '900', 'important');
-      heading.style.setProperty('font-style', 'normal', 'important');
-      heading.style.setProperty('font-stretch', 'normal', 'important');
-      heading.style.setProperty('font-variation-settings', 'normal', 'important');
-      heading.style.setProperty('line-height', '.89', 'important');
-      heading.style.setProperty('letter-spacing', '-.045em', 'important');
-      heading.style.setProperty('text-transform', 'uppercase', 'important');
-      heading.style.setProperty('text-align', 'left', 'important');
-      heading.style.setProperty('white-space', 'normal', 'important');
-      heading.style.setProperty('word-break', 'keep-all', 'important');
-      heading.style.setProperty('overflow-wrap', 'normal', 'important');
-      heading.style.setProperty('hyphens', 'none', 'important');
-      heading.style.setProperty('text-wrap', 'wrap', 'important');
-      heading.style.setProperty('transform', 'none', 'important');
-      heading.style.setProperty('overflow', 'visible', 'important');
+    oldHeading.replaceWith(newHeading);
+    return true;
+  }
+
+  function applySharedTitleStyle(heading) {
+    if (!(heading instanceof HTMLElement)) return;
+
+    const cleanText = heading.textContent?.replace(/\s+/g, ' ').trim();
+    if (cleanText && heading.textContent !== cleanText) heading.textContent = cleanText;
+
+    heading.dataset.projectTitleSystem = VERSION;
+    heading.removeAttribute('data-project-title-fit');
+
+    const properties = {
+      display: 'block',
+      'box-sizing': 'border-box',
+      width: '100%',
+      'max-width': '100%',
+      'min-width': '0',
+      'min-height': '1.78em',
+      margin: '0',
+      padding: '0',
+      'font-family': '"Arial Black", Arial, Helvetica, sans-serif',
+      'font-size': '25px',
+      'font-weight': '900',
+      'font-style': 'normal',
+      'font-stretch': 'normal',
+      'font-variation-settings': 'normal',
+      'line-height': '.89',
+      'letter-spacing': '-.045em',
+      'text-transform': 'uppercase',
+      'text-align': 'left',
+      'white-space': normalize(cleanText) === 'BLANDETTO' ? 'nowrap' : 'normal',
+      'word-break': 'keep-all',
+      'overflow-wrap': 'normal',
+      hyphens: 'none',
+      'text-wrap': 'wrap',
+      transform: 'none',
+      overflow: 'visible',
+    };
+
+    Object.entries(properties).forEach(([name, value]) => {
+      heading.style.setProperty(name, value, 'important');
     });
+  }
+
+  function applyTitleSystem() {
+    rebuildBlandettoHeading();
+    document.querySelectorAll('#works .mt-10.grid h3').forEach(applySharedTitleStyle);
   }
 
   installStyles();
