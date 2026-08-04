@@ -9,6 +9,39 @@
     (document.currentScript || document.body).after(script);
   };
 
+  // Prevent the shared gallery handlers from treating an entire Blandetto
+  // section as a clickable image group. Only a direct click on an image may
+  // open the lightbox; headings, copy and empty background remain inert.
+  if (!window.__blandettoImageOnlyClickGuardV1) {
+    window.__blandettoImageOnlyClickGuardV1 = true;
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      const modal = event.target.closest('.bf, .blandetto-modal, .bld-modal');
+      if (!modal) return;
+
+      if (event.target.closest([
+        '.bf-x',
+        '.blandetto-close',
+        '.bld-close',
+        '.bf-light',
+        '.blandetto-lightbox',
+        '.pul-overlay',
+        '.psg-lightbox',
+        '.project-scroll-top',
+        'a',
+        'input',
+        'select',
+        'textarea',
+      ].join(','))) return;
+
+      if (event.target.closest('img')) return;
+
+      event.stopImmediatePropagation();
+    }, true);
+  }
+
   loadScript('script[src^="/portfolio-static-assets.js"]', '/portfolio-static-assets.js?v=static-assets-2');
   loadScript('script[src^="/portfolio-image-performance.js"]', '/portfolio-image-performance.js?v=portfolio-image-performance-1');
   loadScript('script[src^="/image-asset-fallback.js"]', '/image-asset-fallback.js?v=image-asset-fallback-1');
