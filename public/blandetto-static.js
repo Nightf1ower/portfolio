@@ -31,6 +31,15 @@
       letter-spacing: 0.24em !important;
     }
 
+    .bf .bf-x,
+    .blandetto-modal .blandetto-close,
+    .bld-modal .bld-close {
+      background: #050505 !important;
+      color: #fff !important;
+      border-color: #050505 !important;
+      box-shadow: none !important;
+    }
+
     div[class*="bg-[#050505]"][class*="fixed"][class*="inset-0"] img[src*="/works/90-06/logo-variations"] {
       max-width: min(72%, 48rem) !important;
       max-height: 56vh !important;
@@ -55,7 +64,7 @@
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = '/blandetto-final.js?v=direct-3';
+  script.src = '/blandetto-final.js?v=direct-4';
   script.async = false;
   (document.currentScript || document.body).after(script);
 })();
