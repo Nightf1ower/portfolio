@@ -89,7 +89,7 @@
   loadScript('script[src^="/font-panic-override.js"]', '/font-panic-override.js?v=font-panic-2');
   loadScript('script[src^="/mobile-touch-gallery-fix.js"]', '/mobile-touch-gallery-fix.js?v=touch-gallery-2');
   loadScript('script[src^="/portfolio-unified-style.js"]', '/portfolio-unified-style.js?v=portfolio-unified-style-2');
-  loadScript('script[src^="/project-spacing-system.js"]', '/project-spacing-system.js?v=project-spacing-system-1');
+  loadScript('script[src^="/project-spacing-system.js"]', '/project-spacing-system.js?v=project-spacing-system-2');
 
   const updateNavigation = () => {
     const language = localStorage.getItem('site-language') || 'en';
