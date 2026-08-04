@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardUnifiedToneV5) return;
-  window.__projectCardUnifiedToneV5 = true;
+  if (window.__projectCardUnifiedToneV6) return;
+  window.__projectCardUnifiedToneV6 = true;
 
-  const VERSION = 'project-card-unified-tone-5';
+  const VERSION = 'project-card-unified-tone-6';
   const normalize = (value) => String(value || '')
     .toUpperCase()
     .replace(/\|/g, '')
@@ -34,7 +34,6 @@
       -webkit-backdrop-filter: none !important;
     }
 
-    /* Only BLANDETTO: normal Helvetica/Arial face and a smaller size. */
     #works h3.blandetto-title-final {
       display: block !important;
       width: 100% !important;
@@ -42,23 +41,24 @@
       margin: 0 !important;
       padding: 0 !important;
       font-family: Helvetica, "Helvetica Neue", Arial, sans-serif !important;
-      font-size: clamp(2rem, 3vw, 2.65rem) !important;
+      font-size: clamp(1.45rem, 2.1vw, 1.9rem) !important;
       font-weight: 800 !important;
       font-style: normal !important;
       font-stretch: normal !important;
       font-variation-settings: normal !important;
       font-feature-settings: normal !important;
       font-synthesis: none !important;
-      line-height: .92 !important;
-      letter-spacing: -.055em !important;
+      line-height: .94 !important;
+      letter-spacing: -.04em !important;
       text-transform: uppercase !important;
+      white-space: nowrap !important;
       transform: none !important;
       scale: none !important;
     }
 
     @media (max-width: 820px) {
       #works h3.blandetto-title-final {
-        font-size: clamp(1.9rem, 9vw, 2.45rem) !important;
+        font-size: clamp(1.3rem, 6.8vw, 1.7rem) !important;
       }
     }
   `;
@@ -76,13 +76,14 @@
     heading.textContent = 'BLANDETTO';
 
     heading.style.setProperty('font-family', 'Helvetica, "Helvetica Neue", Arial, sans-serif', 'important');
-    heading.style.setProperty('font-size', 'clamp(2rem, 3vw, 2.65rem)', 'important');
+    heading.style.setProperty('font-size', 'clamp(1.45rem, 2.1vw, 1.9rem)', 'important');
     heading.style.setProperty('font-weight', '800', 'important');
     heading.style.setProperty('font-style', 'normal', 'important');
     heading.style.setProperty('font-stretch', 'normal', 'important');
     heading.style.setProperty('font-variation-settings', 'normal', 'important');
-    heading.style.setProperty('line-height', '.92', 'important');
-    heading.style.setProperty('letter-spacing', '-.055em', 'important');
+    heading.style.setProperty('line-height', '.94', 'important');
+    heading.style.setProperty('letter-spacing', '-.04em', 'important');
+    heading.style.setProperty('white-space', 'nowrap', 'important');
     heading.style.setProperty('transform', 'none', 'important');
     heading.style.setProperty('margin', '0', 'important');
     return true;
