@@ -1,11 +1,12 @@
 (() => {
-  if (window.__projectSpacingSystemV1) return;
-  window.__projectSpacingSystemV1 = true;
+  if (window.__projectSpacingSystemV2) return;
+  window.__projectSpacingSystemV2 = true;
 
-  const VERSION = 'project-spacing-system-1';
+  const VERSION = 'project-spacing-system-2';
   const STYLE_ID = 'project-spacing-system-style';
   const ROOTS = [
     '.m10-modal',
+    '.cr-modal',
     '.stk-modal',
     '.posters-modal',
     '.su-modal',
@@ -29,6 +30,7 @@
     '.bf-s',
     '.pink-punk-section',
     '.m10-section',
+    '.cr-section',
     '.stk-section',
     '.posters-section',
     '.su-section',
@@ -48,12 +50,56 @@
       style.dataset.version = VERSION;
       style.textContent = `
         :root {
+          --project-top-gap: clamp(1rem, 1.4vw, 1.5rem);
           --project-layout-gap: clamp(2.75rem, 3.5vw, 3.75rem);
           --project-title-copy-gap: clamp(1rem, 1.25vw, 1.25rem);
           --project-copy-media-gap: clamp(2rem, 2.75vw, 2.75rem);
         }
 
-        /* Brand title -> description stays intact; description -> divider is now compact. */
+        /* Keep every project start compact: header -> first brand/project content. */
+        :where(${ROOTS}) :where(
+          .m10-hero,
+          .cr-hero,
+          .fable-intro,
+          .zny-brand,
+          .bf-brand,
+          .pink-punk-brand,
+          .project9006-brand,
+          .m10-project-intro,
+          .stk-project-intro,
+          .posters-project-intro,
+          .su-project-intro,
+          .vtb-project-intro,
+          .album-covers-project-intro,
+          .collages-project-intro,
+          [class$="-project-intro"],
+          [class*="-project-intro "],
+          [class$="-brand-intro"],
+          [class*="-brand-intro "],
+          [class$="-hero"],
+          [class*="-hero "]
+        ) {
+          padding-top: var(--project-top-gap) !important;
+          margin-top: 0 !important;
+          min-height: 0 !important;
+        }
+
+        /* Remove extra spacer margins directly below project headers. */
+        :where(${ROOTS}) :where(
+          .m10-head,
+          .cr-head,
+          .fable-head,
+          .zny-head,
+          .bf-bar,
+          .pink-punk-head,
+          .project9006-head,
+          [class$="-head"],
+          [class*="-head "]
+        ) + * {
+          margin-top: 0 !important;
+        }
+
+        /* Brand title -> description stays intact; description -> divider is compact. */
         :where(${ROOTS}) :where(
           .fable-intro,
           .zny-brand,
@@ -61,6 +107,7 @@
           .pink-punk-brand,
           .project9006-brand,
           .m10-project-intro,
+          .cr-hero,
           .stk-project-intro,
           .posters-project-intro,
           .su-project-intro,
@@ -151,6 +198,7 @@
           .pink-punk-brand__copy,
           .project9006-brand-copy,
           .m10-project-copy,
+          .cr-description,
           .vtb-project-intro__text,
           [class$="-brand-copy"],
           [class*="-brand-copy "],
@@ -162,6 +210,7 @@
 
         @media (max-width: 700px) {
           :root {
+            --project-top-gap: .75rem;
             --project-layout-gap: 2.25rem;
             --project-title-copy-gap: 1rem;
             --project-copy-media-gap: 2rem;
