@@ -1,21 +1,25 @@
 (() => {
-  if (window.__merchGalleryCleanV1) return;
-  window.__merchGalleryCleanV1 = true;
+  if (window.__merchGalleryCleanV2) return;
+  window.__merchGalleryCleanV2 = true;
 
-  const VERSION = 'merch-clean-1';
+  const VERSION = 'merch-clean-2';
   const COPY = {
     ru: {
       close: 'ЗАКРЫТЬ',
       merch: 'МЕРЧ',
+      top: 'НАВЕРХ',
       yKicker: 'ЯБЛОЧКО ЗЕЛЕНОЕ',
       yTitle: 'РАЗРАБОТКА МЕРЧА К АЛЬБОМУ «MOSGORTRAX»',
       yText: 'Серия мерча для музыкального альбома Mosgortrax исполнителя «Яблочко Зеленое». Визуальная система построена на сочетании наивной графики, яркого цвета и намеренно простой формы, которая переносится на футболки, принты, постеры, рекламные материалы и наружные носители.',
-      campaign: 'КАМПЕЙН',
-      posters: 'ПОСТЕРЫ',
-      socials: 'МАТЕРИАЛЫ ДЛЯ СОЦСЕТЕЙ',
+      merchTitle: 'ГРАФИКА ДЛЯ МЕРЧА',
+      merchText: 'Разработка серии графических работ для мерча, посвящённого музыкальному альбому. Дизайны создавались для футболок и других предметов коллекции, объединяя клубную эстетику, характер исполнителя и визуальные отсылки к тематике релиза.',
+      postersTitle: 'СЕРИЯ ПОСТЕРОВ',
+      postersText: 'Серия постеров основана на эстетике и характере исполнителя, а также на главной фразе альбома — “Stuck in the Loop? Don’t Worry, It’s Just Techno.” В каждом изображении эта надпись интерпретируется по-разному: через фотографию, типографику, коллажи и графические образы, связанные с клубной культурой и электронной музыкой.',
+      socialTitle: 'КОНТЕНТ ДЛЯ СОЦИАЛЬНЫХ СЕТЕЙ',
+      socialText: 'Разработка различных изображений для продвижения альбома в социальных сетях. В серию вошли визуалы для постов, сторис, анонсов и других цифровых форматов. Все материалы продолжают общую стилистику релиза и адаптируют её под разные способы коммуникации с аудиторией.',
       billboards: 'БИЛБОРДЫ',
-      billboardText: 'Серия рекламных визуалов для социальных сетей, вдохновлённая масштабными фестивальными билбордами Coachella. Изображения созданы с помощью ИИ и доработаны вручную.',
-      dxsText: 'DXS — фотостудия, для которой была разработана контрастная визуальная система, построенная вокруг крупной типографики, насыщенного красного цвета и фрагментированной графики.',
+      billboardText: 'Серия рекламных визуалов для социальных сетей, вдохновлённая масштабными фестивальными билбордами Coachella. Изображения созданы с помощью ИИ и доработаны вручную, чтобы перенести эстетику наружной рекламы в digital-формат и сохранить единый визуальный язык проекта.',
+      dxsText: 'Разработка серии визуальных материалов для модельного комьюнити DXS. В проект вошли изображения для постов и сторис, рекламные и имиджевые постеры, а также графика для стикеров и других носителей. Дизайн строится на сочетании минималистичной типографики, рукописной графики, коротких высказываний и контрастной красно-бело-чёрной палитры, отражающей независимый и экспериментальный характер проекта.',
       stickers: 'СТИКЕРЫ',
       visualization: 'ВИЗУАЛИЗАЦИИ',
       ads: 'РЕКЛАМНЫЕ МАТЕРИАЛЫ',
@@ -23,15 +27,19 @@
     en: {
       close: 'CLOSE',
       merch: 'MERCH',
+      top: 'BACK TO TOP',
       yKicker: 'YABLOCHKO ZELENOE',
       yTitle: 'MERCHANDISE DESIGN FOR THE ALBUM “MOSGORTRAX”',
       yText: 'A merchandise series created for Mosgortrax, an album by the artist Yablochko Zelenoe. The visual system combines naïve graphics, vivid color and intentionally simple forms across T-shirts, prints, posters, promotional materials and outdoor formats.',
-      campaign: 'CAMPAIGN',
-      posters: 'POSTERS',
-      socials: 'SOCIAL MEDIA MATERIALS',
+      merchTitle: 'MERCH GRAPHICS',
+      merchText: 'Development of a series of graphic works for merchandise dedicated to the music album. The designs were created for T-shirts and other items from the collection, combining club aesthetics, the artist’s character, and visual references to the theme of the release.',
+      postersTitle: 'POSTER SERIES',
+      postersText: 'The poster series is based on the artist’s aesthetic and personality, as well as the album’s key phrase — “Stuck in the Loop? Don’t Worry, It’s Just Techno.” Each visual reinterprets the phrase through photography, typography, collage, and graphic imagery inspired by club culture and electronic music.',
+      socialTitle: 'SOCIAL MEDIA CONTENT',
+      socialText: 'Development of various visuals for promoting the album across social media. The series includes content for posts, stories, announcements, and other digital formats. All materials continue the visual direction of the release and adapt it to different ways of communicating with the audience.',
       billboards: 'BILLBOARDS',
-      billboardText: 'A series of social media campaign visuals inspired by Coachella’s large-scale festival billboards. The imagery was created with AI and refined through post-production.',
-      dxsText: 'DXS is a photography studio for which a bold visual system was developed around oversized typography, saturated red and fragmented graphic elements.',
+      billboardText: 'A series of social media campaign visuals inspired by Coachella’s large-scale festival billboards. The imagery was created with AI and refined through post-production, translating the aesthetics of outdoor advertising into a digital format while maintaining the project’s consistent visual language.',
+      dxsText: 'Development of a series of visual materials for the DXS model community. The project includes content for social media posts and stories, promotional and image-based posters, as well as graphics for stickers and other formats. The visual direction combines minimalist typography, handwritten graphics, concise statements, and a contrasting red, white, and black palette that reflects the project’s independent and experimental character.',
       stickers: 'STICKERS',
       visualization: 'VISUALIZATIONS',
       ads: 'ADVERTISING MATERIALS',
@@ -92,6 +100,7 @@
   let lightboxIndex = 0;
   let previousBodyOverflow = '';
   let previousHtmlOverflow = '';
+  let imageObserver = null;
 
   const language = () => (
     document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en'
@@ -111,38 +120,43 @@
     style.id = 'merch-clean-style';
     style.textContent = `
       html:has(.mc-modal),body:has(.mc-modal){overflow:hidden!important}
-      .mc-modal{position:fixed;inset:0;z-index:950000;overflow-y:auto;overflow-x:hidden;background:#87CEEB;color:#050505;opacity:0;transition:opacity .25s ease}
+      .mc-modal{--mc-page-edge:clamp(1.25rem,2.6vw,3rem);position:fixed;inset:0;z-index:950000;overflow-y:auto;overflow-x:hidden;background:#87CEEB;color:#050505;opacity:0;transition:opacity .25s ease;overscroll-behavior:contain}
       .mc-modal.is-open{opacity:1}
-      .mc-shell{width:min(calc(100% - 2rem),92rem);margin:0 auto;padding:1rem 0 0}
-      .mc-head{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.3);background:rgba(135,206,235,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+      .mc-shell{box-sizing:border-box;width:auto;max-width:none;margin:0 var(--mc-page-edge);padding:1rem 0 0}
+      .mc-head{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem 0 .85rem;border:0;background:transparent}
       .mc-label,.mc-close,.mc-count{font:900 .68rem/1 Arial,Helvetica,sans-serif;letter-spacing:.24em;text-transform:uppercase}
       .mc-label,.mc-close{border:0;background:#050505;color:#fff;padding:.7rem 1rem}
       .mc-close{cursor:pointer}
-      .mc-hero{padding:clamp(4rem,9vw,8rem) 0 clamp(4rem,8vw,7rem)}
+      .mc-hero{padding:clamp(2.5rem,5vw,4.5rem) 0 clamp(1.25rem,2.5vw,2.25rem)}
       .mc-kicker{margin:0;font:900 .72rem/1 Arial,Helvetica,sans-serif;letter-spacing:.3em;text-transform:uppercase}
-      .mc-title{max-width:15ch;margin:1rem 0 0;font:900 clamp(3rem,7.2vw,8rem)/.84 Arial,Helvetica,sans-serif;letter-spacing:-.075em;text-transform:uppercase}
-      .mc-copy{width:min(100%,54rem);margin:clamp(1.5rem,3vw,2.5rem) 0 0;font:600 clamp(1rem,1.4vw,1.25rem)/1.5 Arial,Helvetica,sans-serif;letter-spacing:-.015em}
-      .mc-section{padding-top:1.35rem;margin-top:clamp(4rem,8vw,7rem);border-top:1px solid rgba(5,5,5,.3)}
-      .mc-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:clamp(1.5rem,3vw,2.5rem)}
+      .mc-title{width:100%;max-width:none;margin:1rem 0 0;font:900 clamp(4.25rem,8.6vw,10.5rem)/.82 Arial,Helvetica,sans-serif;letter-spacing:-.075em;text-transform:uppercase;text-wrap:balance}
+      .mc-copy{box-sizing:border-box;width:100%;max-width:none;margin:clamp(1.25rem,2.5vw,2rem) 0 0;padding-right:clamp(0rem,7vw,8rem);font:600 clamp(1rem,1.25vw,1.35rem)/1.5 Arial,Helvetica,sans-serif;letter-spacing:-.015em}
+      .mc-section{width:100%;max-width:none;padding-top:1.25rem;margin-top:clamp(3rem,5.5vw,5rem);border-top:1px solid rgba(5,5,5,.3);content-visibility:auto;contain-intrinsic-size:auto 760px}
+      .mc-hero+.mc-section{margin-top:clamp(1rem,2vw,2rem)}
+      .mc-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:clamp(1rem,2vw,1.6rem)}
       .mc-section-title{margin:0;font:900 clamp(2.7rem,6vw,6.5rem)/.82 Arial,Helvetica,sans-serif;letter-spacing:-.07em;text-transform:uppercase}
+      .mc-section>.mc-copy-update{margin:0 0 clamp(1.5rem,3vw,2.5rem);padding-right:clamp(0rem,7vw,8rem)}
       .mc-count{margin:0;color:rgba(5,5,5,.5);white-space:nowrap}
-      .mc-grid{display:grid;gap:clamp(.8rem,1.6vw,1.25rem);align-items:start}
+      .mc-grid{display:grid;width:100%;max-width:none;gap:clamp(.8rem,1.6vw,1.25rem);align-items:start}
       .mc-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
       .mc-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
       .mc-grid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
       .mc-grid--5{grid-template-columns:repeat(5,minmax(0,1fr))}
-      .mc-card{display:block;width:100%;min-width:0;margin:0;padding:0;border:0;background:transparent;cursor:zoom-in}
-      .mc-media{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:12rem;overflow:hidden}
-      .mc-media img{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain}
-      .mc-hover{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:contain!important;opacity:0;transition:opacity .35s ease}
-      .mc-card:hover .mc-hover{opacity:1}
-      .mc-bridge{box-sizing:border-box;width:100vw;margin-left:calc(50% - 50vw);margin-top:clamp(5rem,10vw,9rem);padding:0 max(1rem,calc((100vw - 92rem)/2)) clamp(6rem,11vw,10rem);background:linear-gradient(180deg,#87CEEB 0,#87CEEB 8rem,#90c6dd 18rem,#a6b5c8 30rem,#c58e9d 43rem,#dd5b5a 56rem,#e5312b 68rem,#ef2b27 82rem,#ef2b27 100%)}
+      .mc-card{display:block;width:100%;min-width:0;margin:0;padding:0;border:0;background:transparent;cursor:zoom-in;content-visibility:auto;contain-intrinsic-size:420px 520px}
+      .mc-media{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-height:12rem;overflow:hidden;background:rgba(255,255,255,.08)}
+      .mc-media img{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain;opacity:0;transition:opacity .22s ease}
+      .mc-media img.is-loaded{opacity:1}
+      .mc-hover{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:contain!important;opacity:0!important;transition:opacity .35s ease!important}
+      .mc-card:hover .mc-hover.is-loaded{opacity:1!important}
+      .mc-bridge{box-sizing:border-box;width:100vw;margin-left:calc(50% - 50vw);margin-top:clamp(3rem,6vw,5rem);padding:0 var(--mc-page-edge) clamp(6rem,11vw,10rem);background:linear-gradient(180deg,#87CEEB 0,#87CEEB 8rem,#90c6dd 18rem,#a6b5c8 30rem,#c58e9d 43rem,#dd5b5a 56rem,#e5312b 68rem,#ef2b27 82rem,#ef2b27 100%)}
       .mc-bridge .mc-section{background:transparent}
-      .mc-billboards{padding-top:1.35rem;margin-top:0}
-      .mc-dxs{padding-top:clamp(8rem,13vw,13rem)}
+      .mc-billboards{padding-top:1.25rem;margin-top:0}
+      .mc-dxs{width:100%;max-width:none;padding-top:clamp(7rem,11vw,11rem);content-visibility:auto;contain-intrinsic-size:auto 1800px}
       .mc-dxs-title{margin:0;font:900 clamp(5rem,16vw,14rem)/.78 Arial,Helvetica,sans-serif;letter-spacing:-.085em;text-transform:uppercase}
-      .mc-dxs .mc-copy{margin-bottom:clamp(4rem,8vw,7rem)}
+      .mc-dxs-copy{margin-top:clamp(1.25rem,2.5vw,2rem)!important;margin-bottom:clamp(2.5rem,5vw,4.5rem)!important}
       .mc-subtitle{margin:clamp(2.5rem,5vw,4.5rem) 0 1rem;font:900 clamp(1rem,1.8vw,1.45rem)/1 Arial,Helvetica,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+      .mc-top{position:fixed;right:max(1rem,var(--mc-page-edge));bottom:max(1rem,env(safe-area-inset-bottom));z-index:40;width:3.3rem;height:3.3rem;border:1px solid #fff;background:#050505;color:#fff;font:900 1.4rem/1 Arial,Helvetica,sans-serif;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(.5rem);transition:opacity .2s ease,transform .2s ease}
+      .mc-top.is-visible{opacity:1;pointer-events:auto;transform:none}
       .mc-light{position:fixed;inset:0;z-index:990000;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1rem;padding:1rem;background:rgba(0,0,0,.97)}
       .mc-light-stage{display:flex;align-items:center;justify-content:center;height:calc(100dvh - 2rem);min-width:0;overflow:hidden}
       .mc-light-image{display:block;max-width:100%;max-height:92dvh;width:auto;height:auto;object-fit:contain}
@@ -152,16 +166,52 @@
       .mc-light-count{position:absolute;left:50%;bottom:1rem;transform:translateX(-50%);margin:0;padding:.45rem .7rem;background:#fff;color:#050505;font:900 .65rem/1 Arial,Helvetica,sans-serif;letter-spacing:.18em}
       @media(max-width:1000px){.mc-grid--5{grid-template-columns:repeat(3,minmax(0,1fr))}.mc-grid--4{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:700px){
-        .mc-shell{width:min(calc(100% - 1.5rem),92rem)}
+        .mc-modal{--mc-page-edge:.75rem}
+        .mc-title{font-size:clamp(3.25rem,16vw,6rem);text-wrap:wrap}
+        .mc-copy,.mc-section>.mc-copy-update{padding-right:0;font-size:1rem}
         .mc-section-head{display:block}.mc-count{margin-top:.75rem}
         .mc-grid--2,.mc-grid--3,.mc-grid--4,.mc-grid--5{grid-template-columns:1fr}
-        .mc-bridge{padding-left:.75rem;padding-right:.75rem;background:linear-gradient(180deg,#87CEEB 0,#87CEEB 5rem,#98c0d6 13rem,#ba9faf 23rem,#dc605f 34rem,#e5312b 44rem,#ef2b27 54rem,#ef2b27 100%)}
-        .mc-dxs{padding-top:7rem}
+        .mc-bridge{background:linear-gradient(180deg,#87CEEB 0,#87CEEB 5rem,#98c0d6 13rem,#ba9faf 23rem,#dc605f 34rem,#e5312b 44rem,#ef2b27 54rem,#ef2b27 100%)}
+        .mc-dxs{padding-top:6rem}
         .mc-light{grid-template-columns:1fr;padding:.75rem}.mc-light-nav{display:none}.mc-light-stage{height:calc(100dvh - 1.5rem)}
-        .mc-card:hover .mc-hover{opacity:0}
+        .mc-card:hover .mc-hover.is-loaded{opacity:0!important}
       }
     `;
     document.head.append(style);
+  }
+
+  function loadDeferredImage(image) {
+    if (!(image instanceof HTMLImageElement) || !image.dataset.src || image.dataset.loaded === 'true') return;
+    image.dataset.loaded = 'true';
+    image.addEventListener('load', () => image.classList.add('is-loaded'), { once: true });
+    image.addEventListener('error', () => image.classList.add('is-loaded'), { once: true });
+    image.src = image.dataset.src;
+    delete image.dataset.src;
+  }
+
+  function setupDeferredImages(root) {
+    imageObserver?.disconnect();
+    imageObserver = null;
+    const images = [...root.querySelectorAll('img[data-src]:not(.mc-hover)')];
+
+    if (!('IntersectionObserver' in window)) {
+      images.forEach(loadDeferredImage);
+      return;
+    }
+
+    imageObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        loadDeferredImage(entry.target);
+        imageObserver?.unobserve(entry.target);
+      });
+    }, {
+      root: root.classList.contains('mc-modal') ? root : null,
+      rootMargin: '1200px 0px',
+      threshold: 0.01,
+    });
+
+    images.forEach(image => imageObserver.observe(image));
   }
 
   function imageCard(path, group, index, hoverPath = '') {
@@ -169,19 +219,25 @@
     const media = el('span', 'mc-media');
     const image = el('img');
     button.type = 'button';
-    image.src = src(path);
+    image.dataset.src = src(path);
     image.alt = path.split('/').pop() || 'MERCH image';
     image.loading = 'lazy';
     image.decoding = 'async';
+    image.fetchPriority = 'low';
     media.append(image);
+
     if (hoverPath) {
       const hover = el('img', 'mc-hover');
-      hover.src = src(hoverPath);
+      hover.dataset.src = src(hoverPath);
       hover.alt = hoverPath.split('/').pop() || 'MERCH mockup';
       hover.loading = 'lazy';
       hover.decoding = 'async';
+      hover.fetchPriority = 'low';
       media.append(hover);
+      button.addEventListener('mouseenter', () => loadDeferredImage(hover), { once: true });
+      button.addEventListener('focus', () => loadDeferredImage(hover), { once: true });
     }
+
     button.append(media);
     button.onclick = event => {
       event.stopPropagation();
@@ -201,11 +257,13 @@
     return wrapper;
   }
 
-  function section(title, items, content, extraClass = '') {
+  function section(title, items, content, extraClass = '', description = '') {
     const wrapper = el('section', `mc-section ${extraClass}`.trim());
     const head = el('div', 'mc-section-head');
     head.append(el('h2', 'mc-section-title', title), el('p', 'mc-count', `${items.length} / ${items.length}`));
-    wrapper.append(head, content);
+    wrapper.append(head);
+    if (description) wrapper.append(el('p', 'mc-copy mc-copy-update', description));
+    wrapper.append(content);
     return wrapper;
   }
 
@@ -252,6 +310,8 @@
 
   function closeModal() {
     closeLightbox();
+    imageObserver?.disconnect();
+    imageObserver = null;
     modal?.remove();
     modal = null;
     document.body.style.overflow = previousBodyOverflow;
@@ -286,22 +346,21 @@
     shell.append(
       head,
       hero,
-      section(copy.campaign, [...ASSETS.brochures.flat(), ...ASSETS.prints], campaignContent),
-      section(copy.posters, ASSETS.posters, grid(ASSETS.posters, 3)),
-      section(copy.socials, ASSETS.socials, grid(ASSETS.socials, 2)),
+      section(copy.merchTitle, [...ASSETS.brochures.flat(), ...ASSETS.prints], campaignContent, '', copy.merchText),
+      section(copy.postersTitle, ASSETS.posters, grid(ASSETS.posters, 3), '', copy.postersText),
+      section(copy.socialTitle, ASSETS.socials, grid(ASSETS.socials, 2), '', copy.socialText),
     );
 
     const bridge = el('div', 'mc-bridge');
-    const billboardSection = section(copy.billboards, ASSETS.billboards, grid(ASSETS.billboards, 5), 'mc-billboards');
-    billboardSection.insertBefore(el('p', 'mc-copy', copy.billboardText), billboardSection.querySelector('.mc-grid'));
+    const billboardSection = section(copy.billboards, ASSETS.billboards, grid(ASSETS.billboards, 5), 'mc-billboards', copy.billboardText);
 
     const dxs = el('section', 'mc-dxs');
-    dxs.append(el('h1', 'mc-dxs-title', 'DXS'), el('p', 'mc-copy', copy.dxsText));
+    dxs.append(el('h1', 'mc-dxs-title', 'DXS'), el('p', 'mc-copy mc-dxs-copy', copy.dxsText));
     dxs.append(
       section(copy.stickers, ASSETS.dxsStickers, grid(ASSETS.dxsStickers, 3)),
       el('h3', 'mc-subtitle', copy.visualization),
       grid(ASSETS.dxsStickerVisuals, 2),
-      section(copy.posters, ASSETS.dxsPosters, grid(ASSETS.dxsPosters, 3)),
+      section(copy.postersTitle, ASSETS.dxsPosters, grid(ASSETS.dxsPosters, 3)),
       el('h3', 'mc-subtitle', copy.visualization),
       grid(ASSETS.dxsPosterVisuals, 2),
       section(copy.ads, ASSETS.dxsAds, grid(ASSETS.dxsAds, 3)),
@@ -309,9 +368,19 @@
 
     bridge.append(billboardSection, dxs);
     shell.append(bridge);
-    overlay.append(shell);
+
+    const top = el('button', 'mc-top', '↑');
+    top.type = 'button';
+    top.setAttribute('aria-label', copy.top);
+    top.onclick = () => overlay.scrollTo({ top: 0, behavior: 'smooth' });
+    overlay.addEventListener('scroll', () => {
+      top.classList.toggle('is-visible', overlay.scrollTop > 500);
+    }, { passive: true });
+
+    overlay.append(shell, top);
     document.body.append(overlay);
     modal = overlay;
+    setupDeferredImages(overlay);
     requestAnimationFrame(() => overlay.classList.add('is-open'));
   }
 
