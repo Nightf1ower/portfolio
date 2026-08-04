@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardUnifiedToneV10) return;
-  window.__projectCardUnifiedToneV10 = true;
+  if (window.__projectCardUnifiedToneV11) return;
+  window.__projectCardUnifiedToneV11 = true;
 
-  const VERSION = 'project-card-unified-tone-10';
+  const VERSION = 'project-card-unified-tone-11';
   const STYLE_ID = 'project-card-unified-tone-style';
 
   function installStyles() {
@@ -42,7 +42,7 @@
         margin: 0 !important;
         padding: 0 !important;
         font-family: "Arial Black", Arial, Helvetica, sans-serif !important;
-        font-size: 30px !important;
+        font-size: 25px !important;
         font-weight: 900 !important;
         font-style: normal !important;
         font-stretch: normal !important;
@@ -52,17 +52,17 @@
         text-transform: uppercase !important;
         text-align: left !important;
         white-space: normal !important;
-        word-break: normal !important;
-        overflow-wrap: anywhere !important;
+        word-break: keep-all !important;
+        overflow-wrap: normal !important;
         hyphens: none !important;
-        text-wrap: balance !important;
+        text-wrap: wrap !important;
         transform: none !important;
         overflow: visible !important;
       }
 
       @media (max-width: 820px) {
         #works .mt-10.grid h3[data-project-title-system="${VERSION}"] {
-          font-size: 30px !important;
+          font-size: 25px !important;
           line-height: .89 !important;
           letter-spacing: -.045em !important;
         }
@@ -96,7 +96,7 @@
       heading.style.setProperty('margin', '0', 'important');
       heading.style.setProperty('padding', '0', 'important');
       heading.style.setProperty('font-family', '"Arial Black", Arial, Helvetica, sans-serif', 'important');
-      heading.style.setProperty('font-size', '30px', 'important');
+      heading.style.setProperty('font-size', '25px', 'important');
       heading.style.setProperty('font-weight', '900', 'important');
       heading.style.setProperty('font-style', 'normal', 'important');
       heading.style.setProperty('font-stretch', 'normal', 'important');
@@ -106,9 +106,10 @@
       heading.style.setProperty('text-transform', 'uppercase', 'important');
       heading.style.setProperty('text-align', 'left', 'important');
       heading.style.setProperty('white-space', 'normal', 'important');
-      heading.style.setProperty('word-break', 'normal', 'important');
-      heading.style.setProperty('overflow-wrap', 'anywhere', 'important');
+      heading.style.setProperty('word-break', 'keep-all', 'important');
+      heading.style.setProperty('overflow-wrap', 'normal', 'important');
       heading.style.setProperty('hyphens', 'none', 'important');
+      heading.style.setProperty('text-wrap', 'wrap', 'important');
       heading.style.setProperty('transform', 'none', 'important');
       heading.style.setProperty('overflow', 'visible', 'important');
     });
