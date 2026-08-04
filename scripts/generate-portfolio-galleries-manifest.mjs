@@ -10,6 +10,7 @@ const SOURCES = {
   logos: ['works/logo', 'works/logos'],
   collages: ['works/collage', 'works/collages'],
   posters: ['works/posters'],
+  ankaPeresild: ['works/anka-peresild'],
 };
 
 const naturalCompare = (a, b) => a.localeCompare(b, 'en', {
@@ -79,5 +80,5 @@ const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${
 await writeFile(OUTPUT, output, 'utf8');
 
 console.log(
-  `[portfolio galleries] logos=${manifest.logos.length}, collages=${manifest.collages.length}, posters=${manifest.posters.length}`,
+  `[portfolio galleries] logos=${manifest.logos.length}, collages=${manifest.collages.length}, posters=${manifest.posters.length}, ankaPeresild=${manifest.ankaPeresild.length}`,
 );
