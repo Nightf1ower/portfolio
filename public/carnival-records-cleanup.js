@@ -1,6 +1,6 @@
 (() => {
-  if (window.__carnivalRecordsCleanupV8) return;
-  window.__carnivalRecordsCleanupV8 = true;
+  if (window.__carnivalRecordsCleanupV9) return;
+  window.__carnivalRecordsCleanupV9 = true;
 
   const style = document.createElement('style');
   style.id = 'carnival-records-cleanup-style';
@@ -16,11 +16,6 @@
       border: 0 !important;
       outline: 0 !important;
       box-shadow: none !important;
-    }
-
-    .cr-modal .cr-card,
-    .cr-modal .cr-media,
-    .cr-modal .cr-img {
       background-color: transparent !important;
     }
   `;
@@ -29,7 +24,7 @@
 
   if (!document.querySelector('script[src^="/carnival-records-spacing-fix.js"]')) {
     const script = document.createElement('script');
-    script.src = '/carnival-records-spacing-fix.js?v=carnival-spacing-1';
+    script.src = '/carnival-records-spacing-fix.js?v=carnival-spacing-2';
     script.async = false;
     document.head.append(script);
   }
