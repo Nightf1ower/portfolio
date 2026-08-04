@@ -26,9 +26,9 @@
       #contacts > .mx-auto.max-w-7xl {
         box-sizing: border-box !important;
         width: 100% !important;
-        max-width: none !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        max-width: 1600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
 
       #top,
@@ -46,7 +46,7 @@
       #about h2,
       #services h2,
       #contacts h2 {
-        max-width: none !important;
+        max-width: 90rem !important;
       }
 
       @media (min-width: 1280px) {
