@@ -40,6 +40,15 @@
       box-shadow: none !important;
     }
 
+    .pink-punk-fullscreen > div > .sticky,
+    .pink-punk-fullscreen .sticky,
+    .pink-punk-modal .sticky {
+      border-bottom: 0 !important;
+      border-bottom-color: transparent !important;
+      box-shadow: none !important;
+      outline: 0 !important;
+    }
+
     /* Minimal logo previews should use their natural horizontal ratio.
        The old square media box created a large fake blank area above them. */
     .bf .bf-s[data-bf-section="minimalLogo"] .bf-note {
