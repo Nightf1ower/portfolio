@@ -76,7 +76,7 @@ for (const [key, directories] of Object.entries(SOURCES)) {
   manifest[key] = await collect(directories);
 }
 
-const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${JSON.stringify(manifest, null, 2)});\n  if (!document.querySelector('script[src^="/project-list-expansion.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/project-list-expansion.js?v=project-list-expansion-2';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n})();\n`;
+const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${JSON.stringify(manifest, null, 2)});\n  if (!document.querySelector('script[src^="/project-list-expansion.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/project-list-expansion.js?v=project-list-expansion-2';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/merch-full-width-layout.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/merch-full-width-layout.js?v=merch-full-width-layout-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n})();\n`;
 await writeFile(OUTPUT, output, 'utf8');
 
 console.log(
