@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardUnifiedToneV3) return;
-  window.__projectCardUnifiedToneV3 = true;
+  if (window.__projectCardUnifiedToneV4) return;
+  window.__projectCardUnifiedToneV4 = true;
 
-  const VERSION = 'project-card-unified-tone-3';
+  const VERSION = 'project-card-unified-tone-4';
   const normalize = (value) => String(value || '')
     .toUpperCase()
     .replace(/\|/g, '')
@@ -34,7 +34,6 @@
       -webkit-backdrop-filter: none !important;
     }
 
-    /* One explicit face for every project title — no browser fallback differences. */
     #works .mt-10.grid h3,
     #works .mt-10.grid h3 * {
       font-family: "Arial Black", Arial, Helvetica, sans-serif !important;
@@ -49,6 +48,19 @@
       text-transform: uppercase !important;
       transform: none !important;
     }
+
+    /* BLANDETTO is visually too tall: compress only its vertical proportions. */
+    #works [data-project-layout-v5-key="BLANDETTO"] h3,
+    #works [data-project-layout-key="BLANDETTO"] h3,
+    #works [data-project-card-title="BLANDETTO"] h3,
+    #works h3[data-unified-brand-heading="${VERSION}"] {
+      display: block !important;
+      transform: scaleY(.78) !important;
+      transform-origin: left bottom !important;
+      line-height: .78 !important;
+      margin-top: -.08em !important;
+      margin-bottom: -.12em !important;
+    }
   `;
   document.getElementById('project-card-unified-tone-style')?.remove();
   document.head.append(style);
@@ -59,26 +71,18 @@
       .find((card) => normalize(card.querySelector('h3')?.textContent) === accepted) || null;
   }
 
-  function rebuildBlandettoHeading() {
-    const blandettoCard = findCard('BLANDETTO');
-    const referenceCard = findCard('PINK PUNK') || findCard('ZNY') || findCard('FABLE');
-    const current = blandettoCard?.querySelector('h3');
-    const reference = referenceCard?.querySelector('h3');
-    if (!current || !reference) return false;
+  function markBlandettoHeading() {
+    const card = findCard('BLANDETTO');
+    const heading = card?.querySelector('h3');
+    if (!card || !heading) return false;
 
-    const referenceClass = reference.className;
-    const alreadyClean = current.dataset.unifiedBrandHeading === VERSION
-      && current.className === referenceClass
-      && current.childNodes.length === 1
-      && current.textContent === 'BLANDETTO';
-    if (alreadyClean) return true;
-
-    const heading = reference.cloneNode(false);
-    heading.textContent = 'BLANDETTO';
-    heading.className = referenceClass;
-    heading.removeAttribute('style');
+    card.dataset.projectCardTitle = 'BLANDETTO';
     heading.dataset.unifiedBrandHeading = VERSION;
-    current.replaceWith(heading);
+    heading.style.setProperty('transform', 'scaleY(.78)', 'important');
+    heading.style.setProperty('transform-origin', 'left bottom', 'important');
+    heading.style.setProperty('line-height', '.78', 'important');
+    heading.style.setProperty('margin-top', '-.08em', 'important');
+    heading.style.setProperty('margin-bottom', '-.12em', 'important');
     return true;
   }
 
@@ -88,19 +92,17 @@
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
-      rebuildBlandettoHeading();
+      markBlandettoHeading();
     });
   }
 
   const works = document.getElementById('works');
   if (works) {
-    new MutationObserver((mutations) => {
-      const relevant = mutations.some((mutation) =>
-        mutation.type === 'childList'
-        || (mutation.type === 'characterData' && mutation.target.parentElement?.closest('#works'))
-      );
-      if (relevant) schedule();
-    }).observe(works, { childList: true, subtree: true, characterData: true });
+    new MutationObserver(schedule).observe(works, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
   }
 
   window.addEventListener('load', schedule);
