@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbLayoutOrderV1) return;
-  window.__vtbLayoutOrderV1 = true;
+  if (window.__vtbLayoutOrderV2) return;
+  window.__vtbLayoutOrderV2 = true;
 
-  const VERSION = 'vtb-layout-order-1';
+  const VERSION = 'vtb-layout-order-2';
   const PRINT_ORDER = [1, 3, 2, 4, 5, 6, 9, 7, 8];
   const BOXERS_ORDER = [1, 2];
   const ASHTRAYS_TOP_ORDER = [3, 4];
@@ -36,7 +36,7 @@
       .vtb-merch-subtitle {
         margin: 0 0 1.15rem;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: .72rem;
+        font-size: clamp(1.8rem, 2.8vw, 3rem);
         font-weight: 900;
         line-height: 1;
         letter-spacing: .25em;
@@ -63,6 +63,10 @@
       }
 
       @media (max-width: 700px) {
+        .vtb-merch-subtitle {
+          font-size: 1.6rem;
+        }
+
         .vtb-merch-grid--two,
         .vtb-merch-grid--three {
           grid-template-columns: 1fr;
