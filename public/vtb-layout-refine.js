@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbLayoutRefineV1) return;
-  window.__vtbLayoutRefineV1 = true;
+  if (window.__vtbLayoutRefineV2) return;
+  window.__vtbLayoutRefineV2 = true;
 
-  const VERSION = 'vtb-layout-refine-1';
+  const VERSION = 'vtb-layout-refine-2';
   const STYLE_ID = 'vtb-layout-refine-style';
 
   function installStyles() {
@@ -86,20 +86,47 @@
         margin-bottom: clamp(1.35rem, 2.5vw, 2.25rem) !important;
       }
 
-      .vtb-modal .vtb-merch-section .vtb-grid {
+      .vtb-modal .vtb-merch-layout {
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      .vtb-modal .vtb-merch-grid--two,
+      .vtb-modal .vtb-merch-grid--three {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: clamp(1rem, 2vw, 1.5rem) !important;
       }
 
-      .vtb-modal .vtb-merch-section .vtb-card,
-      .vtb-modal .vtb-merch-section .vtb-card img {
+      .vtb-modal .vtb-merch-grid--three {
+        margin-top: clamp(1rem, 2vw, 1.5rem) !important;
+      }
+
+      .vtb-modal .vtb-merch-layout .vtb-card {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        overflow: visible !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+
+      .vtb-modal .vtb-merch-layout .vtb-card img {
+        display: block !important;
         width: 100% !important;
         max-width: none !important;
         max-height: none !important;
         height: auto !important;
+        margin: 0 !important;
         padding: 0 !important;
+        border: 0 !important;
         object-fit: contain !important;
         background: transparent !important;
+        box-shadow: none !important;
       }
 
       .vtb-scroll-top {
@@ -138,7 +165,8 @@
           line-height: 1.34 !important;
         }
 
-        .vtb-modal .vtb-merch-section .vtb-grid {
+        .vtb-modal .vtb-merch-grid--two,
+        .vtb-modal .vtb-merch-grid--three {
           grid-template-columns: 1fr !important;
         }
 
@@ -155,14 +183,132 @@
     return String(value || '').trim().toUpperCase();
   }
 
+  function averageCornerColor(context, width, height) {
+    const size = Math.max(2, Math.round(Math.min(width, height) * 0.018));
+    const samples = [
+      [0, 0],
+      [Math.max(0, width - size), 0],
+      [0, Math.max(0, height - size)],
+      [Math.max(0, width - size), Math.max(0, height - size)],
+    ];
+
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+    let count = 0;
+
+    samples.forEach(([startX, startY]) => {
+      const pixels = context.getImageData(startX, startY, size, size).data;
+      for (let index = 0; index < pixels.length; index += 4) {
+        if (pixels[index + 3] < 20) continue;
+        red += pixels[index];
+        green += pixels[index + 1];
+        blue += pixels[index + 2];
+        count += 1;
+      }
+    });
+
+    return count
+      ? [red / count, green / count, blue / count]
+      : [255, 255, 255];
+  }
+
+  function cropMerchWhitespace(image) {
+    if (!(image instanceof HTMLImageElement)) return;
+    if (image.dataset.vtbMerchCrop === 'done' || image.dataset.vtbMerchCrop === 'working') return;
+
+    if (!image.complete || !image.naturalWidth || !image.naturalHeight) {
+      image.addEventListener('load', () => cropMerchWhitespace(image), { once: true });
+      return;
+    }
+
+    image.dataset.vtbMerchCrop = 'working';
+
+    try {
+      const source = document.createElement('canvas');
+      source.width = image.naturalWidth;
+      source.height = image.naturalHeight;
+      const context = source.getContext('2d', { willReadFrequently: true });
+      context.drawImage(image, 0, 0);
+
+      const { data, width, height } = context.getImageData(0, 0, source.width, source.height);
+      const [backgroundRed, backgroundGreen, backgroundBlue] = averageCornerColor(context, width, height);
+      let minX = width;
+      let minY = height;
+      let maxX = -1;
+      let maxY = -1;
+
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const offset = (y * width + x) * 4;
+          if (data[offset + 3] < 20) continue;
+
+          const red = data[offset];
+          const green = data[offset + 1];
+          const blue = data[offset + 2];
+          const difference = Math.sqrt(
+            ((red - backgroundRed) ** 2)
+            + ((green - backgroundGreen) ** 2)
+            + ((blue - backgroundBlue) ** 2),
+          );
+          const brightness = (red + green + blue) / 3;
+
+          if (difference > 24 || brightness < 232) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+          }
+        }
+      }
+
+      if (maxX < minX || maxY < minY) {
+        image.dataset.vtbMerchCrop = 'done';
+        return;
+      }
+
+      const horizontalPadding = Math.max(8, Math.round((maxX - minX + 1) * 0.045));
+      const verticalPadding = Math.max(8, Math.round((maxY - minY + 1) * 0.045));
+      minX = Math.max(0, minX - horizontalPadding);
+      minY = Math.max(0, minY - verticalPadding);
+      maxX = Math.min(width - 1, maxX + horizontalPadding);
+      maxY = Math.min(height - 1, maxY + verticalPadding);
+
+      const cropWidth = maxX - minX + 1;
+      const cropHeight = maxY - minY + 1;
+      const cropped = document.createElement('canvas');
+      cropped.width = cropWidth;
+      cropped.height = cropHeight;
+      cropped.getContext('2d').drawImage(
+        source,
+        minX,
+        minY,
+        cropWidth,
+        cropHeight,
+        0,
+        0,
+        cropWidth,
+        cropHeight,
+      );
+
+      image.dataset.vtbMerchCrop = 'done';
+      image.src = cropped.toDataURL('image/webp', 0.94);
+    } catch (error) {
+      image.dataset.vtbMerchCrop = 'done';
+      console.warn('[VTB] Merch crop skipped', error);
+    }
+  }
+
   function enhanceModal(modal) {
     if (!(modal instanceof HTMLElement)) return;
 
     const sections = [...modal.querySelectorAll('.vtb-section')];
     sections.forEach((section) => {
       const title = normalize(section.querySelector('.vtb-title')?.textContent);
-      section.classList.toggle('vtb-merch-section', title === 'MERCH');
+      section.classList.toggle('vtb-merch-section', title === 'MERCH' || title === 'МЕРЧ');
     });
+
+    modal.querySelectorAll('.vtb-merch-layout .vtb-card img').forEach(cropMerchWhitespace);
 
     let button = modal.querySelector(':scope > .vtb-scroll-top');
     if (!button) {
