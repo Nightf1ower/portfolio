@@ -1,8 +1,8 @@
 (() => {
-  if (window.__stickersProjectCopyV2) return;
-  window.__stickersProjectCopyV2 = true;
+  if (window.__stickersProjectCopyV3) return;
+  window.__stickersProjectCopyV3 = true;
 
-  const VERSION = 'stickers-project-copy-2';
+  const VERSION = 'stickers-project-copy-3';
   const COPY = {
     ru: {
       mnu: {
@@ -32,10 +32,10 @@
     },
   };
 
-  const LINKS = [
-    { brand: 'ZNY', project: 'ZNY', target: 'zny' },
-    { brand: 'DXS', project: 'MERCH', target: 'dxs' },
-  ];
+  const LINKS = {
+    zny: { brand: 'ZNY', project: 'ZNY' },
+    dxs: { brand: 'DXS', project: 'MERCH' },
+  };
 
   const language = () => (
     document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru'
@@ -47,6 +47,7 @@
     document.getElementById('stickers-project-copy-style')?.remove();
     const style = document.createElement('style');
     style.id = 'stickers-project-copy-style';
+    style.dataset.version = VERSION;
     style.textContent = `
       .stk-project-copy {
         width: min(100%, 52rem);
@@ -61,8 +62,11 @@
       .stk-project[data-stickers-project="flawa"] .stk-project-title { max-width: 12ch; }
 
       .stk-more-projects {
+        position: relative;
+        z-index: 3;
         padding: clamp(5rem, 10vw, 9rem) 0 clamp(2rem, 4vw, 4rem);
         border-top: 1px solid rgba(5,5,5,.3);
+        pointer-events: auto;
       }
       .stk-more-projects__title {
         margin: 0;
@@ -78,6 +82,8 @@
       }
       .stk-more-projects__list { border-top: 1px solid rgba(5,5,5,.32); }
       .stk-more-projects__link {
+        position: relative;
+        z-index: 4;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -89,16 +95,22 @@
         border-bottom: 1px solid rgba(5,5,5,.32);
         background: transparent;
         color: #050505;
-        cursor: pointer;
+        cursor: pointer !important;
+        pointer-events: auto !important;
         text-align: left;
+        appearance: none;
+        -webkit-appearance: none;
+        touch-action: manipulation;
       }
       .stk-more-projects__brand {
+        pointer-events: none;
         font: 900 clamp(2.8rem, 6.5vw, 6.5rem)/.8 Arial, Helvetica, sans-serif;
         letter-spacing: -.075em;
         text-transform: uppercase;
       }
       .stk-more-projects__action {
         flex: 0 0 auto;
+        pointer-events: none;
         font: 900 .68rem/1 Arial, Helvetica, sans-serif;
         letter-spacing: .2em;
         text-transform: uppercase;
@@ -132,7 +144,6 @@
     if (!block) {
       block = document.createElement('div');
       block.className = 'stk-project-copy';
-      block.dataset.version = VERSION;
       block.append(document.createElement('p'));
       title?.after(block);
     }
@@ -149,7 +160,7 @@
     )) || null;
   }
 
-  function findTarget(target) {
+  function targetSection(target) {
     if (target === 'zny') {
       const root = document.querySelector('.zny-modal');
       return [...(root?.querySelectorAll('.zny-section') || [])].find((section) => {
@@ -162,55 +173,62 @@
       const root = document.querySelector('.mc-modal, .m10-modal');
       const dxs = root?.querySelector('.mc-dxs, .m10-dxs-zone');
       return [...(dxs?.querySelectorAll('section, .mc-section, .m10-section') || [])].find((section) => {
-        const text = section.querySelector('h1,h2,h3,.mc-section-title,.m10-section-title')?.textContent?.trim().toUpperCase() || '';
+        const heading = section.querySelector('h1,h2,h3,.mc-section-title,.m10-section-title');
+        const text = heading?.textContent?.trim().toUpperCase() || '';
         return text === 'STICKERS' || text === 'СТИКЕРЫ';
       }) || null;
     }
-
     return null;
   }
 
   function scrollWhenReady(target, attempt = 0) {
-    const section = findTarget(target);
+    const section = targetSection(target);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const scroller = section.closest('.zny-modal, .mc-modal, .m10-modal');
+      if (scroller) {
+        const top = section.offsetTop - 24;
+        scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      } else {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       return;
     }
-    if (attempt < 80) setTimeout(() => scrollWhenReady(target, attempt + 1), 50);
+    if (attempt < 100) window.setTimeout(() => scrollWhenReady(target, attempt + 1), 50);
   }
 
-  function openProject(link) {
+  function openProject(target) {
+    const link = LINKS[target];
+    if (!link) return;
     const card = homepageCard(link.project);
     if (!card) return;
+
     document.querySelector('.stk-close')?.click();
-    setTimeout(() => {
-      card.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-      scrollWhenReady(link.target);
-    }, 40);
+
+    window.setTimeout(() => {
+      card.click();
+      window.setTimeout(() => scrollWhenReady(target), 40);
+    }, 80);
   }
 
-  function ensureMoreBlock() {
-    const inner = document.querySelector('.stk-modal .stk-inner');
-    if (!inner) return;
+  function createMoreBlock(inner) {
+    const block = document.createElement('section');
+    block.className = 'stk-more-projects';
 
-    let block = inner.querySelector(':scope > .stk-more-projects');
-    if (!block) {
-      block = document.createElement('section');
-      block.className = 'stk-more-projects';
-      block.innerHTML = '<h2 class="stk-more-projects__title"></h2><p class="stk-more-projects__copy"></p><div class="stk-more-projects__list"></div>';
-      inner.append(block);
-    }
+    const title = document.createElement('h2');
+    title.className = 'stk-more-projects__title';
 
-    const copy = COPY[language()];
-    block.querySelector('.stk-more-projects__title').textContent = copy.moreTitle;
-    block.querySelector('.stk-more-projects__copy').textContent = copy.moreText;
+    const copy = document.createElement('p');
+    copy.className = 'stk-more-projects__copy';
 
-    const list = block.querySelector('.stk-more-projects__list');
-    list.replaceChildren();
-    LINKS.forEach((link) => {
+    const list = document.createElement('div');
+    list.className = 'stk-more-projects__list';
+
+    Object.entries(LINKS).forEach(([target, link]) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'stk-more-projects__link';
+      button.dataset.stickerProjectTarget = target;
+      button.setAttribute('aria-label', `${link.brand} stickers`);
 
       const brand = document.createElement('span');
       brand.className = 'stk-more-projects__brand';
@@ -218,19 +236,37 @@
 
       const action = document.createElement('span');
       action.className = 'stk-more-projects__action';
-      action.textContent = copy.action;
       const arrow = document.createElement('span');
       arrow.className = 'stk-more-projects__arrow';
       arrow.textContent = '→';
-      action.append(arrow);
+      action.append(document.createTextNode(COPY[language()].action), arrow);
 
       button.append(brand, action);
-      button.onclick = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        openProject(link);
-      };
       list.append(button);
+    });
+
+    block.append(title, copy, list);
+    inner.append(block);
+    return block;
+  }
+
+  function updateMoreBlock() {
+    const inner = document.querySelector('.stk-modal .stk-inner');
+    if (!inner) return;
+
+    const block = inner.querySelector(':scope > .stk-more-projects') || createMoreBlock(inner);
+    const copy = COPY[language()];
+    const title = block.querySelector('.stk-more-projects__title');
+    const paragraph = block.querySelector('.stk-more-projects__copy');
+    if (title && title.textContent !== copy.moreTitle) title.textContent = copy.moreTitle;
+    if (paragraph && paragraph.textContent !== copy.moreText) paragraph.textContent = copy.moreText;
+
+    block.querySelectorAll('.stk-more-projects__link').forEach((button) => {
+      const action = button.querySelector('.stk-more-projects__action');
+      const arrow = action?.querySelector('.stk-more-projects__arrow');
+      if (!action || !arrow) return;
+      const currentLabel = [...action.childNodes].find((node) => node.nodeType === Node.TEXT_NODE);
+      if (currentLabel && currentLabel.nodeValue !== copy.action) currentLabel.nodeValue = copy.action;
     });
   }
 
@@ -238,7 +274,7 @@
     injectStyles();
     document.querySelectorAll('.stk-project[data-stickers-project="mnu"]').forEach((section) => applySection(section, 'mnu'));
     document.querySelectorAll('.stk-project[data-stickers-project="flawa"]').forEach((section) => applySection(section, 'flawa'));
-    ensureMoreBlock();
+    updateMoreBlock();
   }
 
   let scheduled = false;
@@ -251,10 +287,26 @@
     });
   };
 
-  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver((mutations) => {
+    const relevant = mutations.some((mutation) => [...mutation.addedNodes].some((node) => (
+      node.nodeType === 1 && (
+        node.matches?.('.stk-modal, .stk-project') || node.querySelector?.('.stk-modal, .stk-project')
+      )
+    )));
+    if (relevant) schedule();
+  }).observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('click', (event) => {
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+    const linkButton = event.target.closest?.('.stk-more-projects__link[data-sticker-project-target]');
+    if (linkButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      openProject(linkButton.dataset.stickerProjectTarget);
+      return;
+    }
+
+    if (event.target.closest?.('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
       setTimeout(schedule, 0);
       setTimeout(schedule, 120);
     }
