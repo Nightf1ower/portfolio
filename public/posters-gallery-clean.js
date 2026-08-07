@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersGalleryCleanV2) return;
-  window.__postersGalleryCleanV2 = true;
+  if (window.__postersGalleryCleanV3) return;
+  window.__postersGalleryCleanV3 = true;
 
-  const VERSION = 'posters-gallery-clean-2';
+  const VERSION = 'posters-gallery-clean-3';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {};
   const SOURCE = Array.isArray(manifest.posters) ? manifest.posters : [];
   const MAX_PARALLEL = 3;
@@ -33,6 +33,10 @@
       flawaTitle: 'FLAWA POSTERS',
       flawaText: 'Серия личных постеров, созданных как способ самовыражения и презентации себя в качестве артиста. В основе работ — собственные фотографии, личные образы и эксперименты с коллажем, типографикой и обработкой.',
       otherTitle: 'POSTERS',
+      klubiqueTitle: 'KLUBIQUE PARTY',
+      yasnoTitle: 'YASNO PARTY',
+      finalPoster: 'FINAL POSTER',
+      mainInspiration: 'MAIN INSPIRATION',
       open: 'ОТКРЫТЬ ПОСТЕР',
       top: 'НАВЕРХ',
     },
@@ -47,6 +51,10 @@
       flawaTitle: 'FLAWA POSTERS',
       flawaText: 'A personal poster series created as a form of self-expression and a way to present myself as an artist. The works are based on personal photographs, individual imagery, and experiments with collage, typography, and image processing.',
       otherTitle: 'POSTERS',
+      klubiqueTitle: 'KLUBIQUE PARTY',
+      yasnoTitle: 'YASNO PARTY',
+      finalPoster: 'FINAL POSTER',
+      mainInspiration: 'MAIN INSPIRATION',
       open: 'OPEN POSTER',
       top: 'BACK TO TOP',
     },
@@ -60,6 +68,12 @@
   const cleanPath = item => [item?.name, item?.relative, item?.folder, item?.src]
     .filter(Boolean)
     .join(' ')
+    .toLowerCase();
+
+  const baseName = item => String(item?.name || item?.src || '')
+    .split('/')
+    .pop()
+    .replace(/\.[^.]+$/, '')
     .toLowerCase();
 
   const isSocPoster = item => /soc[\s_\-/]*posters?/.test(cleanPath(item));
@@ -98,7 +112,7 @@
     style.id = id;
     style.dataset.version = VERSION;
     style.textContent = `
-      html:has(.pcg-modal), body:has(.pcg-modal) { overflow: hidden !important; }
+      html:has(.pcg-modal), body:has(.pcg-modal) { overflow:hidden !important; }
       .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:#f3f2ef; color:#050505; }
       .pcg-inner { width:100%; max-width:none; margin:0; }
       .pcg-head { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 0 1rem; background:rgba(243,242,239,.96); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
@@ -115,6 +129,18 @@
       .pcg-card { display:block; width:100%; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; cursor:zoom-in; }
       .pcg-card img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; object-fit:contain; opacity:0; transition:opacity .16s ease; }
       .pcg-card img.is-loaded { opacity:1; }
+
+      .pcg-event-block { margin-top:clamp(3rem,6vw,6rem); }
+      .pcg-event-subtitle { margin:0 0 clamp(1.5rem,3vw,2.5rem); font:900 clamp(1.65rem,3vw,3.25rem)/.92 Arial,Helvetica,sans-serif; letter-spacing:-.045em; text-transform:uppercase; }
+      .pcg-event-feature { width:min(100%,78rem); margin:0 auto clamp(1rem,2vw,1.5rem); }
+      .pcg-event-row { display:grid; gap:1rem; align-items:start; margin-top:1rem; }
+      .pcg-event-row--4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .pcg-event-row--3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .pcg-event-row--2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .pcg-labelled-card { min-width:0; }
+      .pcg-card-label { margin:0 0 .8rem; font:900 clamp(.72rem,1vw,.95rem)/1 Arial,Helvetica,sans-serif; letter-spacing:.18em; text-transform:uppercase; }
+      .pcg-event-leftovers { margin-top:clamp(2.5rem,5vw,4rem); }
+
       .pcg-light { position:fixed; inset:0; z-index:990000; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:clamp(.5rem,2vw,1.25rem); padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:rgba(0,0,0,.97); color:#fff; touch-action:none; }
       .pcg-light-stage { position:relative; min-width:0; height:calc(100dvh - 2rem); display:flex; align-items:center; justify-content:center; overflow:hidden; }
       .pcg-light-stage::after { content:''; position:absolute; width:2.5rem; height:2.5rem; border:3px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:pcg-spin .8s linear infinite; }
@@ -127,8 +153,21 @@
       .pcg-light-close { position:absolute; top:max(1rem,env(safe-area-inset-top)); right:max(1rem,env(safe-area-inset-right)); z-index:2; padding:.72rem .95rem; font-size:.68rem; letter-spacing:.2em; }
       .pcg-top { position:fixed; right:max(1rem,env(safe-area-inset-right)); bottom:max(1rem,env(safe-area-inset-bottom)); z-index:960000; display:grid; place-items:center; width:3.5rem; height:3.5rem; margin:0; padding:0; border:1px solid #050505; background:#fff; color:#050505; font:900 1.55rem/1 Arial,Helvetica,sans-serif; cursor:pointer; opacity:0; visibility:hidden; transform:translateY(.7rem); transition:opacity .18s ease,transform .18s ease,visibility .18s ease; }
       .pcg-top.is-visible { opacity:1; visibility:visible; transform:translateY(0); }
-      @media(max-width:920px){ .pcg-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
-      @media(max-width:620px),(hover:none),(pointer:coarse){ .pcg-title{font-size:clamp(3rem,16vw,6rem);} .pcg-intro,.pcg-copy{padding-right:0;font-size:1rem;line-height:1.45;} .pcg-grid{grid-template-columns:1fr;gap:.8rem;} .pcg-light{grid-template-columns:1fr;padding:.75rem;} .pcg-light-nav{display:none;} .pcg-light-stage{height:calc(100dvh - 1.5rem);} .pcg-top{width:3.1rem;height:3.1rem;} }
+
+      @media(max-width:920px){
+        .pcg-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+        .pcg-event-row--4 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      }
+      @media(max-width:620px),(hover:none),(pointer:coarse){
+        .pcg-title { font-size:clamp(3rem,16vw,6rem); }
+        .pcg-intro,.pcg-copy { padding-right:0; font-size:1rem; line-height:1.45; }
+        .pcg-grid,.pcg-event-row--4,.pcg-event-row--3,.pcg-event-row--2 { grid-template-columns:1fr; gap:.8rem; }
+        .pcg-event-feature { width:100%; }
+        .pcg-light { grid-template-columns:1fr; padding:.75rem; }
+        .pcg-light-nav { display:none; }
+        .pcg-light-stage { height:calc(100dvh - 1.5rem); }
+        .pcg-top { width:3.1rem; height:3.1rem; }
+      }
     `;
     document.head.append(style);
   }
@@ -136,14 +175,14 @@
   function groups() {
     const copy = COPY[language()];
     const used = new Set();
-    const take = (title, description, predicate) => {
+    const take = (title, description, predicate, type = 'standard') => {
       const groupItems = POSTERS.filter(item => !used.has(item.src) && predicate(item));
       groupItems.forEach(item => used.add(item.src));
-      return groupItems.length ? { title, description, items: groupItems } : null;
+      return groupItems.length ? { title, description, items: groupItems, type } : null;
     };
     return [
       take(copy.italyTitle, copy.italyText, isItaly),
-      take(copy.eventsTitle, copy.eventsText, isEvent),
+      take(copy.eventsTitle, copy.eventsText, isEvent, 'events'),
       take(copy.flawaTitle, copy.flawaText, isFlawa),
       take(copy.otherTitle, '', () => true),
     ].filter(Boolean);
@@ -332,7 +371,128 @@
     unlockPage();
   }
 
+  function createCard(item, extraClass = '') {
+    if (!item) return null;
+    const index = items.findIndex(entry => entry.src === item.src);
+    const card = el('button', `pcg-card${extraClass ? ` ${extraClass}` : ''}`);
+    const image = el('img');
+    card.type = 'button';
+    card.setAttribute('aria-label', COPY[language()].open);
+    image.dataset.src = item.src;
+    image.alt = item.alt || item.name || 'Poster';
+    image.decoding = 'async';
+    image.loading = 'eager';
+    image.fetchPriority = 'low';
+    image.draggable = false;
+    thumbBySource.set(item.src, image);
+    const prioritize = () => queueThumb(image, true);
+    card.addEventListener('pointerenter', prioritize, { passive:true });
+    card.addEventListener('focus', prioritize, { passive:true });
+    card.onclick = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      prioritize();
+      openLightbox(index);
+    };
+    card.append(image);
+    return card;
+  }
+
+  function findByBase(groupItems, ...names) {
+    const accepted = new Set(names.map(name => name.toLowerCase()));
+    return groupItems.find(item => accepted.has(baseName(item))) || null;
+  }
+
+  function findFaceSeries(groupItems, prefix, count) {
+    return Array.from({ length: count }, (_, index) =>
+      findByBase(groupItems, `${prefix}-face-${index + 1}`)
+    ).filter(Boolean);
+  }
+
+  function appendRow(parent, className, rowItems) {
+    const available = rowItems.filter(Boolean);
+    if (!available.length) return;
+    const row = el('div', `pcg-event-row ${className}`);
+    available.forEach(item => {
+      const card = createCard(item);
+      if (card) row.append(card);
+    });
+    parent.append(row);
+  }
+
+  function createLabelledCard(item, labelText) {
+    if (!item) return null;
+    const wrap = el('div', 'pcg-labelled-card');
+    wrap.append(el('p', 'pcg-card-label', labelText));
+    const card = createCard(item);
+    if (card) wrap.append(card);
+    return wrap;
+  }
+
+  function createEventSection(group) {
+    const copy = COPY[language()];
+    const section = el('section', 'pcg-section pcg-events-section');
+    section.append(el('h2', 'pcg-section-title', group.title));
+    if (group.description) section.append(el('p', 'pcg-copy', group.description));
+
+    const used = new Set();
+    const use = item => {
+      if (item) used.add(item.src);
+      return item;
+    };
+
+    const klubiqueMain = use(findByBase(group.items, 'party-3'));
+    const klubiqueFaces = findFaceSeries(group.items, 'party-3', 7).map(use);
+    const yasnoFinal = use(findByBase(group.items, 'party-2'));
+    const yasnoInspiration = use(findByBase(group.items, 'party-2-isnpiration', 'party-2-inspiration'));
+    const yasnoFaces = findFaceSeries(group.items, 'party-2', 7).map(use);
+
+    if (klubiqueMain || klubiqueFaces.length) {
+      const block = el('div', 'pcg-event-block');
+      block.append(el('h3', 'pcg-event-subtitle', copy.klubiqueTitle));
+      if (klubiqueMain) {
+        const feature = el('div', 'pcg-event-feature');
+        const card = createCard(klubiqueMain);
+        if (card) feature.append(card);
+        block.append(feature);
+      }
+      appendRow(block, 'pcg-event-row--4', klubiqueFaces.slice(0, 4));
+      appendRow(block, 'pcg-event-row--3', klubiqueFaces.slice(4, 7));
+      section.append(block);
+    }
+
+    if (yasnoFinal || yasnoInspiration || yasnoFaces.length) {
+      const block = el('div', 'pcg-event-block');
+      block.append(el('h3', 'pcg-event-subtitle', copy.yasnoTitle));
+
+      const topRow = el('div', 'pcg-event-row pcg-event-row--2');
+      const finalCard = createLabelledCard(yasnoFinal, copy.finalPoster);
+      const inspirationCard = createLabelledCard(yasnoInspiration, copy.mainInspiration);
+      if (finalCard) topRow.append(finalCard);
+      if (inspirationCard) topRow.append(inspirationCard);
+      if (topRow.children.length) block.append(topRow);
+
+      appendRow(block, 'pcg-event-row--4', yasnoFaces.slice(0, 4));
+      appendRow(block, 'pcg-event-row--3', yasnoFaces.slice(4, 7));
+      section.append(block);
+    }
+
+    const leftovers = group.items.filter(item => !used.has(item.src));
+    if (leftovers.length) {
+      const grid = el('div', 'pcg-grid pcg-event-leftovers');
+      leftovers.forEach(item => {
+        const card = createCard(item);
+        if (card) grid.append(card);
+      });
+      section.append(grid);
+    }
+
+    return section;
+  }
+
   function createSection(group) {
+    if (group.type === 'events') return createEventSection(group);
+
     const section = el('section', 'pcg-section');
     const title = el('h2', 'pcg-section-title', group.title);
     section.append(title);
@@ -340,29 +500,8 @@
     const grid = el('div', 'pcg-grid');
 
     group.items.forEach(item => {
-      const index = items.findIndex(entry => entry.src === item.src);
-      const card = el('button', 'pcg-card');
-      const image = el('img');
-      card.type = 'button';
-      card.setAttribute('aria-label', COPY[language()].open);
-      image.dataset.src = item.src;
-      image.alt = item.alt || item.name || 'Poster';
-      image.decoding = 'async';
-      image.loading = 'eager';
-      image.fetchPriority = 'low';
-      image.draggable = false;
-      thumbBySource.set(item.src, image);
-      const prioritize = () => queueThumb(image, true);
-      card.addEventListener('pointerenter', prioritize, { passive:true });
-      card.addEventListener('focus', prioritize, { passive:true });
-      card.onclick = event => {
-        event.preventDefault();
-        event.stopPropagation();
-        prioritize();
-        openLightbox(index);
-      };
-      card.append(image);
-      grid.append(card);
+      const card = createCard(item);
+      if (card) grid.append(card);
     });
 
     section.append(grid);
@@ -407,8 +546,7 @@
     modal = overlay;
     setupObserver();
 
-    const firstGrid = modal.querySelector('.pcg-grid');
-    const firstImages = [...(firstGrid?.querySelectorAll('img[data-src]') || [])].slice(0, 6);
+    const firstImages = [...modal.querySelectorAll('img[data-src]')].slice(0, 6);
     firstImages.forEach((image, index) => queueThumb(image, index < 3));
   }
 
