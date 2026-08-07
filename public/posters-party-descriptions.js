@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersPartyDescriptionsV2) return;
-  window.__postersPartyDescriptionsV2 = true;
+  if (window.__postersPartyDescriptionsV3) return;
+  window.__postersPartyDescriptionsV3 = true;
 
-  const VERSION = 'posters-party-descriptions-2';
+  const VERSION = 'posters-party-descriptions-3';
   const STYLE_ID = 'posters-party-descriptions-style';
 
   const COPY = {
@@ -42,6 +42,10 @@
         background: rgba(44, 61, 85, .94) !important;
       }
 
+      .pcg-section {
+        border-top: 0 !important;
+      }
+
       .pcg-section--italy,
       .pcg-events-section {
         background: #2C3D55 !important;
@@ -54,12 +58,13 @@
         margin-left: calc(50% - 50vw) !important;
         padding-left: max(1rem, env(safe-area-inset-left)) !important;
         padding-right: max(1rem, env(safe-area-inset-right)) !important;
+        padding-bottom: 0 !important;
       }
 
       .pcg-event-block--klubique {
         width: 100vw !important;
         box-sizing: border-box !important;
-        margin-left: calc(50% - 50vw) !important;
+        margin: 0 0 0 calc(50% - 50vw) !important;
         padding: clamp(3.5rem, 6vw, 6rem) max(1rem, env(safe-area-inset-right)) clamp(4rem, 7vw, 7rem) max(1rem, env(safe-area-inset-left)) !important;
         background: linear-gradient(
           180deg,
@@ -82,7 +87,7 @@
       .pcg-event-block--yasno {
         width: 100vw !important;
         box-sizing: border-box !important;
-        margin-left: calc(50% - 50vw) !important;
+        margin: 0 0 0 calc(50% - 50vw) !important;
         padding: max(4rem, 7vw) max(1rem, env(safe-area-inset-right)) max(4rem, 7vw) max(1rem, env(safe-area-inset-left)) !important;
         background: linear-gradient(
           180deg,
@@ -103,7 +108,7 @@
       .pcg-after-events-section {
         width: 100vw !important;
         box-sizing: border-box !important;
-        margin-left: calc(50% - 50vw) !important;
+        margin: 0 0 0 calc(50% - 50vw) !important;
         background: #56876D !important;
         color: #050505 !important;
       }
