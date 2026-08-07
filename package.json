@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "generate:posters-thumbs": "node scripts/generate-posters-thumbnails.mjs",
+    "generate:dxs-thumbs": "node scripts/generate-dxs-thumbnails.mjs",
     "generate:stickers": "node scripts/generate-stickers-manifest.mjs",
     "generate:galleries": "node scripts/generate-portfolio-galleries-manifest.mjs",
-    "generate:assets": "npm run generate:posters-thumbs && npm run generate:stickers && npm run generate:galleries",
+    "generate:assets": "npm run generate:posters-thumbs && npm run generate:dxs-thumbs && npm run generate:stickers && npm run generate:galleries",
     "dev": "npm run generate:assets && vite --host 0.0.0.0",
     "build": "npm run generate:assets && vite build",
     "preview": "vite preview --host 0.0.0.0"
