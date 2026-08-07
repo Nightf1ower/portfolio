@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersPartyDescriptionsV3) return;
-  window.__postersPartyDescriptionsV3 = true;
+  if (window.__postersPartyDescriptionsV4) return;
+  window.__postersPartyDescriptionsV4 = true;
 
-  const VERSION = 'posters-party-descriptions-3';
+  const VERSION = 'posters-party-descriptions-4';
   const STYLE_ID = 'posters-party-descriptions-style';
 
   const COPY = {
@@ -36,6 +36,7 @@
       .pcg-modal {
         background: #2C3D55 !important;
         color: #fff !important;
+        padding-bottom: 0 !important;
       }
 
       .pcg-head {
@@ -55,7 +56,7 @@
       .pcg-events-section {
         width: 100vw !important;
         box-sizing: border-box !important;
-        margin-left: calc(50% - 50vw) !important;
+        margin: 0 0 0 calc(50% - 50vw) !important;
         padding-left: max(1rem, env(safe-area-inset-left)) !important;
         padding-right: max(1rem, env(safe-area-inset-right)) !important;
         padding-bottom: 0 !important;
@@ -111,16 +112,31 @@
         margin: 0 0 0 calc(50% - 50vw) !important;
         background: #56876D !important;
         color: #050505 !important;
+        border: 0 !important;
       }
 
       .pcg-event-block--bday {
         padding: clamp(4rem, 7vw) max(1rem, env(safe-area-inset-right)) clamp(5rem, 8vw) max(1rem, env(safe-area-inset-left)) !important;
+        margin-bottom: 0 !important;
+      }
+
+      .pcg-flawa-section {
+        position: relative !important;
+        margin-top: 0 !important;
+        box-shadow: 0 -6rem 0 #56876D !important;
       }
 
       .pcg-flawa-section,
       .pcg-after-events-section {
         padding-left: max(1rem, env(safe-area-inset-left)) !important;
         padding-right: max(1rem, env(safe-area-inset-right)) !important;
+      }
+
+      .pcg-inner > .pcg-section:last-of-type {
+        margin-bottom: 0 !important;
+        padding-bottom: max(5rem, env(safe-area-inset-bottom)) !important;
+        background: #56876D !important;
+        box-shadow: 0 6rem 0 #56876D !important;
       }
 
       .pcg-event-block > .pcg-party-copy {
