@@ -1,4 +1,4 @@
-import { readdir, writeFile } from 'node:fs/promises';
+import { access, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 
@@ -71,12 +71,33 @@ async function collect(sourceDirectories) {
   return items.sort((a, b) => naturalCompare(a.relative, b.relative));
 }
 
-const manifest = {};
-for (const [key, directories] of Object.entries(SOURCES)) {
-  manifest[key] = await collect(directories);
+async function addPosterThumbnail(item) {
+  const parsed = path.parse(item.relative);
+  const absoluteThumb = path.join(
+    PUBLIC_DIR,
+    'generated',
+    'posters-thumbs',
+    parsed.dir,
+    `${parsed.name}.webp`,
+  );
+
+  try {
+    await access(absoluteThumb);
+    return { ...item, thumb: encodePublicUrl(absoluteThumb) };
+  } catch {
+    return item;
+  }
 }
 
-const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${JSON.stringify(manifest, null, 2)});\n  if (!document.querySelector('script[src^="/project-list-expansion.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/project-list-expansion.js?v=project-list-expansion-2';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/merch-image-cleanup.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/merch-image-cleanup.js?v=merch-image-cleanup-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/vtb-layout-refine.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/vtb-layout-refine.js?v=vtb-layout-refine-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/posters-copy-update.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/posters-copy-update.js?v=posters-copy-update-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/posters-party-descriptions.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/posters-party-descriptions.js?v=posters-party-descriptions-4';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n})();\n`;
+const manifest = {};
+for (const [key, directories] of Object.entries(SOURCES)) {
+  const collected = await collect(directories);
+  manifest[key] = key === 'posters'
+    ? await Promise.all(collected.map(addPosterThumbnail))
+    : collected;
+}
+
+const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${JSON.stringify(manifest, null, 2)});\n  if (!document.querySelector('script[src^="/project-list-expansion.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/project-list-expansion.js?v=project-list-expansion-2';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/merch-image-cleanup.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/merch-image-cleanup.js?v=merch-image-cleanup-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/vtb-layout-refine.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/vtb-layout-refine.js?v=vtb-layout-refine-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n})();\n`;
 await writeFile(OUTPUT, output, 'utf8');
 
 console.log(
