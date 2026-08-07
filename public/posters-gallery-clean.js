@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersGalleryCleanV3) return;
-  window.__postersGalleryCleanV3 = true;
+  if (window.__postersGalleryCleanV4) return;
+  window.__postersGalleryCleanV4 = true;
 
-  const VERSION = 'posters-gallery-clean-3';
+  const VERSION = 'posters-gallery-clean-4';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {};
   const SOURCE = Array.isArray(manifest.posters) ? manifest.posters : [];
   const MAX_PARALLEL = 3;
@@ -35,6 +35,7 @@
       otherTitle: 'POSTERS',
       klubiqueTitle: 'KLUBIQUE PARTY',
       yasnoTitle: 'YASNO PARTY',
+      bdayTitle: 'B-DAY PARTY',
       finalPoster: 'FINAL POSTER',
       mainInspiration: 'MAIN INSPIRATION',
       open: 'ОТКРЫТЬ ПОСТЕР',
@@ -53,6 +54,7 @@
       otherTitle: 'POSTERS',
       klubiqueTitle: 'KLUBIQUE PARTY',
       yasnoTitle: 'YASNO PARTY',
+      bdayTitle: 'B-DAY PARTY',
       finalPoster: 'FINAL POSTER',
       mainInspiration: 'MAIN INSPIRATION',
       open: 'OPEN POSTER',
@@ -113,9 +115,9 @@
     style.dataset.version = VERSION;
     style.textContent = `
       html:has(.pcg-modal), body:has(.pcg-modal) { overflow:hidden !important; }
-      .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:#f3f2ef; color:#050505; }
+      .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:#efff39; color:#050505; }
       .pcg-inner { width:100%; max-width:none; margin:0; }
-      .pcg-head { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 0 1rem; background:rgba(243,242,239,.96); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+      .pcg-head { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 0 1rem; background:rgba(239,255,57,.94); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
       .pcg-label,.pcg-close { margin:0; border:0; padding:.7rem 1rem; background:#050505; color:#fff; font:900 .68rem/1 Arial,Helvetica,sans-serif; letter-spacing:.25em; text-transform:uppercase; }
       .pcg-close { cursor:pointer; }
       .pcg-hero { padding:clamp(3.5rem,8vw,7rem) 0 clamp(3rem,6vw,5rem); }
@@ -123,12 +125,25 @@
       .pcg-intro,.pcg-copy { box-sizing:border-box; width:100%; max-width:none; padding-right:clamp(0rem,8vw,9rem); font:500 clamp(1rem,1.25vw,1.3rem)/1.42 Arial,Helvetica,sans-serif; letter-spacing:-.015em; }
       .pcg-intro { margin:clamp(1.5rem,3vw,2.5rem) 0 0; }
       .pcg-copy { margin:0 0 clamp(2rem,4vw,3.5rem); }
-      .pcg-section { padding:clamp(3.25rem,6vw,6rem) 0; border-top:1px solid rgba(5,5,5,.22); content-visibility:auto; contain-intrinsic-size:auto 1200px; }
+      .pcg-section { position:relative; padding:clamp(3.25rem,6vw,6rem) 0; border-top:1px solid rgba(5,5,5,.22); content-visibility:auto; contain-intrinsic-size:auto 1200px; }
       .pcg-section-title { margin:0 0 clamp(1rem,2vw,1.5rem); font:900 clamp(2.8rem,7vw,7.5rem)/.84 Arial,Helvetica,sans-serif; letter-spacing:-.07em; text-transform:uppercase; }
       .pcg-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; align-items:start; }
       .pcg-card { display:block; width:100%; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; cursor:zoom-in; }
       .pcg-card img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; object-fit:contain; opacity:0; transition:opacity .16s ease; }
       .pcg-card img.is-loaded { opacity:1; }
+
+      .pcg-section--italy {
+        background:#efff39;
+      }
+
+      .pcg-events-section {
+        width:100vw;
+        box-sizing:border-box;
+        margin-left:calc(50% - 50vw);
+        padding-left:max(1rem,env(safe-area-inset-left));
+        padding-right:max(1rem,env(safe-area-inset-right));
+        background:linear-gradient(180deg,#efff39 0%,#f6ff9b 8%,#fff 22%,#fff 100%);
+      }
 
       .pcg-event-block { margin-top:clamp(3rem,6vw,6rem); }
       .pcg-event-subtitle { margin:0 0 clamp(1.5rem,3vw,2.5rem); font:900 clamp(1.65rem,3vw,3.25rem)/.92 Arial,Helvetica,sans-serif; letter-spacing:-.045em; text-transform:uppercase; }
@@ -139,7 +154,36 @@
       .pcg-event-row--2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .pcg-labelled-card { min-width:0; }
       .pcg-card-label { margin:0 0 .8rem; font:900 clamp(.72rem,1vw,.95rem)/1 Arial,Helvetica,sans-serif; letter-spacing:.18em; text-transform:uppercase; }
-      .pcg-event-leftovers { margin-top:clamp(2.5rem,5vw,4rem); }
+
+      .pcg-event-block--klubique {
+        padding-top:clamp(1rem,2vw,2rem);
+      }
+
+      .pcg-event-block--yasno {
+        width:100vw;
+        box-sizing:border-box;
+        margin-left:calc(50% - 50vw);
+        padding:max(4rem,7vw) max(1rem,env(safe-area-inset-right)) max(4rem,7vw) max(1rem,env(safe-area-inset-left));
+        background:linear-gradient(180deg,#fff 0%,#f4ffe6 14%,#caff8a 38%,#8dff32 68%,#6dff00 100%);
+      }
+
+      .pcg-event-block--bday {
+        width:100vw;
+        box-sizing:border-box;
+        margin:0 0 0 calc(50% - 50vw);
+        padding:clamp(4rem,7vw) max(1rem,env(safe-area-inset-right)) clamp(5rem,8vw) max(1rem,env(safe-area-inset-left));
+        background:#6dff00;
+      }
+
+      .pcg-flawa-section,
+      .pcg-after-events-section {
+        width:100vw;
+        box-sizing:border-box;
+        margin-left:calc(50% - 50vw);
+        padding-left:max(1rem,env(safe-area-inset-left));
+        padding-right:max(1rem,env(safe-area-inset-right));
+        background:#6dff00;
+      }
 
       .pcg-light { position:fixed; inset:0; z-index:990000; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:clamp(.5rem,2vw,1.25rem); padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:rgba(0,0,0,.97); color:#fff; touch-action:none; }
       .pcg-light-stage { position:relative; min-width:0; height:calc(100dvh - 2rem); display:flex; align-items:center; justify-content:center; overflow:hidden; }
@@ -181,10 +225,10 @@
       return groupItems.length ? { title, description, items: groupItems, type } : null;
     };
     return [
-      take(copy.italyTitle, copy.italyText, isItaly),
+      take(copy.italyTitle, copy.italyText, isItaly, 'italy'),
       take(copy.eventsTitle, copy.eventsText, isEvent, 'events'),
-      take(copy.flawaTitle, copy.flawaText, isFlawa),
-      take(copy.otherTitle, '', () => true),
+      take(copy.flawaTitle, copy.flawaText, isFlawa, 'flawa'),
+      take(copy.otherTitle, '', () => true, 'after-events'),
     ].filter(Boolean);
   }
 
@@ -435,20 +479,15 @@
     section.append(el('h2', 'pcg-section-title', group.title));
     if (group.description) section.append(el('p', 'pcg-copy', group.description));
 
-    const used = new Set();
-    const use = item => {
-      if (item) used.add(item.src);
-      return item;
-    };
-
-    const klubiqueMain = use(findByBase(group.items, 'party-3'));
-    const klubiqueFaces = findFaceSeries(group.items, 'party-3', 7).map(use);
-    const yasnoFinal = use(findByBase(group.items, 'party-2'));
-    const yasnoInspiration = use(findByBase(group.items, 'party-2-isnpiration', 'party-2-inspiration'));
-    const yasnoFaces = findFaceSeries(group.items, 'party-2', 7).map(use);
+    const klubiqueMain = findByBase(group.items, 'party-3');
+    const klubiqueFaces = findFaceSeries(group.items, 'party-3', 7);
+    const yasnoFinal = findByBase(group.items, 'party-2');
+    const yasnoInspiration = findByBase(group.items, 'party-2-isnpiration', 'party-2-inspiration');
+    const yasnoFaces = findFaceSeries(group.items, 'party-2', 7);
+    const bdayMain = findByBase(group.items, 'party-1');
 
     if (klubiqueMain || klubiqueFaces.length) {
-      const block = el('div', 'pcg-event-block');
+      const block = el('div', 'pcg-event-block pcg-event-block--klubique');
       block.append(el('h3', 'pcg-event-subtitle', copy.klubiqueTitle));
       if (klubiqueMain) {
         const feature = el('div', 'pcg-event-feature');
@@ -462,7 +501,7 @@
     }
 
     if (yasnoFinal || yasnoInspiration || yasnoFaces.length) {
-      const block = el('div', 'pcg-event-block');
+      const block = el('div', 'pcg-event-block pcg-event-block--yasno');
       block.append(el('h3', 'pcg-event-subtitle', copy.yasnoTitle));
 
       const topRow = el('div', 'pcg-event-row pcg-event-row--2');
@@ -477,14 +516,14 @@
       section.append(block);
     }
 
-    const leftovers = group.items.filter(item => !used.has(item.src));
-    if (leftovers.length) {
-      const grid = el('div', 'pcg-grid pcg-event-leftovers');
-      leftovers.forEach(item => {
-        const card = createCard(item);
-        if (card) grid.append(card);
-      });
-      section.append(grid);
+    if (bdayMain) {
+      const block = el('div', 'pcg-event-block pcg-event-block--bday');
+      block.append(el('h3', 'pcg-event-subtitle', copy.bdayTitle));
+      const feature = el('div', 'pcg-event-feature');
+      const card = createCard(bdayMain);
+      if (card) feature.append(card);
+      block.append(feature);
+      section.append(block);
     }
 
     return section;
@@ -493,7 +532,12 @@
   function createSection(group) {
     if (group.type === 'events') return createEventSection(group);
 
-    const section = el('section', 'pcg-section');
+    const classes = ['pcg-section'];
+    if (group.type === 'italy') classes.push('pcg-section--italy');
+    if (group.type === 'flawa') classes.push('pcg-flawa-section');
+    if (group.type === 'after-events') classes.push('pcg-after-events-section');
+
+    const section = el('section', classes.join(' '));
     const title = el('h2', 'pcg-section-title', group.title);
     section.append(title);
     if (group.description) section.append(el('p', 'pcg-copy', group.description));
