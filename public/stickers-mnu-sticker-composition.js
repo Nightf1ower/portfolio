@@ -1,196 +1,98 @@
 (() => {
-  if (window.__stickersMnuStickerCompositionV2) return;
-  window.__stickersMnuStickerCompositionV2 = true;
+  if (window.__stickersMnuStickerCompositionV3) return;
+  window.__stickersMnuStickerCompositionV3 = true;
 
-  const VERSION = 'stickers-mnu-sticker-composition-2';
-  const ROWS = [
-    ['sticker-mnu-05', 'sticker-mnu-02', 'sticker-mnu-04'],
-    ['sticker-mnu-09', 'sticker-mnu-01', 'sticker-mnu-10'],
-    ['sticker-mnu-07', 'sticker-mnu-08'],
-    ['sticker-mnu-03', 'sticker-mnu-06'],
-  ];
-
-  function filename(card) {
-    const image = card?.querySelector('img');
-    const source = image?.currentSrc || image?.getAttribute('src') || image?.src || '';
-    try {
-      return decodeURIComponent(source)
-        .split(/[?#]/)[0]
-        .split('/')
-        .pop()
-        .replace(/\.[^.]+$/, '')
-        .toLowerCase();
-    } catch {
-      return source
-        .split(/[?#]/)[0]
-        .split('/')
-        .pop()
-        .replace(/\.[^.]+$/, '')
-        .toLowerCase();
-    }
-  }
+  const VERSION = 'stickers-mnu-sticker-composition-3';
 
   function injectStyles() {
     document.getElementById('stickers-mnu-sticker-composition-style')?.remove();
+
     const style = document.createElement('style');
     style.id = 'stickers-mnu-sticker-composition-style';
+    style.dataset.version = VERSION;
     style.textContent = `
-      .stk-project[data-stickers-project="mnu"] .stk-grid--stickers.stk-grid--mnu-composition {
-        display: block !important;
+      .stk-project[data-stickers-project="mnu"] .stk-grid--stickers {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: clamp(1rem, 2vw, 1.6rem) !important;
+        align-items: stretch !important;
+        width: 100% !important;
       }
 
-      .stk-mnu-composition {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(1rem, 2vw, 1.8rem);
-        width: 100%;
-      }
-
-      .stk-mnu-composition__row {
-        display: grid;
-        align-items: center;
-        justify-content: center;
-        gap: clamp(.8rem, 1.8vw, 1.6rem);
-        width: 100%;
-      }
-
-      .stk-mnu-composition__row--three {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .stk-mnu-composition__row--two {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        width: min(100%, 74rem);
-        margin-inline: auto;
-      }
-
-      .stk-mnu-composition__cell {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 0;
-      }
-
-      .stk-mnu-composition__cell .stk-card {
-        width: 100%;
+      .stk-project[data-stickers-project="mnu"] .stk-grid--stickers > .stk-card {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: clamp(17rem, 26vw, 25rem) !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: clamp(1rem, 2vw, 1.6rem) !important;
         overflow: visible !important;
-      }
-
-      .stk-mnu-composition__cell .stk-card img {
-        display: block;
-        width: 100%;
-        height: auto !important;
-        max-height: none !important;
-        object-fit: contain !important;
         background: transparent !important;
       }
 
-      .stk-mnu-composition__row--top .stk-mnu-composition__cell:nth-child(2) .stk-card {
-        width: min(78%, 18rem);
+      .stk-project[data-stickers-project="mnu"] .stk-grid--stickers > .stk-card img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        object-fit: contain !important;
+        object-position: center !important;
+        background: transparent !important;
       }
 
-      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(1) .stk-card,
-      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(3) .stk-card {
-        width: min(72%, 16rem);
+      .stk-project[data-stickers-project="mnu"] .stk-mnu-composition,
+      .stk-project[data-stickers-project="mnu"] .stk-mnu-composition__row,
+      .stk-project[data-stickers-project="mnu"] .stk-mnu-composition__cell,
+      .stk-project[data-stickers-project="mnu"] .stk-mnu-composition__extras {
+        display: contents !important;
       }
 
-      .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(2) .stk-card {
-        width: min(100%, 31rem);
-      }
-
-      .stk-mnu-composition__row--pair .stk-card {
-        width: min(100%, 31rem);
-      }
-
-      .stk-mnu-composition__extras {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-
-      @media (max-width: 760px) {
-        .stk-mnu-composition__row--three,
-        .stk-mnu-composition__row--two {
-          grid-template-columns: 1fr;
-          width: 100%;
+      @media (max-width: 900px) {
+        .stk-project[data-stickers-project="mnu"] .stk-grid--stickers {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
 
-        .stk-mnu-composition__row--top .stk-mnu-composition__cell:nth-child(2) .stk-card,
-        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(1) .stk-card,
-        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(2) .stk-card,
-        .stk-mnu-composition__row--middle .stk-mnu-composition__cell:nth-child(3) .stk-card,
-        .stk-mnu-composition__row--pair .stk-card {
-          width: 100%;
+        .stk-project[data-stickers-project="mnu"] .stk-grid--stickers > .stk-card {
+          height: clamp(16rem, 42vw, 23rem) !important;
+        }
+      }
+
+      @media (max-width: 560px), (hover: none), (pointer: coarse) {
+        .stk-project[data-stickers-project="mnu"] .stk-grid--stickers {
+          grid-template-columns: 1fr !important;
+          gap: .8rem !important;
+        }
+
+        .stk-project[data-stickers-project="mnu"] .stk-grid--stickers > .stk-card {
+          height: min(84vw, 24rem) !important;
+          padding: 1rem !important;
         }
       }
     `;
     document.head.append(style);
   }
 
-  function findCard(cards, wanted) {
-    return cards.find((card) => {
-      const name = filename(card);
-      return name === wanted || name.endsWith(wanted) || name.includes(wanted);
-    }) || null;
-  }
-
-  function makeCell(card) {
-    const cell = document.createElement('div');
-    cell.className = 'stk-mnu-composition__cell';
-    if (card) cell.append(card);
-    return cell;
-  }
-
-  function makeRow(cards, index) {
-    const row = document.createElement('div');
-    const type = cards.length === 3 ? 'three' : 'two';
-    const role = index === 0 ? 'top' : index === 1 ? 'middle' : 'pair';
-    row.className = `stk-mnu-composition__row stk-mnu-composition__row--${type} stk-mnu-composition__row--${role}`;
-    cards.forEach((card) => row.append(makeCell(card)));
-    return row;
-  }
-
-  function arrange(modal) {
-    const mnu = modal.querySelector('.stk-project[data-stickers-project="mnu"]');
-    const grid = mnu?.querySelector('.stk-grid--stickers');
+  function flattenMnuGrid(modal) {
+    const grid = modal.querySelector('.stk-project[data-stickers-project="mnu"] .stk-grid--stickers');
     if (!grid || grid.dataset.mnuCompositionVersion === VERSION) return;
 
-    const existing = grid.querySelector(':scope > .stk-mnu-composition');
-    const cards = existing
-      ? [...existing.querySelectorAll('.stk-card')]
-      : [...grid.querySelectorAll(':scope > .stk-card')];
+    const cards = [...grid.querySelectorAll('.stk-card')];
     if (!cards.length) return;
 
-    const selectedRows = ROWS.map((row) => row.map((wanted) => findCard(cards, wanted)));
-    const used = new Set(selectedRows.flat().filter(Boolean));
-    const remaining = cards.filter((card) => !used.has(card));
-
-    selectedRows.forEach((row) => {
-      row.forEach((card, index) => {
-        if (!card && remaining.length) row[index] = remaining.shift();
-      });
-    });
-
-    const composition = document.createElement('div');
-    composition.className = 'stk-mnu-composition';
-    selectedRows.forEach((row, index) => composition.append(makeRow(row, index)));
-
-    grid.replaceChildren(composition);
-    if (remaining.length) {
-      const extras = document.createElement('div');
-      extras.className = 'stk-mnu-composition__extras';
-      extras.append(...remaining);
-      grid.append(extras);
-    }
-
-    grid.classList.add('stk-grid--mnu-composition');
+    grid.replaceChildren(...cards);
+    grid.classList.remove('stk-grid--mnu-composition');
     grid.dataset.mnuCompositionVersion = VERSION;
   }
 
   function apply() {
     injectStyles();
-    document.querySelectorAll('.stk-modal').forEach(arrange);
+    document.querySelectorAll('.stk-modal').forEach(flattenMnuGrid);
   }
 
   let scheduled = false;
@@ -208,6 +110,7 @@
     subtree: true,
   });
 
+  window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('load', schedule);
   apply();
 })();
