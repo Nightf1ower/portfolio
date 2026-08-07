@@ -1,6 +1,6 @@
 (() => {
-  if (window.__stickersTransparentPngFixV3) return;
-  window.__stickersTransparentPngFixV3 = true;
+  if (window.__stickersTransparentPngFixV4) return;
+  window.__stickersTransparentPngFixV4 = true;
 
   const style = document.createElement('style');
   style.id = 'stickers-transparent-png-fix-style';
@@ -23,10 +23,10 @@
   `;
   document.head.append(style);
 
-  if (!window.__stickersMnuStickerCompositionV2
+  if (!window.__stickersMnuStickerCompositionV3
     && !document.querySelector('script[data-stickers-mnu-composition]')) {
     const script = document.createElement('script');
-    script.src = '/stickers-mnu-sticker-composition.js?v=stickers-mnu-sticker-composition-2';
+    script.src = '/stickers-mnu-sticker-composition.js?v=stickers-mnu-sticker-composition-3';
     script.async = false;
     script.dataset.stickersMnuComposition = 'true';
     document.head.append(script);
