@@ -1,8 +1,8 @@
 (() => {
-  if (window.__stickersProjectCopyV3) return;
-  window.__stickersProjectCopyV3 = true;
+  if (window.__stickersProjectCopyV4) return;
+  window.__stickersProjectCopyV4 = true;
 
-  const VERSION = 'stickers-project-copy-3';
+  const VERSION = 'stickers-project-copy-4';
   const COPY = {
     ru: {
       mnu: {
@@ -170,30 +170,34 @@
     }
 
     if (target === 'dxs') {
-      const root = document.querySelector('.mc-modal, .m10-modal');
-      const dxs = root?.querySelector('.mc-dxs, .m10-dxs-zone');
-      return [...(dxs?.querySelectorAll('section, .mc-section, .m10-section') || [])].find((section) => {
-        const heading = section.querySelector('h1,h2,h3,.mc-section-title,.m10-section-title');
-        const text = heading?.textContent?.trim().toUpperCase() || '';
+      const root = document.querySelector('.mc-modal');
+      const dxs = root?.querySelector('.mc-dxs');
+      return [...(dxs?.querySelectorAll(':scope > .mc-section') || [])].find((section) => {
+        const text = section.querySelector('.mc-section-title')?.textContent?.trim().toUpperCase() || '';
         return text === 'STICKERS' || text === 'СТИКЕРЫ';
       }) || null;
     }
     return null;
   }
 
-  function scrollWhenReady(target, attempt = 0) {
-    const section = targetSection(target);
-    if (section) {
-      const scroller = section.closest('.zny-modal, .mc-modal, .m10-modal');
-      if (scroller) {
-        const top = section.offsetTop - 24;
-        scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-      } else {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      return;
-    }
-    if (attempt < 100) window.setTimeout(() => scrollWhenReady(target, attempt + 1), 50);
+  function jumpToTarget(target) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const section = targetSection(target);
+        if (!section) return;
+
+        const scroller = section.closest('.zny-modal, .mc-modal');
+        if (!scroller) {
+          section.scrollIntoView({ block: 'start' });
+          return;
+        }
+
+        const sectionRect = section.getBoundingClientRect();
+        const scrollerRect = scroller.getBoundingClientRect();
+        const targetTop = scroller.scrollTop + sectionRect.top - scrollerRect.top - 16;
+        scroller.scrollTop = Math.max(0, targetTop);
+      });
+    });
   }
 
   function openProject(target) {
@@ -206,8 +210,8 @@
 
     window.setTimeout(() => {
       card.click();
-      window.setTimeout(() => scrollWhenReady(target), 40);
-    }, 80);
+      jumpToTarget(target);
+    }, 60);
   }
 
   function createMoreBlock(inner) {
