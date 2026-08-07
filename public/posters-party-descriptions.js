@@ -1,8 +1,8 @@
 (() => {
-  if (window.__postersPartyDescriptionsV1) return;
-  window.__postersPartyDescriptionsV1 = true;
+  if (window.__postersPartyDescriptionsV2) return;
+  window.__postersPartyDescriptionsV2 = true;
 
-  const VERSION = 'posters-party-descriptions-1';
+  const VERSION = 'posters-party-descriptions-2';
   const STYLE_ID = 'posters-party-descriptions-style';
 
   const COPY = {
@@ -33,6 +33,91 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
+      .pcg-modal {
+        background: #2C3D55 !important;
+        color: #fff !important;
+      }
+
+      .pcg-head {
+        background: rgba(44, 61, 85, .94) !important;
+      }
+
+      .pcg-section--italy,
+      .pcg-events-section {
+        background: #2C3D55 !important;
+        color: #fff !important;
+      }
+
+      .pcg-events-section {
+        width: 100vw !important;
+        box-sizing: border-box !important;
+        margin-left: calc(50% - 50vw) !important;
+        padding-left: max(1rem, env(safe-area-inset-left)) !important;
+        padding-right: max(1rem, env(safe-area-inset-right)) !important;
+      }
+
+      .pcg-event-block--klubique {
+        width: 100vw !important;
+        box-sizing: border-box !important;
+        margin-left: calc(50% - 50vw) !important;
+        padding: clamp(3.5rem, 6vw, 6rem) max(1rem, env(safe-area-inset-right)) clamp(4rem, 7vw, 7rem) max(1rem, env(safe-area-inset-left)) !important;
+        background: linear-gradient(
+          180deg,
+          #2C3D55 0%,
+          #2C3D55 8%,
+          #667487 24%,
+          #a9b1bc 36%,
+          #dfe2e6 47%,
+          #ffffff 58%,
+          #ffffff 100%
+        ) !important;
+        color: #fff !important;
+      }
+
+      .pcg-event-block--klubique > .pcg-event-subtitle,
+      .pcg-event-block--klubique > .pcg-party-copy {
+        color: #fff !important;
+      }
+
+      .pcg-event-block--yasno {
+        width: 100vw !important;
+        box-sizing: border-box !important;
+        margin-left: calc(50% - 50vw) !important;
+        padding: max(4rem, 7vw) max(1rem, env(safe-area-inset-right)) max(4rem, 7vw) max(1rem, env(safe-area-inset-left)) !important;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #ffffff 8%,
+          #e9efec 24%,
+          #cad8d0 40%,
+          #9db9aa 58%,
+          #739986 74%,
+          #56876D 90%,
+          #56876D 100%
+        ) !important;
+        color: #050505 !important;
+      }
+
+      .pcg-event-block--bday,
+      .pcg-flawa-section,
+      .pcg-after-events-section {
+        width: 100vw !important;
+        box-sizing: border-box !important;
+        margin-left: calc(50% - 50vw) !important;
+        background: #56876D !important;
+        color: #050505 !important;
+      }
+
+      .pcg-event-block--bday {
+        padding: clamp(4rem, 7vw) max(1rem, env(safe-area-inset-right)) clamp(5rem, 8vw) max(1rem, env(safe-area-inset-left)) !important;
+      }
+
+      .pcg-flawa-section,
+      .pcg-after-events-section {
+        padding-left: max(1rem, env(safe-area-inset-left)) !important;
+        padding-right: max(1rem, env(safe-area-inset-right)) !important;
+      }
+
       .pcg-event-block > .pcg-party-copy {
         box-sizing: border-box !important;
         width: 100% !important;
