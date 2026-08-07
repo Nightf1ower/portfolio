@@ -1,10 +1,11 @@
 (() => {
-  if (window.__postersGalleryCleanV1) return;
-  window.__postersGalleryCleanV1 = true;
+  if (window.__postersGalleryCleanV2) return;
+  window.__postersGalleryCleanV2 = true;
 
-  const VERSION = 'posters-gallery-clean-1';
+  const VERSION = 'posters-gallery-clean-2';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {};
   const SOURCE = Array.isArray(manifest.posters) ? manifest.posters : [];
+  const MAX_PARALLEL = 3;
 
   const normalize = value => String(value || '')
     .trim()
@@ -77,6 +78,10 @@
   let activeIndex = 0;
   let previousBodyOverflow = '';
   let previousHtmlOverflow = '';
+  let activeLoads = 0;
+  const loadQueue = [];
+  const thumbBySource = new Map();
+  const loadedSources = new Set();
 
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -87,249 +92,43 @@
 
   function installStyles() {
     const id = 'posters-gallery-clean-style';
-    const old = document.getElementById(id);
-    if (old?.dataset.version === VERSION) return;
-    old?.remove();
+    document.getElementById(id)?.remove();
 
     const style = el('style');
     style.id = id;
     style.dataset.version = VERSION;
     style.textContent = `
       html:has(.pcg-modal), body:has(.pcg-modal) { overflow: hidden !important; }
-
-      .pcg-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 950000;
-        box-sizing: border-box;
-        width: 100vw;
-        height: 100dvh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        overscroll-behavior: contain;
-        padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(5rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-        background: #f3f2ef;
-        color: #050505;
-      }
-
-      .pcg-inner { width: 100%; max-width: none; margin: 0; }
-
-      .pcg-head {
-        position: sticky;
-        top: 0;
-        z-index: 30;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: .7rem 0 1rem;
-        background: rgba(243,242,239,.96);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-      }
-
-      .pcg-label,
-      .pcg-close {
-        margin: 0;
-        border: 0;
-        padding: .7rem 1rem;
-        background: #050505;
-        color: #fff;
-        font: 900 .68rem/1 Arial, Helvetica, sans-serif;
-        letter-spacing: .25em;
-        text-transform: uppercase;
-      }
-
-      .pcg-close { cursor: pointer; }
-
-      .pcg-hero { padding: clamp(3.5rem, 8vw, 7rem) 0 clamp(3rem, 6vw, 5rem); }
-
-      .pcg-title {
-        margin: 0;
-        font: 900 clamp(4.2rem, 14vw, 13rem)/.82 Arial, Helvetica, sans-serif;
-        letter-spacing: -.075em;
-        text-transform: uppercase;
-      }
-
-      .pcg-intro,
-      .pcg-copy {
-        box-sizing: border-box;
-        width: 100%;
-        max-width: none;
-        padding-right: clamp(0rem, 8vw, 9rem);
-        font: 500 clamp(1rem, 1.25vw, 1.3rem)/1.42 Arial, Helvetica, sans-serif;
-        letter-spacing: -.015em;
-      }
-
-      .pcg-intro { margin: clamp(1.5rem, 3vw, 2.5rem) 0 0; }
-      .pcg-copy { margin: 0 0 clamp(2rem, 4vw, 3.5rem); }
-
-      .pcg-section {
-        padding: clamp(3.25rem, 6vw, 6rem) 0;
-        border-top: 1px solid rgba(5,5,5,.22);
-        content-visibility: auto;
-        contain-intrinsic-size: auto 1200px;
-      }
-
-      .pcg-section-title {
-        margin: 0 0 clamp(1rem, 2vw, 1.5rem);
-        font: 900 clamp(2.8rem, 7vw, 7.5rem)/.84 Arial, Helvetica, sans-serif;
-        letter-spacing: -.07em;
-        text-transform: uppercase;
-      }
-
-      .pcg-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        align-items: start;
-      }
-
-      .pcg-card {
-        display: block;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        background: transparent;
-        box-shadow: none;
-        cursor: zoom-in;
-      }
-
-      .pcg-card img {
-        display: block;
-        width: 100%;
-        height: auto;
-        margin: 0;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        background: transparent;
-        box-shadow: none;
-        object-fit: contain;
-        opacity: 0;
-        transition: opacity .18s ease;
-      }
-
-      .pcg-card img.is-loaded { opacity: 1; }
-
-      .pcg-light {
-        position: fixed;
-        inset: 0;
-        z-index: 990000;
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        align-items: center;
-        gap: clamp(.5rem, 2vw, 1.25rem);
-        padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
-        background: rgba(0,0,0,.97);
-        color: #fff;
-        touch-action: none;
-      }
-
-      .pcg-light-stage {
-        position: relative;
-        min-width: 0;
-        height: calc(100dvh - 2rem);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-      }
-
-      .pcg-light-stage::after {
-        content: '';
-        position: absolute;
-        width: 2.5rem;
-        height: 2.5rem;
-        border: 3px solid rgba(255,255,255,.25);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: pcg-spin .8s linear infinite;
-      }
-
-      .pcg-light-stage.is-loaded::after { display: none; }
-      @keyframes pcg-spin { to { transform: rotate(360deg); } }
-
-      .pcg-light-image {
-        display: block;
-        max-width: 100%;
-        max-height: 92dvh;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        opacity: 0;
-        transition: opacity .16s ease;
-        user-select: none;
-        -webkit-user-drag: none;
-      }
-
-      .pcg-light-stage.is-loaded .pcg-light-image { opacity: 1; }
-
-      .pcg-light-nav,
-      .pcg-light-close {
-        border: 1px solid rgba(255,255,255,.72);
-        background: #050505;
-        color: #fff;
-        cursor: pointer;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: 900;
-      }
-
-      .pcg-light-nav { width: 3.3rem; height: 3.3rem; font-size: 1.5rem; }
-
-      .pcg-light-close {
-        position: absolute;
-        top: max(1rem, env(safe-area-inset-top));
-        right: max(1rem, env(safe-area-inset-right));
-        z-index: 2;
-        padding: .72rem .95rem;
-        font-size: .68rem;
-        letter-spacing: .2em;
-      }
-
-      .pcg-top {
-        position: fixed;
-        right: max(1rem, env(safe-area-inset-right));
-        bottom: max(1rem, env(safe-area-inset-bottom));
-        z-index: 960000;
-        display: grid;
-        place-items: center;
-        width: 3.5rem;
-        height: 3.5rem;
-        margin: 0;
-        padding: 0;
-        border: 1px solid #050505;
-        background: #fff;
-        color: #050505;
-        font: 900 1.55rem/1 Arial, Helvetica, sans-serif;
-        cursor: pointer;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(.7rem);
-        transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
-      }
-
-      .pcg-top.is-visible {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
-
-      @media (max-width: 920px) {
-        .pcg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      }
-
-      @media (max-width: 620px), (hover: none), (pointer: coarse) {
-        .pcg-title { font-size: clamp(3rem, 16vw, 6rem); }
-        .pcg-intro, .pcg-copy { padding-right: 0; font-size: 1rem; line-height: 1.45; }
-        .pcg-grid { grid-template-columns: 1fr; gap: .8rem; }
-        .pcg-light { grid-template-columns: 1fr; padding: .75rem; }
-        .pcg-light-nav { display: none; }
-        .pcg-light-stage { height: calc(100dvh - 1.5rem); }
-        .pcg-top { width: 3.1rem; height: 3.1rem; }
-      }
+      .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:#f3f2ef; color:#050505; }
+      .pcg-inner { width:100%; max-width:none; margin:0; }
+      .pcg-head { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 0 1rem; background:rgba(243,242,239,.96); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+      .pcg-label,.pcg-close { margin:0; border:0; padding:.7rem 1rem; background:#050505; color:#fff; font:900 .68rem/1 Arial,Helvetica,sans-serif; letter-spacing:.25em; text-transform:uppercase; }
+      .pcg-close { cursor:pointer; }
+      .pcg-hero { padding:clamp(3.5rem,8vw,7rem) 0 clamp(3rem,6vw,5rem); }
+      .pcg-title { margin:0; font:900 clamp(4.2rem,14vw,13rem)/.82 Arial,Helvetica,sans-serif; letter-spacing:-.075em; text-transform:uppercase; }
+      .pcg-intro,.pcg-copy { box-sizing:border-box; width:100%; max-width:none; padding-right:clamp(0rem,8vw,9rem); font:500 clamp(1rem,1.25vw,1.3rem)/1.42 Arial,Helvetica,sans-serif; letter-spacing:-.015em; }
+      .pcg-intro { margin:clamp(1.5rem,3vw,2.5rem) 0 0; }
+      .pcg-copy { margin:0 0 clamp(2rem,4vw,3.5rem); }
+      .pcg-section { padding:clamp(3.25rem,6vw,6rem) 0; border-top:1px solid rgba(5,5,5,.22); content-visibility:auto; contain-intrinsic-size:auto 1200px; }
+      .pcg-section-title { margin:0 0 clamp(1rem,2vw,1.5rem); font:900 clamp(2.8rem,7vw,7.5rem)/.84 Arial,Helvetica,sans-serif; letter-spacing:-.07em; text-transform:uppercase; }
+      .pcg-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; align-items:start; }
+      .pcg-card { display:block; width:100%; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; cursor:zoom-in; }
+      .pcg-card img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; object-fit:contain; opacity:0; transition:opacity .16s ease; }
+      .pcg-card img.is-loaded { opacity:1; }
+      .pcg-light { position:fixed; inset:0; z-index:990000; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:clamp(.5rem,2vw,1.25rem); padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:rgba(0,0,0,.97); color:#fff; touch-action:none; }
+      .pcg-light-stage { position:relative; min-width:0; height:calc(100dvh - 2rem); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+      .pcg-light-stage::after { content:''; position:absolute; width:2.5rem; height:2.5rem; border:3px solid rgba(255,255,255,.25); border-top-color:#fff; border-radius:50%; animation:pcg-spin .8s linear infinite; }
+      .pcg-light-stage.is-loaded::after { display:none; }
+      @keyframes pcg-spin { to { transform:rotate(360deg); } }
+      .pcg-light-image { display:block; max-width:100%; max-height:92dvh; width:auto; height:auto; object-fit:contain; opacity:0; transition:opacity .12s ease; user-select:none; -webkit-user-drag:none; }
+      .pcg-light-stage.is-loaded .pcg-light-image { opacity:1; }
+      .pcg-light-nav,.pcg-light-close { border:1px solid rgba(255,255,255,.72); background:#050505; color:#fff; cursor:pointer; font-family:Arial,Helvetica,sans-serif; font-weight:900; }
+      .pcg-light-nav { width:3.3rem; height:3.3rem; font-size:1.5rem; }
+      .pcg-light-close { position:absolute; top:max(1rem,env(safe-area-inset-top)); right:max(1rem,env(safe-area-inset-right)); z-index:2; padding:.72rem .95rem; font-size:.68rem; letter-spacing:.2em; }
+      .pcg-top { position:fixed; right:max(1rem,env(safe-area-inset-right)); bottom:max(1rem,env(safe-area-inset-bottom)); z-index:960000; display:grid; place-items:center; width:3.5rem; height:3.5rem; margin:0; padding:0; border:1px solid #050505; background:#fff; color:#050505; font:900 1.55rem/1 Arial,Helvetica,sans-serif; cursor:pointer; opacity:0; visibility:hidden; transform:translateY(.7rem); transition:opacity .18s ease,transform .18s ease,visibility .18s ease; }
+      .pcg-top.is-visible { opacity:1; visibility:visible; transform:translateY(0); }
+      @media(max-width:920px){ .pcg-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+      @media(max-width:620px),(hover:none),(pointer:coarse){ .pcg-title{font-size:clamp(3rem,16vw,6rem);} .pcg-intro,.pcg-copy{padding-right:0;font-size:1rem;line-height:1.45;} .pcg-grid{grid-template-columns:1fr;gap:.8rem;} .pcg-light{grid-template-columns:1fr;padding:.75rem;} .pcg-light-nav{display:none;} .pcg-light-stage{height:calc(100dvh - 1.5rem);} .pcg-top{width:3.1rem;height:3.1rem;} }
     `;
     document.head.append(style);
   }
@@ -342,7 +141,6 @@
       groupItems.forEach(item => used.add(item.src));
       return groupItems.length ? { title, description, items: groupItems } : null;
     };
-
     return [
       take(copy.italyTitle, copy.italyText, isItaly),
       take(copy.eventsTitle, copy.eventsText, isEvent),
@@ -363,47 +161,88 @@
     document.documentElement.style.overflow = previousHtmlOverflow;
   }
 
-  function loadThumb(image) {
-    if (!image?.dataset.src || image.dataset.loading === '1') return;
+  function finishThumb(image, source) {
+    const done = async () => {
+      try { await image.decode(); } catch {}
+      image.classList.add('is-loaded');
+      image.dataset.loaded = '1';
+      loadedSources.add(source);
+      activeLoads = Math.max(0, activeLoads - 1);
+      pumpQueue();
+    };
+    done();
+  }
+
+  function startThumb(image) {
+    const source = image?.dataset.src;
+    if (!source || image.dataset.loading === '1' || image.dataset.loaded === '1') return;
     image.dataset.loading = '1';
-    image.src = image.dataset.src;
+    image.removeAttribute('data-queued');
+    activeLoads += 1;
+    image.fetchPriority = image.dataset.priority === 'high' ? 'high' : 'low';
+    image.addEventListener('load', () => finishThumb(image, source), { once:true });
+    image.addEventListener('error', () => finishThumb(image, source), { once:true });
+    image.src = source;
     image.removeAttribute('data-src');
-    image.addEventListener('load', () => image.classList.add('is-loaded'), { once: true });
-    image.addEventListener('error', () => image.classList.add('is-loaded'), { once: true });
+  }
+
+  function pumpQueue() {
+    while (activeLoads < MAX_PARALLEL && loadQueue.length) {
+      const image = loadQueue.shift();
+      if (!image?.isConnected || image.dataset.loaded === '1' || image.dataset.loading === '1') continue;
+      startThumb(image);
+    }
+  }
+
+  function queueThumb(image, priority = false) {
+    if (!image || image.dataset.loaded === '1' || image.dataset.loading === '1') return;
+    if (priority) image.dataset.priority = 'high';
+    if (image.dataset.queued === '1') {
+      if (priority) {
+        const index = loadQueue.indexOf(image);
+        if (index > 0) {
+          loadQueue.splice(index, 1);
+          loadQueue.unshift(image);
+        }
+      }
+      return;
+    }
+    image.dataset.queued = '1';
+    priority ? loadQueue.unshift(image) : loadQueue.push(image);
+    pumpQueue();
+  }
+
+  function resetLoader() {
+    observer?.disconnect();
+    observer = null;
+    loadQueue.length = 0;
+    activeLoads = 0;
+    thumbBySource.clear();
+    loadedSources.clear();
   }
 
   function setupObserver() {
     observer?.disconnect();
     if (!modal) return;
-
     if (!('IntersectionObserver' in window)) {
-      modal.querySelectorAll('img[data-src]').forEach(loadThumb);
+      modal.querySelectorAll('img[data-src]').forEach(image => queueThumb(image));
       return;
     }
-
     observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
         observer.unobserve(entry.target);
-        loadThumb(entry.target);
+        queueThumb(entry.target);
       });
-    }, {
-      root: modal,
-      rootMargin: '900px 0px',
-      threshold: .01,
-    });
-
+    }, { root:modal, rootMargin:'1600px 0px', threshold:.01 });
     modal.querySelectorAll('img[data-src]').forEach(image => observer.observe(image));
   }
 
-  function preload(index) {
-    if (!items.length) return;
-    [-1, 1].forEach(offset => {
-      const next = items[(index + offset + items.length) % items.length];
-      if (!next?.src) return;
-      const image = new Image();
-      image.decoding = 'async';
-      image.src = next.src;
+  function warmAround(index) {
+    [-2,-1,1,2].forEach(offset => {
+      const item = items[(index + offset + items.length) % items.length];
+      const thumb = thumbBySource.get(item?.src);
+      if (thumb) queueThumb(thumb, true);
     });
   }
 
@@ -411,23 +250,30 @@
     if (!lightbox || !items.length) return;
     const item = items[activeIndex];
     const stage = lightbox.querySelector('.pcg-light-stage');
-    const image = lightbox.querySelector('.pcg-light-image');
     stage.classList.remove('is-loaded');
-    image.removeAttribute('src');
-    image.alt = item.alt || 'Poster';
+    stage.replaceChildren();
 
-    requestAnimationFrame(() => {
+    const thumb = thumbBySource.get(item.src);
+    const image = thumb?.complete && thumb.naturalWidth ? thumb.cloneNode(false) : el('img');
+    image.className = 'pcg-light-image';
+    image.alt = item.alt || item.name || 'Poster';
+    image.draggable = false;
+    image.loading = 'eager';
+    image.fetchPriority = 'high';
+    stage.append(image);
+
+    const finish = () => {
+      stage.classList.add('is-loaded');
+      warmAround(activeIndex);
+    };
+
+    if (image.src && image.complete && image.naturalWidth) {
+      finish();
+    } else {
+      image.addEventListener('load', finish, { once:true });
+      image.addEventListener('error', finish, { once:true });
       image.src = item.src;
-      const finish = () => {
-        stage.classList.add('is-loaded');
-        preload(activeIndex);
-      };
-      if (image.complete && image.naturalWidth) finish();
-      else {
-        image.addEventListener('load', finish, { once: true });
-        image.addEventListener('error', finish, { once: true });
-      }
-    });
+    }
   }
 
   function closeLightbox() {
@@ -444,16 +290,12 @@
   function openLightbox(index) {
     closeLightbox();
     activeIndex = Math.max(0, Math.min(index, items.length - 1));
-
     const overlay = el('div', 'pcg-light');
     const previous = el('button', 'pcg-light-nav', '←');
     const stage = el('div', 'pcg-light-stage');
-    const image = el('img', 'pcg-light-image');
     const next = el('button', 'pcg-light-nav', '→');
     const close = el('button', 'pcg-light-close', COPY[language()].close);
     previous.type = next.type = close.type = 'button';
-    image.draggable = false;
-
     previous.onclick = event => { event.stopPropagation(); stepLightbox(-1); };
     next.onclick = event => { event.stopPropagation(); stepLightbox(1); };
     close.onclick = event => { event.stopPropagation(); closeLightbox(); };
@@ -466,16 +308,15 @@
       if (event.touches.length !== 1) return;
       startX = event.touches[0].clientX;
       startY = event.touches[0].clientY;
-    }, { passive: true });
+    }, { passive:true });
     overlay.addEventListener('touchend', event => {
       if (!event.changedTouches.length) return;
       const dx = event.changedTouches[0].clientX - startX;
       const dy = event.changedTouches[0].clientY - startY;
       if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.15) stepLightbox(dx < 0 ? 1 : -1);
       else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.2) closeLightbox();
-    }, { passive: true });
+    }, { passive:true });
 
-    stage.append(image);
     overlay.append(previous, stage, next, close);
     document.body.append(overlay);
     lightbox = overlay;
@@ -484,8 +325,7 @@
 
   function closeModal() {
     closeLightbox();
-    observer?.disconnect();
-    observer = null;
+    resetLoader();
     modal?.remove();
     modal = null;
     items = [];
@@ -497,8 +337,8 @@
     const title = el('h2', 'pcg-section-title', group.title);
     section.append(title);
     if (group.description) section.append(el('p', 'pcg-copy', group.description));
-
     const grid = el('div', 'pcg-grid');
+
     group.items.forEach(item => {
       const index = items.findIndex(entry => entry.src === item.src);
       const card = el('button', 'pcg-card');
@@ -508,17 +348,23 @@
       image.dataset.src = item.src;
       image.alt = item.alt || item.name || 'Poster';
       image.decoding = 'async';
-      image.loading = 'lazy';
+      image.loading = 'eager';
       image.fetchPriority = 'low';
       image.draggable = false;
-      card.append(image);
+      thumbBySource.set(item.src, image);
+      const prioritize = () => queueThumb(image, true);
+      card.addEventListener('pointerenter', prioritize, { passive:true });
+      card.addEventListener('focus', prioritize, { passive:true });
       card.onclick = event => {
         event.preventDefault();
         event.stopPropagation();
+        prioritize();
         openLightbox(index);
       };
+      card.append(image);
       grid.append(card);
     });
+
     section.append(grid);
     return section;
   }
@@ -526,12 +372,12 @@
   function openModal() {
     installStyles();
     closeModal();
+    resetLoader();
     lockPage();
 
     const copy = COPY[language()];
     const sectionGroups = groups();
     items = sectionGroups.flatMap(group => group.items);
-
     const overlay = el('div', 'pcg-modal');
     const inner = el('div', 'pcg-inner');
     const head = el('div', 'pcg-head');
@@ -548,12 +394,9 @@
     top.onclick = event => {
       event.preventDefault();
       event.stopPropagation();
-      overlay.scrollTo({ top: 0, behavior: 'smooth' });
+      overlay.scrollTo({ top:0, behavior:'smooth' });
     };
-
-    overlay.addEventListener('scroll', () => {
-      top.classList.toggle('is-visible', overlay.scrollTop > 520);
-    }, { passive: true });
+    overlay.addEventListener('scroll', () => top.classList.toggle('is-visible', overlay.scrollTop > 520), { passive:true });
 
     head.append(label, close);
     hero.append(title, intro);
@@ -564,9 +407,9 @@
     modal = overlay;
     setupObserver();
 
-    modal.querySelectorAll('.pcg-grid').forEach(grid => {
-      [...grid.querySelectorAll('img[data-src]')].slice(0, 3).forEach(loadThumb);
-    });
+    const firstGrid = modal.querySelector('.pcg-grid');
+    const firstImages = [...(firstGrid?.querySelectorAll('img[data-src]') || [])].slice(0, 6);
+    firstImages.forEach((image, index) => queueThumb(image, index < 3));
   }
 
   function findPostersCard(target) {
