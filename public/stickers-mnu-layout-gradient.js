@@ -1,8 +1,8 @@
 (() => {
-  if (window.__stickersMnuLayoutGradientV2) return;
-  window.__stickersMnuLayoutGradientV2 = true;
+  if (window.__stickersMnuLayoutGradientV3) return;
+  window.__stickersMnuLayoutGradientV3 = true;
 
-  const VERSION = 'stickers-mnu-layout-gradient-2';
+  const VERSION = 'stickers-mnu-layout-gradient-3';
   const ORDER = {
     left: ['real-4', 'real-5', 'real-1'],
     right: ['real-2', 'real-3'],
@@ -22,10 +22,11 @@
     document.getElementById('stickers-mnu-layout-gradient-style')?.remove();
     const style = document.createElement('style');
     style.id = 'stickers-mnu-layout-gradient-style';
+    style.dataset.version = VERSION;
     style.textContent = `
       .stk-modal {
         position: fixed !important;
-        background: #e1e1df !important;
+        background: #ffffff !important;
         isolation: isolate;
       }
 
@@ -38,9 +39,9 @@
         pointer-events: none;
         background: linear-gradient(
           180deg,
-          #e1e1df 0,
-          #e1e1df var(--stk-gradient-start, 55%),
-          #00ff00 var(--stk-gradient-end, 82%),
+          #ffffff 0,
+          #ffffff var(--stk-gradient-start, 52%),
+          #00ff00 var(--stk-gradient-end, 84%),
           #00ff00 100%
         );
       }
@@ -51,7 +52,7 @@
       }
 
       .stk-modal .stk-head {
-        background: rgba(225, 225, 223, .78) !important;
+        background: rgba(255, 255, 255, .82) !important;
       }
 
       .stk-project[data-stickers-project="mnu"] .stk-grid--real.stk-grid--mnu-real {
@@ -141,11 +142,18 @@
 
     const flawa = modal.querySelector('.stk-project[data-stickers-project="flawa"]');
     const totalHeight = Math.max(modal.scrollHeight, modal.clientHeight);
-    const start = flawa ? Math.max(0, flawa.offsetTop) : totalHeight * 0.55;
-    const transitionLength = flawa
-      ? Math.max(520, Math.min(1100, flawa.offsetHeight * 0.72))
-      : Math.max(520, totalHeight * 0.25);
-    const end = Math.min(totalHeight, start + transitionLength);
+
+    let start;
+    let end;
+    if (flawa) {
+      const transitionBefore = Math.max(700, Math.min(1400, flawa.offsetTop * .22));
+      const transitionAfter = Math.max(520, Math.min(1000, flawa.offsetHeight * .45));
+      start = Math.max(0, flawa.offsetTop - transitionBefore);
+      end = Math.min(totalHeight, flawa.offsetTop + transitionAfter);
+    } else {
+      start = totalHeight * .5;
+      end = totalHeight * .84;
+    }
 
     background.style.height = `${totalHeight}px`;
     background.style.setProperty('--stk-gradient-start', `${start}px`);
