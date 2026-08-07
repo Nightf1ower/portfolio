@@ -1,11 +1,11 @@
 (() => {
-  if (window.__postersGalleryCleanV4) return;
-  window.__postersGalleryCleanV4 = true;
+  if (window.__postersGalleryCleanV5) return;
+  window.__postersGalleryCleanV5 = true;
 
-  const VERSION = 'posters-gallery-clean-4';
+  const VERSION = 'posters-gallery-clean-5';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {};
   const SOURCE = Array.isArray(manifest.posters) ? manifest.posters : [];
-  const MAX_PARALLEL = 3;
+  const MAX_PARALLEL = 6;
 
   const normalize = value => String(value || '')
     .trim()
@@ -34,8 +34,11 @@
       flawaText: 'Серия личных постеров, созданных как способ самовыражения и презентации себя в качестве артиста. В основе работ — собственные фотографии, личные образы и эксперименты с коллажем, типографикой и обработкой.',
       otherTitle: 'POSTERS',
       klubiqueTitle: 'KLUBIQUE PARTY',
+      klubiqueText: 'Постер для KLUBIQUE PARTY был собран на основе моих предыдущих визуальных экспериментов и идей команды. Вся работа выполнена полностью вручную, без использования Photoshop: ножницы, принтер, бумага, сканер, ручная графика и физическая сборка коллажа. В ход пошли практически все доступные средства, чтобы сохранить живую, неровную и тактильную эстетику изображения.',
       yasnoTitle: 'YASNO PARTY',
+      yasnoText: 'Главным визуальным референсом для серии постеров YASNO PARTY стал блок знакомств из старого российского журнала начала 2000-х. Нарочито низкое качество печати, хаотичная верстка, фотографии и характерная типографика того времени легли в основу всей айдентики события. Серия наполнена большим количеством небольших отсылок и деталей — как в основном постере, так и в персональных постерах участников.',
       bdayTitle: 'B-DAY PARTY',
+      bdayText: 'Основная идея постера — показать узнаваемый символ праздника, но уйти от привычной чистой и праздничной эстетики. Знакомый образ намеренно помещен в более грязную и грубую визуальную среду: потертости, шум, несовершенная печать и текстуры создают ощущение немного испорченного, но живого праздничного артефакта.',
       finalPoster: 'FINAL POSTER',
       mainInspiration: 'MAIN INSPIRATION',
       open: 'ОТКРЫТЬ ПОСТЕР',
@@ -53,8 +56,11 @@
       flawaText: 'A personal poster series created as a form of self-expression and a way to present myself as an artist. The works are based on personal photographs, individual imagery, and experiments with collage, typography, and image processing.',
       otherTitle: 'POSTERS',
       klubiqueTitle: 'KLUBIQUE PARTY',
+      klubiqueText: 'The KLUBIQUE PARTY poster was created using elements of my previous visual experiments combined with ideas from the team. The entire piece was made by hand without using Photoshop — scissors, a printer, paper, a scanner, hand-drawn graphics, and physical collage techniques were all part of the process. Almost every available tool was used to preserve the raw, imperfect, and tactile character of the final image.',
       yasnoTitle: 'YASNO PARTY',
+      yasnoText: 'The main visual reference for the YASNO PARTY poster series was a personal ads section from an old Russian magazine from the early 2000s. Intentionally poor print quality, chaotic layouts, photography, and period-specific typography became the foundation of the event’s visual identity. The series is filled with small references and hidden details appearing throughout both the main poster and the individual participant posters.',
       bdayTitle: 'B-DAY PARTY',
+      bdayText: 'The main idea behind the poster was to take a recognizable symbol of celebration and move it away from the usual clean and polished party aesthetic. The familiar image is intentionally placed in a rougher visual environment, with distressed textures, noise, imperfect printing, and imperfections creating the feeling of a slightly damaged yet alive party artifact.',
       finalPoster: 'FINAL POSTER',
       mainInspiration: 'MAIN INSPIRATION',
       open: 'OPEN POSTER',
@@ -95,9 +101,9 @@
   let previousBodyOverflow = '';
   let previousHtmlOverflow = '';
   let activeLoads = 0;
+  let lightboxRenderToken = 0;
   const loadQueue = [];
   const thumbBySource = new Map();
-  const loadedSources = new Set();
 
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -115,37 +121,30 @@
     style.dataset.version = VERSION;
     style.textContent = `
       html:has(.pcg-modal), body:has(.pcg-modal) { overflow:hidden !important; }
-      .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(5rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:#efff39; color:#050505; }
-      .pcg-inner { width:100%; max-width:none; margin:0; }
-      .pcg-head { position:sticky; top:0; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem 0 1rem; background:rgba(239,255,57,.94); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+      .pcg-modal { position:fixed; inset:0; z-index:950000; box-sizing:border-box; width:100vw; height:100dvh; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) 0 max(1rem,env(safe-area-inset-left)); background:#56876D; color:#050505; }
+      .pcg-inner { width:100%; max-width:none; margin:0; background:#56876D; }
+      .pcg-head { position:sticky; top:0; z-index:30; box-sizing:border-box; width:100vw; margin-left:calc(50% - 50vw); display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.7rem max(1rem,env(safe-area-inset-right)) 1rem max(1rem,env(safe-area-inset-left)); background:rgba(44,61,85,.96); color:#fff; backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
       .pcg-label,.pcg-close { margin:0; border:0; padding:.7rem 1rem; background:#050505; color:#fff; font:900 .68rem/1 Arial,Helvetica,sans-serif; letter-spacing:.25em; text-transform:uppercase; }
       .pcg-close { cursor:pointer; }
-      .pcg-hero { padding:clamp(3.5rem,8vw,7rem) 0 clamp(3rem,6vw,5rem); }
+      .pcg-hero { box-sizing:border-box; width:100vw; margin-left:calc(50% - 50vw); padding:clamp(3.5rem,8vw,7rem) max(1rem,env(safe-area-inset-right)) clamp(3rem,6vw,5rem) max(1rem,env(safe-area-inset-left)); background:#2C3D55; color:#fff; }
       .pcg-title { margin:0; font:900 clamp(4.2rem,14vw,13rem)/.82 Arial,Helvetica,sans-serif; letter-spacing:-.075em; text-transform:uppercase; }
-      .pcg-intro,.pcg-copy { box-sizing:border-box; width:100%; max-width:none; padding-right:clamp(0rem,8vw,9rem); font:500 clamp(1rem,1.25vw,1.3rem)/1.42 Arial,Helvetica,sans-serif; letter-spacing:-.015em; }
+      .pcg-intro,.pcg-copy,.pcg-party-copy { box-sizing:border-box; width:100%; max-width:none; padding-right:clamp(0rem,8vw,9rem); font:500 clamp(1rem,1.25vw,1.3rem)/1.42 Arial,Helvetica,sans-serif; letter-spacing:-.015em; }
       .pcg-intro { margin:clamp(1.5rem,3vw,2.5rem) 0 0; }
       .pcg-copy { margin:0 0 clamp(2rem,4vw,3.5rem); }
-      .pcg-section { position:relative; padding:clamp(3.25rem,6vw,6rem) 0; border-top:1px solid rgba(5,5,5,.22); content-visibility:auto; contain-intrinsic-size:auto 1200px; }
+      .pcg-party-copy { margin:0 0 clamp(2rem,4vw,3.5rem); }
+      .pcg-section { position:relative; box-sizing:border-box; margin:0; padding:clamp(3.25rem,6vw,6rem) 0; border:0; }
       .pcg-section-title { margin:0 0 clamp(1rem,2vw,1.5rem); font:900 clamp(2.8rem,7vw,7.5rem)/.84 Arial,Helvetica,sans-serif; letter-spacing:-.07em; text-transform:uppercase; }
       .pcg-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; align-items:start; }
       .pcg-card { display:block; width:100%; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; cursor:zoom-in; }
-      .pcg-card img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; object-fit:contain; opacity:0; transition:opacity .16s ease; }
+      .pcg-card img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; outline:0; background:transparent; box-shadow:none; object-fit:contain; opacity:0; transition:opacity .14s ease; }
       .pcg-card img.is-loaded { opacity:1; }
 
-      .pcg-section--italy {
-        background:#efff39;
-      }
+      .pcg-section--italy { width:100vw; margin-left:calc(50% - 50vw); padding-left:max(1rem,env(safe-area-inset-left)); padding-right:max(1rem,env(safe-area-inset-right)); background:#2C3D55; color:#fff; }
 
-      .pcg-events-section {
-        width:100vw;
-        box-sizing:border-box;
-        margin-left:calc(50% - 50vw);
-        padding-left:max(1rem,env(safe-area-inset-left));
-        padding-right:max(1rem,env(safe-area-inset-right));
-        background:linear-gradient(180deg,#efff39 0%,#f6ff9b 8%,#fff 22%,#fff 100%);
-      }
+      .pcg-events-section { width:100vw; margin-left:calc(50% - 50vw); padding:0; background:#56876D; color:#050505; }
+      .pcg-events-intro { box-sizing:border-box; width:100%; margin:0; padding:clamp(3.25rem,6vw,6rem) max(1rem,env(safe-area-inset-right)) clamp(2.5rem,5vw,4.5rem) max(1rem,env(safe-area-inset-left)); background:#2C3D55; color:#fff; }
 
-      .pcg-event-block { margin-top:clamp(3rem,6vw,6rem); }
+      .pcg-event-block { box-sizing:border-box; width:100%; margin:0; }
       .pcg-event-subtitle { margin:0 0 clamp(1.5rem,3vw,2.5rem); font:900 clamp(1.65rem,3vw,3.25rem)/.92 Arial,Helvetica,sans-serif; letter-spacing:-.045em; text-transform:uppercase; }
       .pcg-event-feature { width:min(100%,78rem); margin:0 auto clamp(1rem,2vw,1.5rem); }
       .pcg-event-row { display:grid; gap:1rem; align-items:start; margin-top:1rem; }
@@ -155,35 +154,13 @@
       .pcg-labelled-card { min-width:0; }
       .pcg-card-label { margin:0 0 .8rem; font:900 clamp(.72rem,1vw,.95rem)/1 Arial,Helvetica,sans-serif; letter-spacing:.18em; text-transform:uppercase; }
 
-      .pcg-event-block--klubique {
-        padding-top:clamp(1rem,2vw,2rem);
-      }
+      .pcg-event-block--klubique { padding:clamp(3.5rem,6vw,6rem) max(1rem,env(safe-area-inset-right)) clamp(4rem,7vw,7rem) max(1rem,env(safe-area-inset-left)); background:linear-gradient(180deg,#2C3D55 0%,#2C3D55 8%,#667487 24%,#a9b1bc 36%,#dfe2e6 47%,#fff 58%,#fff 100%); color:#fff; }
+      .pcg-event-block--yasno { padding:max(4rem,7vw) max(1rem,env(safe-area-inset-right)); background:linear-gradient(180deg,#fff 0%,#fff 8%,#e9efec 24%,#cad8d0 40%,#9db9aa 58%,#739986 74%,#56876D 90%,#56876D 100%); color:#050505; }
+      .pcg-event-block--bday { padding:clamp(4rem,7vw) max(1rem,env(safe-area-inset-right)) clamp(5rem,8vw) max(1rem,env(safe-area-inset-left)); background:#56876D; color:#050505; }
 
-      .pcg-event-block--yasno {
-        width:100vw;
-        box-sizing:border-box;
-        margin-left:calc(50% - 50vw);
-        padding:max(4rem,7vw) max(1rem,env(safe-area-inset-right)) max(4rem,7vw) max(1rem,env(safe-area-inset-left));
-        background:linear-gradient(180deg,#fff 0%,#f4ffe6 14%,#caff8a 38%,#8dff32 68%,#6dff00 100%);
-      }
-
-      .pcg-event-block--bday {
-        width:100vw;
-        box-sizing:border-box;
-        margin:0 0 0 calc(50% - 50vw);
-        padding:clamp(4rem,7vw) max(1rem,env(safe-area-inset-right)) clamp(5rem,8vw) max(1rem,env(safe-area-inset-left));
-        background:#6dff00;
-      }
-
-      .pcg-flawa-section,
-      .pcg-after-events-section {
-        width:100vw;
-        box-sizing:border-box;
-        margin-left:calc(50% - 50vw);
-        padding-left:max(1rem,env(safe-area-inset-left));
-        padding-right:max(1rem,env(safe-area-inset-right));
-        background:#6dff00;
-      }
+      .pcg-flawa-section,.pcg-after-events-section { width:100vw; margin-left:calc(50% - 50vw); padding-left:max(1rem,env(safe-area-inset-left)); padding-right:max(1rem,env(safe-area-inset-right)); background:#56876D; color:#050505; }
+      .pcg-after-events-section:last-child { padding-bottom:max(5rem,env(safe-area-inset-bottom)); }
+      .pcg-flawa-section:last-child { padding-bottom:max(5rem,env(safe-area-inset-bottom)); }
 
       .pcg-light { position:fixed; inset:0; z-index:990000; display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:clamp(.5rem,2vw,1.25rem); padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left)); background:rgba(0,0,0,.97); color:#fff; touch-action:none; }
       .pcg-light-stage { position:relative; min-width:0; height:calc(100dvh - 2rem); display:flex; align-items:center; justify-content:center; overflow:hidden; }
@@ -204,7 +181,7 @@
       }
       @media(max-width:620px),(hover:none),(pointer:coarse){
         .pcg-title { font-size:clamp(3rem,16vw,6rem); }
-        .pcg-intro,.pcg-copy { padding-right:0; font-size:1rem; line-height:1.45; }
+        .pcg-intro,.pcg-copy,.pcg-party-copy { padding-right:0; font-size:1rem; line-height:1.45; }
         .pcg-grid,.pcg-event-row--4,.pcg-event-row--3,.pcg-event-row--2 { grid-template-columns:1fr; gap:.8rem; }
         .pcg-event-feature { width:100%; }
         .pcg-light { grid-template-columns:1fr; padding:.75rem; }
@@ -244,12 +221,11 @@
     document.documentElement.style.overflow = previousHtmlOverflow;
   }
 
-  function finishThumb(image, source) {
+  function finishThumb(image) {
     const done = async () => {
       try { await image.decode(); } catch {}
       image.classList.add('is-loaded');
       image.dataset.loaded = '1';
-      loadedSources.add(source);
       activeLoads = Math.max(0, activeLoads - 1);
       pumpQueue();
     };
@@ -263,8 +239,8 @@
     image.removeAttribute('data-queued');
     activeLoads += 1;
     image.fetchPriority = image.dataset.priority === 'high' ? 'high' : 'low';
-    image.addEventListener('load', () => finishThumb(image, source), { once:true });
-    image.addEventListener('error', () => finishThumb(image, source), { once:true });
+    image.addEventListener('load', () => finishThumb(image), { once:true });
+    image.addEventListener('error', () => finishThumb(image), { once:true });
     image.src = source;
     image.removeAttribute('data-src');
   }
@@ -301,7 +277,6 @@
     loadQueue.length = 0;
     activeLoads = 0;
     thumbBySource.clear();
-    loadedSources.clear();
   }
 
   function setupObserver() {
@@ -317,7 +292,7 @@
         observer.unobserve(entry.target);
         queueThumb(entry.target);
       });
-    }, { root:modal, rootMargin:'1600px 0px', threshold:.01 });
+    }, { root:modal, rootMargin:'1200px 0px', threshold:.01 });
     modal.querySelectorAll('img[data-src]').forEach(image => observer.observe(image));
   }
 
@@ -331,13 +306,13 @@
 
   function renderLightbox() {
     if (!lightbox || !items.length) return;
+    const token = ++lightboxRenderToken;
     const item = items[activeIndex];
     const stage = lightbox.querySelector('.pcg-light-stage');
     stage.classList.remove('is-loaded');
     stage.replaceChildren();
 
-    const thumb = thumbBySource.get(item.src);
-    const image = thumb?.complete && thumb.naturalWidth ? thumb.cloneNode(false) : el('img');
+    const image = el('img');
     image.className = 'pcg-light-image';
     image.alt = item.alt || item.name || 'Poster';
     image.draggable = false;
@@ -345,21 +320,38 @@
     image.fetchPriority = 'high';
     stage.append(image);
 
-    const finish = () => {
+    const thumb = thumbBySource.get(item.src);
+    const previewSrc = thumb?.complete && thumb.naturalWidth
+      ? (thumb.currentSrc || thumb.src)
+      : (item.thumb || item.src);
+
+    const showPreview = () => {
+      if (token !== lightboxRenderToken || !lightbox) return;
       stage.classList.add('is-loaded');
-      warmAround(activeIndex);
     };
 
-    if (image.src && image.complete && image.naturalWidth) {
-      finish();
-    } else {
-      image.addEventListener('load', finish, { once:true });
-      image.addEventListener('error', finish, { once:true });
-      image.src = item.src;
+    image.addEventListener('load', showPreview, { once:true });
+    image.src = previewSrc;
+    if (image.complete && image.naturalWidth) showPreview();
+
+    if (previewSrc !== item.src) {
+      const full = new Image();
+      full.decoding = 'async';
+      full.fetchPriority = 'high';
+      full.onload = async () => {
+        try { await full.decode(); } catch {}
+        if (token !== lightboxRenderToken || !lightbox) return;
+        image.src = item.src;
+        stage.classList.add('is-loaded');
+      };
+      full.src = item.src;
     }
+
+    warmAround(activeIndex);
   }
 
   function closeLightbox() {
+    lightboxRenderToken += 1;
     lightbox?.remove();
     lightbox = null;
   }
@@ -422,10 +414,11 @@
     const image = el('img');
     card.type = 'button';
     card.setAttribute('aria-label', COPY[language()].open);
-    image.dataset.src = item.src;
+    image.dataset.src = item.thumb || item.src;
+    image.dataset.original = item.src;
     image.alt = item.alt || item.name || 'Poster';
     image.decoding = 'async';
-    image.loading = 'eager';
+    image.loading = 'lazy';
     image.fetchPriority = 'low';
     image.draggable = false;
     thumbBySource.set(item.src, image);
@@ -473,11 +466,17 @@
     return wrap;
   }
 
+  function appendPartyCopy(block, text) {
+    if (text) block.append(el('p', 'pcg-party-copy', text));
+  }
+
   function createEventSection(group) {
     const copy = COPY[language()];
     const section = el('section', 'pcg-section pcg-events-section');
-    section.append(el('h2', 'pcg-section-title', group.title));
-    if (group.description) section.append(el('p', 'pcg-copy', group.description));
+    const intro = el('div', 'pcg-events-intro');
+    intro.append(el('h2', 'pcg-section-title', group.title));
+    if (group.description) intro.append(el('p', 'pcg-copy', group.description));
+    section.append(intro);
 
     const klubiqueMain = findByBase(group.items, 'party-3');
     const klubiqueFaces = findFaceSeries(group.items, 'party-3', 7);
@@ -489,6 +488,7 @@
     if (klubiqueMain || klubiqueFaces.length) {
       const block = el('div', 'pcg-event-block pcg-event-block--klubique');
       block.append(el('h3', 'pcg-event-subtitle', copy.klubiqueTitle));
+      appendPartyCopy(block, copy.klubiqueText);
       if (klubiqueMain) {
         const feature = el('div', 'pcg-event-feature');
         const card = createCard(klubiqueMain);
@@ -503,6 +503,7 @@
     if (yasnoFinal || yasnoInspiration || yasnoFaces.length) {
       const block = el('div', 'pcg-event-block pcg-event-block--yasno');
       block.append(el('h3', 'pcg-event-subtitle', copy.yasnoTitle));
+      appendPartyCopy(block, copy.yasnoText);
 
       const topRow = el('div', 'pcg-event-row pcg-event-row--2');
       const finalCard = createLabelledCard(yasnoFinal, copy.finalPoster);
@@ -519,6 +520,7 @@
     if (bdayMain) {
       const block = el('div', 'pcg-event-block pcg-event-block--bday');
       block.append(el('h3', 'pcg-event-subtitle', copy.bdayTitle));
+      appendPartyCopy(block, copy.bdayText);
       const feature = el('div', 'pcg-event-feature');
       const card = createCard(bdayMain);
       if (card) feature.append(card);
@@ -538,8 +540,7 @@
     if (group.type === 'after-events') classes.push('pcg-after-events-section');
 
     const section = el('section', classes.join(' '));
-    const title = el('h2', 'pcg-section-title', group.title);
-    section.append(title);
+    section.append(el('h2', 'pcg-section-title', group.title));
     if (group.description) section.append(el('p', 'pcg-copy', group.description));
     const grid = el('div', 'pcg-grid');
 
@@ -590,8 +591,8 @@
     modal = overlay;
     setupObserver();
 
-    const firstImages = [...modal.querySelectorAll('img[data-src]')].slice(0, 6);
-    firstImages.forEach((image, index) => queueThumb(image, index < 3));
+    const firstImages = [...modal.querySelectorAll('img[data-src]')].slice(0, 9);
+    firstImages.forEach((image, index) => queueThumb(image, index < 4));
   }
 
   function findPostersCard(target) {
