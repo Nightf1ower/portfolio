@@ -89,12 +89,39 @@ async function addPosterThumbnail(item) {
   }
 }
 
+async function addPortfolioThumbnail(item) {
+  let decodedPath;
+  try {
+    decodedPath = decodeURIComponent(String(item.src || '')).replace(/^\/+/, '');
+  } catch {
+    return item;
+  }
+
+  if (!decodedPath.startsWith('works/')) return item;
+  const relativeToWorks = decodedPath.slice('works/'.length);
+  const parsed = path.parse(relativeToWorks);
+  const absoluteThumb = path.join(
+    PUBLIC_DIR,
+    'generated',
+    'portfolio-thumbs',
+    parsed.dir,
+    `${parsed.name}.webp`,
+  );
+
+  try {
+    await access(absoluteThumb);
+    return { ...item, thumb: encodePublicUrl(absoluteThumb) };
+  } catch {
+    return item;
+  }
+}
+
 const manifest = {};
 for (const [key, directories] of Object.entries(SOURCES)) {
   const collected = await collect(directories);
   manifest[key] = key === 'posters'
     ? await Promise.all(collected.map(addPosterThumbnail))
-    : collected;
+    : await Promise.all(collected.map(addPortfolioThumbnail));
 }
 
 const output = `(() => {\n  window.PORTFOLIO_GALLERY_MANIFEST = Object.freeze(${JSON.stringify(manifest, null, 2)});\n  if (!document.querySelector('script[src^="/project-list-expansion.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/project-list-expansion.js?v=project-list-expansion-3';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/merch-image-cleanup.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/merch-image-cleanup.js?v=merch-image-cleanup-1';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/merch-dxs-thumbnails.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/merch-dxs-thumbnails.js?v=dxs-thumbs-2';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n  if (!document.querySelector('script[src^="/vtb-layout-refine.js"]')) {\n    const script = document.createElement('script');\n    script.src = '/vtb-layout-refine.js?v=vtb-layout-refine-3';\n    script.async = false;\n    (document.currentScript || document.body).after(script);\n  }\n})();\n`;
