@@ -1,8 +1,8 @@
 (() => {
-  if (window.__project9006LayoutV7) return;
-  window.__project9006LayoutV7 = true;
+  if (window.__project9006LayoutV8) return;
+  window.__project9006LayoutV8 = true;
 
-  const VERSION = '9006-layout-7';
+  const VERSION = '9006-layout-8';
   const BRAND_NAME = 'NINETY Z S';
   const LOGOS = [
     '/works/90-06/logo-variations/LOGO%201.jpg',
@@ -65,7 +65,9 @@
   );
 
   function injectStyles() {
-    document.getElementById('project9006-layout-style')?.remove();
+    const current = document.getElementById('project9006-layout-style');
+    if (current?.dataset.version === VERSION) return;
+    current?.remove();
     const style = document.createElement('style');
     style.id = 'project9006-layout-style';
     style.dataset.version = VERSION;
@@ -398,8 +400,7 @@
   function rebuildLogoSection(section, sheetSection) {
     if (!section) return;
     const current = section.querySelector(':scope > .project9006-logo-pair');
-    const currentVersion = current?.dataset.version;
-    if (currentVersion === VERSION) return;
+    if (current?.dataset.version === VERSION) return;
 
     [...section.children].forEach(child => {
       if (child === section.firstElementChild) return;
@@ -480,7 +481,7 @@
     updateProjectCard(lang);
 
     const modal = find9006Modal();
-    if (!modal) return;
+    if (!modal) return false;
     modal.classList.add('project9006-modal');
     ensureToolbar(modal, lang);
 
@@ -506,6 +507,7 @@
     restorePhotoshoot(campaign);
     replacePosters(posters);
     hideTextActions(modal);
+    return true;
   }
 
   let scheduled = false;
@@ -518,17 +520,28 @@
     });
   }
 
-  new MutationObserver(scheduleEnhance).observe(document.body, { childList: true, subtree: true });
+  const runOpeningPasses = () => {
+    [0, 70, 180, 420].forEach((delay) => window.setTimeout(scheduleEnhance, delay));
+  };
+
   new MutationObserver(scheduleEnhance).observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['lang'],
   });
-  window.addEventListener('load', scheduleEnhance);
+
+  window.addEventListener('load', scheduleEnhance, { once: true });
   document.addEventListener('click', event => {
-    if (event.target.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) {
+    const target = event.target instanceof Element ? event.target : null;
+    const projectCard = target?.closest('#works button,#works article');
+    const projectTitle = normalize(projectCard?.querySelector('h3')?.textContent);
+    if (projectTitle === '90.06' || projectTitle === BRAND_NAME) runOpeningPasses();
+
+    if (target?.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) {
       setTimeout(scheduleEnhance, 0);
       setTimeout(scheduleEnhance, 100);
     }
-  });
+  }, true);
+
+  injectStyles();
   scheduleEnhance();
 })();
