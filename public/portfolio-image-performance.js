@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioImagePerformanceV4) return;
-  window.__portfolioImagePerformanceV4 = true;
+  if (window.__portfolioImagePerformanceV5) return;
+  window.__portfolioImagePerformanceV5 = true;
 
-  const VERSION = 'portfolio-image-performance-4';
+  const VERSION = 'portfolio-image-performance-5';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
   const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
   const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
@@ -76,7 +76,8 @@
   };
 
   const shouldThumb = (image, modal) => (
-    modal?.matches?.(THUMB_MODAL_SELECTOR)
+    image.dataset.portfolioThumbFailed !== 'true'
+    && modal?.matches?.(THUMB_MODAL_SELECTOR)
     && !isFullResolutionImage(image)
   );
 
@@ -87,6 +88,7 @@
       const current = image.getAttribute('src') || '';
       if (!GENERATED_RE.test(current)) return;
       const original = image.dataset.portfolioOriginal;
+      image.dataset.portfolioThumbFailed = 'true';
       if (original && original !== current) image.src = original;
     });
   };
