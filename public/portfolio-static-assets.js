@@ -1,6 +1,6 @@
 (() => {
-  if (window.__portfolioStaticAssetsV4) return;
-  window.__portfolioStaticAssetsV4 = true;
+  if (window.__portfolioStaticAssetsV5) return;
+  window.__portfolioStaticAssetsV5 = true;
 
   const FABLE = Array.from({ length: 40 }, (_, index) =>
     `public/works/fable/fprint-${String(index + 1).padStart(2, '0')}.jpg`
@@ -34,16 +34,24 @@
   };
 
   const STAY_UGLY = {
-    concept: Array.from({ length: 4 }, (_, index) =>
-      `public/works/stayugly/concept/concept-${String(index + 1).padStart(2, '0')}.jpg`
-    ),
+    concept: [
+      ...Array.from({ length: 4 }, (_, index) =>
+        `public/works/stayugly/concept/concept-${String(index + 1).padStart(2, '0')}.jpg`
+      ),
+      ...Array.from({ length: 3 }, (_, index) =>
+        `public/works/stayugly/concept/concept-n-${index + 1}.png`
+      ),
+    ],
     final: Array.from({ length: 3 }, (_, index) =>
       `public/works/stayugly/final/final-${String(index + 1).padStart(2, '0')}.jpg`
     ),
     photo: Array.from({ length: 11 }, (_, index) =>
       `public/works/stayugly/photo/photo-${String(index + 1).padStart(2, '0')}.jpg`
     ),
-    package: ['public/works/stayugly/package/package-01.jpg'],
+    package: [
+      'public/works/stayugly/package/package-01.jpg',
+      'public/works/stayugly/package/zips.png',
+    ],
   };
 
   const MERCH = [
