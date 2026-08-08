@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbContentStyleUpdateV3) return;
-  window.__vtbContentStyleUpdateV3 = true;
+  if (window.__vtbContentStyleUpdateV4) return;
+  window.__vtbContentStyleUpdateV4 = true;
 
-  const VERSION = 'vtb-content-style-3';
+  const VERSION = 'vtb-content-style-4';
   const ROOT = '/works/VTB%20DESIGN%20TEAM/print';
   const PRINT_FILES = [
     ['print-1.jpg', 'print-1-variant.jpg', 'print-1-tee-1.jpg', 'print-1-tee-2.jpg', 'print-1-tee-3.jpg', 'print-1-tee-4.jpg', 'print-1-tee-5.jpg', 'print-1-tee-6.jpg'],
@@ -26,7 +26,7 @@
       aboutTitle: 'О ПРОЕКТЕ',
       aboutText: 'Разработка мерча и визуальных материалов для команды дизайнеров ВТБ. Работая с логотипом и фирменным цветом бренда, я создавал принты, брендированные физические объекты и рекламные материалы для digital-носителей. Главной задачей было сохранить узнаваемость айдентики ВТБ, адаптировав её к более свободной и современной визуальной подаче.',
       printsTitle: 'ДИЗАЙН ПРИНТОВ',
-      printsText: 'В основе принтов — смелые идеи, современные визуальные тренды и актуальные референсы. Фирменные элементы ВТБ переосмыслялись через экспериментальную типографику, масштабирование и нестандартные композиционные решения, формируя более дерзкий образ команды внутри общей айдентики бренда.',
+      printsText: 'В основе принтов — смелые идеи, современные визуальные тренды и актуальные референсы. Фирменные элементы ВТБ переосмысливались через экспериментальную типографику, масштабирование и нестандартные композиционные решения, формируя более дерзкий образ команды внутри общей айдентики бренда.',
     },
     en: {
       aboutTitle: 'ABOUT THE PROJECT',
@@ -197,12 +197,12 @@
   }
 
   function applyCopy(modal) {
-    if (!(modal instanceof Element)) return;
+    if (!(modal instanceof Element)) return false;
     const inner = modal.querySelector('.vtb-inner');
     const hero = inner?.querySelector(':scope > .vtb-hero');
     const sections = [...(inner?.querySelectorAll(':scope > .vtb-section') || [])];
     const printsSection = sections[0];
-    if (!inner || !hero || !printsSection) return;
+    if (!inner || !hero || !printsSection) return false;
 
     let intro = inner.querySelector(':scope > .vtb-project-intro');
     if (!intro) {
@@ -226,6 +226,7 @@
     const printTitle = sectionHead?.querySelector('.vtb-title');
     if (printTitle) printTitle.textContent = copy.printsTitle;
     printCopy.textContent = copy.printsText;
+    return true;
   }
 
   function getSeriesForCard(card) {
@@ -368,10 +369,12 @@
 
   function apply() {
     injectStyles();
+    let ready = false;
     document.querySelectorAll('.vtb-modal').forEach((modal) => {
-      applyCopy(modal);
+      ready = applyCopy(modal) || ready;
       restorePrintHover(modal);
     });
+    return ready;
   }
 
   let scheduled = false;
@@ -384,10 +387,9 @@
     });
   };
 
-  new MutationObserver(schedule).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
+  const runOpeningPasses = () => {
+    [0, 70, 180, 420].forEach((delay) => window.setTimeout(schedule, delay));
+  };
 
   new MutationObserver(schedule).observe(document.documentElement, {
     attributes: true,
@@ -395,11 +397,18 @@
   });
 
   document.addEventListener('click', (event) => {
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+    const target = event.target instanceof Element ? event.target : null;
+    const projectCard = target?.closest('#works article, #works button');
+    const title = projectCard?.querySelector('h3')?.textContent?.trim().toUpperCase();
+    if (title === 'VTB DESIGN TEAM') runOpeningPasses();
+
+    if (target?.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
       setTimeout(schedule, 0);
       setTimeout(schedule, 120);
     }
   }, true);
 
-  apply();
+  window.addEventListener('load', schedule, { once: true });
+  injectStyles();
+  schedule();
 })();
