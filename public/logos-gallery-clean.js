@@ -1,8 +1,8 @@
 (() => {
-  if (window.__logosGalleryCleanV1) return;
-  window.__logosGalleryCleanV1 = true;
+  if (window.__logosGalleryCleanV2) return;
+  window.__logosGalleryCleanV2 = true;
 
-  const VERSION = 'logos-gallery-clean-1';
+  const VERSION = 'logos-gallery-clean-2';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {};
   const SOURCE = Array.isArray(manifest.logos) ? manifest.logos : [];
 
@@ -26,40 +26,13 @@
       close: 'ЗАКРЫТЬ',
       open: 'ОТКРЫТЬ ЛОГОТИП',
       sections: [
-        {
-          title: 'РАЗРАБОТКА СИСТЕМЫ ЛОГОТИПОВ',
-          image: 'cpm-main-logo',
-          text: 'Основой проекта стал уже существующий логотип ЦПМ — объёмная геометрическая композиция, построенная на сочетании синих, зелёных и оранжевых плоскостей. Моей задачей было изучить его визуальную логику и создать на её основе отдельные логотипы для разных подразделений и сервисов компании.\n\nЯ выделил главные элементы исходной айдентики: изометрическую перспективу, крупные геометрические формы, диагональные срезы, яркую фирменную палитру и соединение нескольких модулей в единую конструкцию. Далее для каждого направления был выбран самостоятельный образ, отражающий его назначение. Этот образ перерабатывался в стилистике основного логотипа, благодаря чему все знаки получили собственную идею, но сохранили визуальную связь с брендом ЦПМ.',
-        },
-        {
-          title: 'ТРАНСПОРТНОЕ НАПРАВЛЕНИЕ',
-          image: 'cpm-logo-1',
-          text: 'Для транспортного направления основным образом стал грузовой автомобиль — понятный символ перевозок, движения и логистики. Его конструкция была собрана из крупных геометрических объёмов, повторяющих модульный принцип основного логотипа.\n\nКабина выполнена в синем цвете, зелёная плоскость формирует боковую часть кузова, а оранжевые и жёлтые элементы создают яркие акценты и подчёркивают объём. На верхней поверхности кузова сохранены характерные формы и диагональные элементы исходного знака. Благодаря этому автомобиль воспринимается не как отдельная иллюстрация, а как новая конструкция, собранная из элементов фирменной айдентики ЦПМ.',
-        },
-        {
-          title: 'ОБРАЗОВАТЕЛЬНОЕ НАПРАВЛЕНИЕ',
-          image: 'cpm-logo-2',
-          text: 'Для образовательного направления был выбран образ раскрытой книги — универсальный символ знаний, обучения и развития. Книга построена из двух крупных цветовых плоскостей: синяя часть отвечает за одну сторону обложки, а оранжевая — за другую. Центральный элемент одновременно формирует корешок книги и объединяет композицию.\n\nДиагональные грани на обложке продолжают геометрию основного логотипа, а белые страницы делают знак легче и визуально отделяют его от массивной основы. Зелёные элементы над книгой символизируют новые знания, идеи и процесс интеллектуального развития. Их форма и цвет поддерживают фирменную систему и связывают логотип с остальными направлениями компании.',
-        },
-        {
-          title: 'СИСТЕМА MEMOS',
-          image: 'cpm-logo-3',
-          text: 'Логотип MEMOS был разработан вокруг образа документа и ручки, отражающего работу с текстами, записями и внутренними материалами. Основой композиции стала крупная синяя рамка, внутри которой размещён лист с условными строками текста.\n\nОранжевые линии продолжают цветовую палитру основного логотипа и создают простой, легко считываемый образ документа. Зелёная ручка выступает главным смысловым элементом и собирается из нескольких лаконичных геометрических форм. Сам знак выполнен с небольшим перспективным искажением, благодаря чему сохраняет объём и связь с изометрическим характером исходной айдентики.',
-        },
-        {
-          title: 'AUDITORIUM — СИСТЕМА БРОНИРОВАНИЯ',
-          image: 'cpm-logo-4',
-          text: 'Для системы бронирования Auditorium был разработан компактный знак, основанный на идее пространства, разделённого на отдельные помещения или ячейки расписания. Квадратный модуль поделён на четыре секции, каждая из которых содержит отдельный символ.\n\nВнутри конструкции размещены буквы «ЦПМ» и знак геолокации, обозначающий выбор конкретной аудитории или помещения. Синяя рамка объединяет элементы, зелёный и оранжевый цвета выделяют отдельные функциональные части. Логотип получился более плоским и лаконичным, чем основные объёмные знаки, но сохранил общую геометрию, модульность и фирменную палитру бренда.',
-        },
-        {
-          title: 'ОПИС.ЦЕНТР',
-          image: 'cpm-logo-5',
-          text: 'Логотип ОПИС.ЦЕНТР был построен вокруг идеи образовательного и информационного пространства, объединяющего несколько направлений. Основой знака стала объёмная буквенная композиция, встроенная в форму куба.\n\nБуквы образуют боковые грани конструкции, благодаря чему название становится частью самого символа. Синяя верхняя плоскость превращена в академическую шапочку и подчёркивает образовательную направленность центра. Зелёные поверхности формируют основной объём, а небольшой оранжевый элемент добавляет фирменный цветовой акцент. Таким образом, логотип одновременно воспринимается как аббревиатура, объёмный объект и символ образовательной среды.',
-        },
-        {
-          title: 'РЕЗУЛЬТАТ',
-          text: 'В результате была создана единая система логотипов, в которой каждый знак отражает функцию конкретного подразделения через собственный понятный образ: автомобиль, книгу, документ, систему помещений или образовательный центр.\n\nВсе логотипы построены по общим правилам: фирменная палитра, геометрические модули, диагональные плоскости, объём и конструктивный подход к форме. Основной логотип ЦПМ стал визуальным конструктором, который удалось адаптировать под разные задачи, сохранив целостность, узнаваемость и возможность дальнейшего развития айдентики.',
-        },
+        { title: 'РАЗРАБОТКА СИСТЕМЫ ЛОГОТИПОВ', image: 'cpm-main-logo', text: 'Основой проекта стал уже существующий логотип ЦПМ — объёмная геометрическая композиция, построенная на сочетании синих, зелёных и оранжевых плоскостей. Моей задачей было изучить его визуальную логику и создать на её основе отдельные логотипы для разных подразделений и сервисов компании.\n\nЯ выделил главные элементы исходной айдентики: изометрическую перспективу, крупные геометрические формы, диагональные срезы, яркую фирменную палитру и соединение нескольких модулей в единую конструкцию. Далее для каждого направления был выбран самостоятельный образ, отражающий его назначение. Этот образ перерабатывался в стилистике основного логотипа, благодаря чему все знаки получили собственную идею, но сохранили визуальную связь с брендом ЦПМ.' },
+        { title: 'ТРАНСПОРТНОЕ НАПРАВЛЕНИЕ', image: 'cpm-logo-1', text: 'Для транспортного направления основным образом стал грузовой автомобиль — понятный символ перевозок, движения и логистики. Его конструкция была собрана из крупных геометрических объёмов, повторяющих модульный принцип основного логотипа.\n\nКабина выполнена в синем цвете, зелёная плоскость формирует боковую часть кузова, а оранжевые и жёлтые элементы создают яркие акценты и подчёркивают объём. На верхней поверхности кузова сохранены характерные формы и диагональные элементы исходного знака. Благодаря этому автомобиль воспринимается не как отдельная иллюстрация, а как новая конструкция, собранная из элементов фирменной айдентики ЦПМ.' },
+        { title: 'ОБРАЗОВАТЕЛЬНОЕ НАПРАВЛЕНИЕ', image: 'cpm-logo-2', text: 'Для образовательного направления был выбран образ раскрытой книги — универсальный символ знаний, обучения и развития. Книга построена из двух крупных цветовых плоскостей: синяя часть отвечает за одну сторону обложки, а оранжевая — за другую. Центральный элемент одновременно формирует корешок книги и объединяет композицию.\n\nДиагональные грани на обложке продолжают геометрию основного логотипа, а белые страницы делают знак легче и визуально отделяют его от массивной основы. Зелёные элементы над книгой символизируют новые знания, идеи и процесс интеллектуального развития. Их форма и цвет поддерживают фирменную систему и связывают логотип с остальными направлениями компании.' },
+        { title: 'СИСТЕМА MEMOS', image: 'cpm-logo-3', text: 'Логотип MEMOS был разработан вокруг образа документа и ручки, отражающего работу с текстами, записями и внутренними материалами. Основой композиции стала крупная синяя рамка, внутри которой размещён лист с условными строками текста.\n\nОранжевые линии продолжают цветовую палитру основного логотипа и создают простой, легко считываемый образ документа. Зелёная ручка выступает главным смысловым элементом и собирается из нескольких лаконичных геометрических форм. Сам знак выполнен с небольшим перспективным искажением, благодаря чему сохраняет объём и связь с изометрическим характером исходной айдентики.' },
+        { title: 'AUDITORIUM — СИСТЕМА БРОНИРОВАНИЯ', image: 'cpm-logo-4', text: 'Для системы бронирования Auditorium был разработан компактный знак, основанный на идее пространства, разделённого на отдельные помещения или ячейки расписания. Квадратный модуль поделён на четыре секции, каждая из которых содержит отдельный символ.\n\nВнутри конструкции размещены буквы «ЦПМ» и знак геолокации, обозначающий выбор конкретной аудитории или помещения. Синяя рамка объединяет элементы, зелёный и оранжевый цвета выделяют отдельные функциональные части. Логотип получился более плоским и лаконичным, чем основные объёмные знаки, но сохранил общую геометрию, модульность и фирменную палитру бренда.' },
+        { title: 'ОПИС.ЦЕНТР', image: 'cpm-logo-5', text: 'Логотип ОПИС.ЦЕНТР был построен вокруг идеи образовательного и информационного пространства, объединяющего несколько направлений. Основой знака стала объёмная буквенная композиция, встроенная в форму куба.\n\nБуквы образуют боковые грани конструкции, благодаря чему название становится частью самого символа. Синяя верхняя плоскость превращена в академическую шапочку и подчёркивает образовательную направленность центра. Зелёные поверхности формируют основной объём, а небольшой оранжевый элемент добавляет фирменный цветовой акцент. Таким образом, логотип одновременно воспринимается как аббревиатура, объёмный объект и символ образовательной среды.' },
+        { title: 'РЕЗУЛЬТАТ', text: 'В результате была создана единая система логотипов, в которой каждый знак отражает функцию конкретного подразделения через собственный понятный образ: автомобиль, книгу, документ, систему помещений или образовательный центр.\n\nВсе логотипы построены по общим правилам: фирменная палитра, геометрические модули, диагональные плоскости, объём и конструктивный подход к форме. Основной логотип ЦПМ стал визуальным конструктором, который удалось адаптировать под разные задачи, сохранив целостность, узнаваемость и возможность дальнейшего развития айдентики.' },
       ],
     },
     en: {
@@ -67,40 +40,13 @@
       close: 'CLOSE',
       open: 'OPEN LOGO',
       sections: [
-        {
-          title: 'LOGO SYSTEM DEVELOPMENT',
-          image: 'cpm-main-logo',
-          text: 'The project was based on the existing CPM logo — a three-dimensional geometric composition built from blue, green, and orange planes. My task was to study its visual logic and use it as the foundation for a series of logos representing different company departments and services.\n\nI identified the key elements of the original identity: isometric perspective, bold geometric forms, diagonal cuts, a vibrant corporate color palette, and the combination of multiple modules into a single structure. A distinct visual symbol was then selected for each department based on its purpose. Every symbol was redesigned using the visual principles of the main logo, allowing each mark to communicate its own idea while remaining clearly connected to the CPM brand.',
-        },
-        {
-          title: 'TRANSPORTATION DEPARTMENT',
-          image: 'cpm-logo-1',
-          text: 'A delivery truck was chosen as the central image for the transportation department — a clear symbol of logistics, movement, and delivery. Its structure was assembled from large geometric volumes that follow the modular construction of the original logo.\n\nThe blue cab acts as the main structural element, the green plane forms the side of the cargo section, while orange and yellow details create visual accents and emphasize depth. The top surface of the truck retains the distinctive shapes and diagonal elements of the original mark. As a result, the vehicle does not appear as a separate illustration but as a new object constructed from the visual elements of the CPM identity.',
-        },
-        {
-          title: 'EDUCATIONAL DEPARTMENT',
-          image: 'cpm-logo-2',
-          text: 'An open book was selected for the educational department as a universal symbol of knowledge, learning, and development. The book is constructed from two large color planes: blue forms one side of the cover, while orange forms the other. The central element acts as the book spine and visually connects the composition.\n\nThe diagonal surfaces of the cover continue the geometry of the main logo, while the white pages make the mark feel lighter and separate them from the bold base. The green elements above the book represent new knowledge, ideas, and intellectual growth. Their shape and color support the corporate visual system and connect the logo to the other company departments.',
-        },
-        {
-          title: 'MEMOS SYSTEM',
-          image: 'cpm-logo-3',
-          text: 'The MEMOS logo was developed around the image of a document and a pen, representing work with texts, notes, and internal materials. The composition is based on a bold blue frame containing a sheet with simplified lines of text.\n\nThe orange lines continue the color palette of the main logo and create a clear, instantly recognizable document symbol. The green pen acts as the central conceptual element and is assembled from several simple geometric shapes. A slight perspective distortion adds depth to the mark and maintains its connection to the isometric character of the original identity.',
-        },
-        {
-          title: 'AUDITORIUM — BOOKING SYSTEM',
-          image: 'cpm-logo-4',
-          text: 'The Auditorium booking system required a compact logo based on the idea of a space divided into separate rooms or scheduling cells. The square symbol is divided into four sections, each containing an individual graphic element.\n\nThe structure combines the CPM initials with a location pin, representing the selection of a particular classroom or space. A blue frame unifies the elements, while green and orange highlight different functional areas. The result is flatter and more minimal than the main three-dimensional symbols, yet it retains the geometry, modularity, and corporate color palette of the overall brand identity.',
-        },
-        {
-          title: 'OPIS.CENTER',
-          image: 'cpm-logo-5',
-          text: 'The OPIS.CENTER logo was built around the idea of an educational and informational space that brings several areas together. The basis of the mark is a three-dimensional letter composition integrated into the shape of a cube.\n\nThe letters form the side surfaces of the structure, turning the name itself into part of the symbol. The blue top plane becomes a graduation cap, emphasizing the center’s educational purpose. Green surfaces form the main volume, while a small orange element introduces a recognizable corporate accent. The logo can therefore be perceived simultaneously as an abbreviation, a three-dimensional object, and a symbol of an educational environment.',
-        },
-        {
-          title: 'RESULT',
-          text: 'The result is a unified logo system in which each mark communicates the purpose of a specific department through a clear visual image: a truck, a book, a document, a room-booking system, or an educational center.\n\nAll logos follow the same principles: the corporate color palette, geometric modules, diagonal planes, dimensionality, and a structural approach to form. The main CPM logo became a visual construction system that could be adapted to different functions while preserving consistency, recognition, and the potential for further development of the identity.',
-        },
+        { title: 'LOGO SYSTEM DEVELOPMENT', image: 'cpm-main-logo', text: 'The project was based on the existing CPM logo — a three-dimensional geometric composition built from blue, green, and orange planes. My task was to study its visual logic and use it as the foundation for a series of logos representing different company departments and services.\n\nI identified the key elements of the original identity: isometric perspective, bold geometric forms, diagonal cuts, a vibrant corporate color palette, and the combination of multiple modules into a single structure. A distinct visual symbol was then selected for each department based on its purpose. Every symbol was redesigned using the visual principles of the main logo, allowing each mark to communicate its own idea while remaining clearly connected to the CPM brand.' },
+        { title: 'TRANSPORTATION DEPARTMENT', image: 'cpm-logo-1', text: 'A delivery truck was chosen as the central image for the transportation department — a clear symbol of logistics, movement, and delivery. Its structure was assembled from large geometric volumes that follow the modular construction of the original logo.\n\nThe blue cab acts as the main structural element, the green plane forms the side of the cargo section, while orange and yellow details create visual accents and emphasize depth. The top surface of the truck retains the distinctive shapes and diagonal elements of the original mark. As a result, the vehicle does not appear as a separate illustration but as a new object constructed from the visual elements of the CPM identity.' },
+        { title: 'EDUCATIONAL DEPARTMENT', image: 'cpm-logo-2', text: 'An open book was selected for the educational department as a universal symbol of knowledge, learning, and development. The book is constructed from two large color planes: blue forms one side of the cover, while orange forms the other. The central element acts as the book spine and visually connects the composition.\n\nThe diagonal surfaces of the cover continue the geometry of the main logo, while the white pages make the mark feel lighter and separate them from the bold base. The green elements above the book represent new knowledge, ideas, and intellectual growth. Their shape and color support the corporate visual system and connect the logo to the other company departments.' },
+        { title: 'MEMOS SYSTEM', image: 'cpm-logo-3', text: 'The MEMOS logo was developed around the image of a document and a pen, representing work with texts, notes, and internal materials. The composition is based on a bold blue frame containing a sheet with simplified lines of text.\n\nThe orange lines continue the color palette of the main logo and create a clear, instantly recognizable document symbol. The green pen acts as the central conceptual element and is assembled from several simple geometric shapes. A slight perspective distortion adds depth to the mark and maintains its connection to the isometric character of the original identity.' },
+        { title: 'AUDITORIUM — BOOKING SYSTEM', image: 'cpm-logo-4', text: 'The Auditorium booking system required a compact logo based on the idea of a space divided into separate rooms or scheduling cells. The square symbol is divided into four sections, each containing an individual graphic element.\n\nThe structure combines the CPM initials with a location pin, representing the selection of a particular classroom or space. A blue frame unifies the elements, while green and orange highlight different functional areas. The result is flatter and more minimal than the main three-dimensional symbols, yet it retains the geometry, modularity, and corporate color palette of the overall brand identity.' },
+        { title: 'OPIS.CENTER', image: 'cpm-logo-5', text: 'The OPIS.CENTER logo was built around the idea of an educational and informational space that brings several areas together. The basis of the mark is a three-dimensional letter composition integrated into the shape of a cube.\n\nThe letters form the side surfaces of the structure, turning the name itself into part of the symbol. The blue top plane becomes a graduation cap, emphasizing the center’s educational purpose. Green surfaces form the main volume, while a small orange element introduces a recognizable corporate accent. The logo can therefore be perceived simultaneously as an abbreviation, a three-dimensional object, and a symbol of an educational environment.' },
+        { title: 'RESULT', text: 'The result is a unified logo system in which each mark communicates the purpose of a specific department through a clear visual image: a truck, a book, a document, a room-booking system, or an educational center.\n\nAll logos follow the same principles: the corporate color palette, geometric modules, diagonal planes, dimensionality, and a structural approach to form. The main CPM logo became a visual construction system that could be adapted to different functions while preserving consistency, recognition, and the potential for further development of the identity.' },
       ],
     },
   };
@@ -126,7 +72,9 @@
 
   function installStyles() {
     const id = 'logos-gallery-clean-style';
-    document.getElementById(id)?.remove();
+    const existing = document.getElementById(id);
+    if (existing?.dataset.version === VERSION) return;
+    existing?.remove();
     const style = el('style');
     style.id = id;
     style.dataset.version = VERSION;
@@ -137,7 +85,7 @@
       .lcg-label,.lcg-close { margin:0; border:0; padding:.72rem 1rem; background:#050505; color:#fff; font:900 .68rem/1 Arial,Helvetica,sans-serif; letter-spacing:.24em; text-transform:uppercase; }
       .lcg-close { cursor:pointer; }
       .lcg-inner { width:100%; }
-      .lcg-row { box-sizing:border-box; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(2rem,6vw,7rem); align-items:center; min-height:70vh; padding:clamp(4rem,8vw,9rem) max(1rem,env(safe-area-inset-right)) clamp(4rem,8vw,9rem) max(1rem,env(safe-area-inset-left)); border-bottom:1px solid rgba(5,5,5,.14); }
+      .lcg-row { box-sizing:border-box; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(2rem,6vw,7rem); align-items:center; min-height:70vh; padding:clamp(4rem,8vw,9rem) max(1rem,env(safe-area-inset-right)) clamp(4rem,8vw,9rem) max(1rem,env(safe-area-inset-left)); border-bottom:1px solid rgba(5,5,5,.14); content-visibility:auto; contain-intrinsic-size:900px 720px; }
       .lcg-copy { min-width:0; }
       .lcg-title { margin:0 0 clamp(1.4rem,2.5vw,2.4rem); font:900 clamp(2.2rem,5vw,5.6rem)/.88 Arial,Helvetica,sans-serif; letter-spacing:-.06em; text-transform:uppercase; }
       .lcg-text { margin:0; white-space:pre-line; font:500 clamp(1rem,1.22vw,1.25rem)/1.45 Arial,Helvetica,sans-serif; letter-spacing:-.015em; }
@@ -218,11 +166,16 @@
         const image = el('img', 'lcg-logo');
         button.type = 'button';
         button.setAttribute('aria-label', COPY[language()].open);
-        image.src = item.src;
+        image.src = item.thumb || item.src;
         image.alt = item.name || section.title;
         image.decoding = 'async';
         image.loading = index === 0 ? 'eager' : 'lazy';
-        if (index === 0) image.fetchPriority = 'high';
+        try { image.fetchPriority = index === 0 ? 'high' : 'low'; } catch {}
+        button.addEventListener('pointerenter', () => {
+          const preload = new Image();
+          preload.decoding = 'async';
+          preload.src = item.src;
+        }, { once:true, passive:true });
         button.onclick = event => {
           event.preventDefault();
           event.stopPropagation();
