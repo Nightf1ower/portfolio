@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbLayoutOrderV2) return;
-  window.__vtbLayoutOrderV2 = true;
+  if (window.__vtbLayoutOrderV3) return;
+  window.__vtbLayoutOrderV3 = true;
 
-  const VERSION = 'vtb-layout-order-2';
+  const VERSION = 'vtb-layout-order-3';
   const PRINT_ORDER = [1, 3, 2, 4, 5, 6, 9, 7, 8];
   const BOXERS_ORDER = [1, 2];
   const ASHTRAYS_TOP_ORDER = [3, 4];
@@ -175,16 +175,21 @@
   function applyToModal(modal) {
     const inner = modal.querySelector('.vtb-inner');
     const sections = [...(inner?.querySelectorAll(':scope > .vtb-section') || [])];
-    if (sections.length < 3) return;
+    if (sections.length < 3) return false;
 
     arrangePrints(sections[0]);
     arrangeMerch(sections[1]);
     arrangeAdvertising(sections[2]);
+    return true;
   }
 
   function apply() {
     injectStyles();
-    document.querySelectorAll('.vtb-modal').forEach(applyToModal);
+    let ready = false;
+    document.querySelectorAll('.vtb-modal').forEach((modal) => {
+      ready = applyToModal(modal) || ready;
+    });
+    return ready;
   }
 
   let scheduled = false;
@@ -197,10 +202,9 @@
     });
   };
 
-  new MutationObserver(schedule).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
+  const runOpeningPasses = () => {
+    [0, 60, 160, 360].forEach((delay) => window.setTimeout(schedule, delay));
+  };
 
   new MutationObserver(schedule).observe(document.documentElement, {
     attributes: true,
@@ -208,11 +212,18 @@
   });
 
   document.addEventListener('click', (event) => {
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
-      setTimeout(schedule, 0);
-      setTimeout(schedule, 120);
+    const target = event.target instanceof Element ? event.target : null;
+    const projectCard = target?.closest('#works article, #works button');
+    const title = projectCard?.querySelector('h3')?.textContent?.trim().toUpperCase();
+    if (title === 'VTB DESIGN TEAM') runOpeningPasses();
+
+    if (target?.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+      window.setTimeout(schedule, 0);
+      window.setTimeout(schedule, 120);
     }
   }, true);
 
-  apply();
+  window.addEventListener('load', schedule, { once: true });
+  injectStyles();
+  schedule();
 })();
