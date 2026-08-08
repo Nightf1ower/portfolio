@@ -1,6 +1,6 @@
 (() => {
-  if (window.__portfolioStaticAssetsV3) return;
-  window.__portfolioStaticAssetsV3 = true;
+  if (window.__portfolioStaticAssetsV4) return;
+  window.__portfolioStaticAssetsV4 = true;
 
   const FABLE = Array.from({ length: 40 }, (_, index) =>
     `public/works/fable/fprint-${String(index + 1).padStart(2, '0')}.jpg`
@@ -134,12 +134,18 @@
       const current = image.getAttribute('src') || '';
       if (!/\/generated\/(?:portfolio-thumbs|dxs-thumbs)\//.test(current)) return;
       const original = image.dataset.portfolioOriginal;
+      image.dataset.portfolioThumbFailed = 'true';
       if (original && current !== original) image.src = original;
     });
   };
 
   const applyThumb = (image, original) => {
     if (!(image instanceof HTMLImageElement) || !original) return original;
+    if (image.dataset.portfolioThumbFailed === 'true') {
+      image.src = original;
+      return original;
+    }
+
     const thumb = thumbUrl(original);
     if (!thumb) {
       image.src = original;
