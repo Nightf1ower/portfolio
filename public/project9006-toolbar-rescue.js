@@ -1,13 +1,18 @@
 (() => {
-  if (window.__project9006ToolbarRescueV2) return;
-  window.__project9006ToolbarRescueV2 = true;
+  if (window.__project9006ToolbarRescueV3) return;
+  window.__project9006ToolbarRescueV3 = true;
 
+  const VERSION = 'toolbar-rescue-3';
   const STYLE_ID = 'project9006-toolbar-rescue-style';
 
   function installStyles() {
-    document.getElementById(STYLE_ID)?.remove();
+    const existing = document.getElementById(STYLE_ID);
+    if (existing?.dataset.version === VERSION) return;
+    existing?.remove();
+
     const style = document.createElement('style');
     style.id = STYLE_ID;
+    style.dataset.version = VERSION;
     style.textContent = `
       .project9006-modal .project9006-toolbar {
         position: fixed !important;
@@ -84,6 +89,11 @@
         transform: none !important;
       }
 
+      .project9006-modal section {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 900px;
+      }
+
       @media (max-width: 650px) {
         .project9006-modal .project9006-brand {
           padding-bottom: 1.75rem !important;
@@ -101,7 +111,7 @@
     if (img.dataset.project9006Crop === 'done' || img.dataset.project9006Crop === 'working') return;
 
     if (!img.complete || !img.naturalWidth || !img.naturalHeight) {
-      img.addEventListener('load', () => cropOuterWhite(img), { once: true });
+      img.addEventListener('load', () => scheduleCrop(img), { once: true });
       return;
     }
 
@@ -120,17 +130,11 @@
       let maxX = -1;
       let maxY = -1;
 
-      for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
+      for (let y = 0; y < height; y += 2) {
+        for (let x = 0; x < width; x += 2) {
           const offset = (y * width + x) * 4;
-          const alpha = data[offset + 3];
-          if (alpha < 20) continue;
-
-          const r = data[offset];
-          const g = data[offset + 1];
-          const b = data[offset + 2];
-          const brightness = (r + g + b) / 3;
-
+          if (data[offset + 3] < 20) continue;
+          const brightness = (data[offset] + data[offset + 1] + data[offset + 2]) / 3;
           if (brightness < 232) {
             if (x < minX) minX = x;
             if (x > maxX) maxX = x;
@@ -169,58 +173,87 @@
       );
 
       img.dataset.project9006Crop = 'done';
-      img.src = cropped.toDataURL('image/webp', 0.94);
+      img.src = cropped.toDataURL('image/webp', 0.9);
     } catch (error) {
       img.dataset.project9006Crop = 'done';
       console.warn('[NINETY Z S] Logo crop skipped', error);
     }
   }
 
-  function rescue() {
+  function scheduleCrop(img) {
+    const run = () => cropOuterWhite(img);
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(run, { timeout: 1200 });
+    } else {
+      window.setTimeout(run, 180);
+    }
+  }
+
+  function rescueModal(modal, allowCrop = true) {
+    if (!(modal instanceof HTMLElement)) return false;
     installStyles();
 
-    document.querySelectorAll('.project9006-modal').forEach((modal) => {
-      modal.querySelectorAll('.project9006-native-toolbar').forEach((node) => {
-        node.classList.remove('project9006-native-toolbar');
-        node.style.removeProperty('display');
+    modal.querySelectorAll('.project9006-native-toolbar').forEach((node) => {
+      node.classList.remove('project9006-native-toolbar');
+      node.style.removeProperty('display');
+    });
+
+    const toolbar = modal.querySelector('.project9006-toolbar');
+    if (toolbar) {
+      toolbar.style.setProperty('position', 'fixed', 'important');
+      toolbar.style.setProperty('top', '0', 'important');
+      toolbar.style.setProperty('left', '0', 'important');
+      toolbar.style.setProperty('right', '0', 'important');
+      toolbar.style.setProperty('height', 'auto', 'important');
+      toolbar.style.setProperty('min-height', '0', 'important');
+      toolbar.style.setProperty('transform', 'none', 'important');
+    }
+
+    const identity = [...modal.querySelectorAll('section')].find((section) => {
+      const title = String(section.querySelector('h3')?.textContent || '').trim().toUpperCase();
+      return title === 'VISUAL IDENTITY & LOGO DESIGN' || title === 'АЙДЕНТИКА И ЛОГОТИП';
+    });
+    identity?.classList.add('project9006-identity-tight');
+
+    modal.querySelectorAll('img').forEach((img) => {
+      if (!img.loading) img.loading = 'lazy';
+      img.decoding = 'async';
+      if (!img.closest('.project9006-brand,.project9006-toolbar')) img.fetchPriority = 'low';
+    });
+
+    if (allowCrop && modal.dataset.project9006CropQueued !== VERSION) {
+      modal.dataset.project9006CropQueued = VERSION;
+      [...modal.querySelectorAll('.project9006-logo-card img')].forEach((img, index) => {
+        window.setTimeout(() => scheduleCrop(img), index * 120);
       });
+    }
 
-      const toolbar = modal.querySelector('.project9006-toolbar');
-      if (toolbar) {
-        toolbar.style.setProperty('position', 'fixed', 'important');
-        toolbar.style.setProperty('top', '0', 'important');
-        toolbar.style.setProperty('left', '0', 'important');
-        toolbar.style.setProperty('right', '0', 'important');
-        toolbar.style.setProperty('height', 'auto', 'important');
-        toolbar.style.setProperty('min-height', '0', 'important');
-        toolbar.style.setProperty('transform', 'none', 'important');
-      }
+    modal.dataset.project9006Rescued = VERSION;
+    return true;
+  }
 
-      const identity = [...modal.querySelectorAll('section')].find((section) => {
-        const title = String(section.querySelector('h3')?.textContent || '').trim().toUpperCase();
-        return title === 'VISUAL IDENTITY & LOGO DESIGN' || title === 'АЙДЕНТИКА И ЛОГОТИП';
-      });
-      identity?.classList.add('project9006-identity-tight');
+  function rescueExisting(allowCrop = true) {
+    return rescueModal(document.querySelector('.project9006-modal'), allowCrop);
+  }
 
-      modal.querySelectorAll('.project9006-logo-card img').forEach(cropOuterWhite);
+  function rescueAfterOpen() {
+    [0, 60, 180, 420].forEach((delay, index) => {
+      window.setTimeout(() => rescueExisting(index === 3), delay);
     });
   }
 
-  let scheduled = false;
-  function schedule() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      rescue();
-    });
-  }
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const card = target?.closest('#works article,#works button');
+    const title = card?.querySelector('h3')?.textContent?.trim().toUpperCase();
+    if (title === 'NINETY Z S' || title === '90.06') rescueAfterOpen();
 
-  schedule();
-  new MutationObserver(schedule).observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['class'],
-  });
+    if (target?.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) {
+      window.setTimeout(() => rescueExisting(false), 0);
+      window.setTimeout(() => rescueExisting(false), 120);
+    }
+  }, true);
+
+  window.addEventListener('load', () => rescueExisting(false), { once: true });
+  installStyles();
 })();
