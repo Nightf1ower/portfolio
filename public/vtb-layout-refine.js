@@ -1,8 +1,8 @@
 (() => {
-  if (window.__vtbLayoutRefineV2) return;
-  window.__vtbLayoutRefineV2 = true;
+  if (window.__vtbLayoutRefineV3) return;
+  window.__vtbLayoutRefineV3 = true;
 
-  const VERSION = 'vtb-layout-refine-2';
+  const VERSION = 'vtb-layout-refine-3';
   const STYLE_ID = 'vtb-layout-refine-style';
 
   function installStyles() {
@@ -91,13 +91,14 @@
         max-width: none !important;
       }
 
-      .vtb-modal .vtb-merch-grid--two,
-      .vtb-modal .vtb-merch-grid--three {
+      .vtb-modal .vtb-merch-grid--two {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: clamp(1rem, 2vw, 1.5rem) !important;
       }
 
       .vtb-modal .vtb-merch-grid--three {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: clamp(1rem, 2vw, 1.5rem) !important;
         margin-top: clamp(1rem, 2vw, 1.5rem) !important;
       }
 
