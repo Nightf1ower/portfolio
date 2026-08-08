@@ -1,6 +1,6 @@
 (() => {
-  if (window.__portfolioStaticAssetsV2) return;
-  window.__portfolioStaticAssetsV2 = true;
+  if (window.__portfolioStaticAssetsV3) return;
+  window.__portfolioStaticAssetsV3 = true;
 
   const FABLE = Array.from({ length: 40 }, (_, index) =>
     `public/works/fable/fprint-${String(index + 1).padStart(2, '0')}.jpg`
@@ -82,93 +82,73 @@
     'public/works/merch/dxs/ad/dxs_ad_03.jpg',
   ];
 
-  const TREE = [...FABLE, ...MERCH].map((path) => ({
-    path,
-    type: 'blob',
-    mode: '100644',
-  }));
+  const toLocalUrl = (value) => {
+    if (typeof value !== 'string' || !value) return value;
+    if (value.startsWith('public/')) return `/${value.slice('public/'.length)}`;
 
-  const toLocalUrl = (path) => `/${path.replace(/^public\//, '')}`;
-  const directoryItems = (paths) => paths.map((path) => ({
-    type: 'file',
-    name: path.split('/').pop(),
-    path,
-    download_url: toLocalUrl(path),
-  }));
-
-  const RAW_PREFIX = 'https://raw.githubusercontent.com/Nightf1ower/portfolio/main/public/';
-  const localizeImageUrl = (value) => {
-    if (typeof value !== 'string' || !value.startsWith(RAW_PREFIX)) return value;
-    return `/${value.slice(RAW_PREFIX.length)}`;
-  };
-
-  const imageSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-  if (imageSrcDescriptor?.get && imageSrcDescriptor?.set) {
-    Object.defineProperty(HTMLImageElement.prototype, 'src', {
-      configurable: true,
-      enumerable: imageSrcDescriptor.enumerable,
-      get() {
-        return imageSrcDescriptor.get.call(this);
-      },
-      set(value) {
-        imageSrcDescriptor.set.call(this, localizeImageUrl(value));
-      },
-    });
-  }
-
-  const originalSetAttribute = HTMLImageElement.prototype.setAttribute;
-  HTMLImageElement.prototype.setAttribute = function setAttribute(name, value) {
-    return originalSetAttribute.call(
-      this,
-      name,
-      String(name).toLowerCase() === 'src' ? localizeImageUrl(value) : value,
-    );
-  };
-
-  const originalFetch = window.fetch.bind(window);
-
-  window.fetch = (input, init) => {
-    const rawUrl = typeof input === 'string' ? input : input?.url;
-    if (!rawUrl) return originalFetch(input, init);
-
-    let parsed;
     try {
-      parsed = new URL(rawUrl, window.location.href);
+      const url = new URL(value, window.location.href);
+      const rawPublicPrefix = '/Nightf1ower/portfolio/main/public/';
+      if (url.hostname === 'raw.githubusercontent.com' && url.pathname.startsWith(rawPublicPrefix)) {
+        return `/${url.pathname.slice(rawPublicPrefix.length)}`;
+      }
+    } catch {}
+    return value;
+  };
+
+  const stripQuery = (value) => String(value || '').split('#')[0].split('?')[0];
+
+  const worksPath = (value) => {
+    if (typeof value !== 'string' || !value) return '';
+    const local = toLocalUrl(value);
+    try {
+      const url = new URL(local, window.location.href);
+      const pathname = url.pathname;
+      const marker = '/works/';
+      const index = pathname.indexOf(marker);
+      return index >= 0 ? pathname.slice(index) : '';
     } catch {
-      return originalFetch(input, init);
+      const clean = stripQuery(local);
+      const index = clean.indexOf('/works/');
+      return index >= 0 ? clean.slice(index) : '';
+    }
+  };
+
+  const replaceExtension = (pathname) => pathname.replace(/\.(?:avif|gif|jpe?g|png|webp)$/i, '.webp');
+
+  const thumbUrl = (value) => {
+    const pathname = worksPath(value);
+    if (!pathname) return '';
+
+    if (pathname.toLowerCase().startsWith('/works/merch/dxs/')) {
+      return replaceExtension(pathname.replace(/^\/works\/merch\/dxs\//i, '/generated/dxs-thumbs/'));
     }
 
-    if (parsed.hostname !== 'api.github.com') return originalFetch(input, init);
+    return replaceExtension(pathname.replace(/^\/works\//i, '/generated/portfolio-thumbs/'));
+  };
 
-    const treeMatch = parsed.pathname.match(/^\/repos\/Nightf1ower\/portfolio\/git\/trees\/main$/i);
-    if (treeMatch) {
-      return Promise.resolve(new Response(JSON.stringify({
-        sha: 'static-portfolio-assets-v2',
-        truncated: false,
-        tree: TREE,
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      }));
+  const bindFallback = (image) => {
+    if (!(image instanceof HTMLImageElement) || image.dataset.portfolioThumbFallback === 'true') return;
+    image.dataset.portfolioThumbFallback = 'true';
+    image.addEventListener('error', () => {
+      const current = image.getAttribute('src') || '';
+      if (!/\/generated\/(?:portfolio-thumbs|dxs-thumbs)\//.test(current)) return;
+      const original = image.dataset.portfolioOriginal;
+      if (original && current !== original) image.src = original;
+    });
+  };
+
+  const applyThumb = (image, original) => {
+    if (!(image instanceof HTMLImageElement) || !original) return original;
+    const thumb = thumbUrl(original);
+    if (!thumb) {
+      image.src = original;
+      return original;
     }
-
-    const contentsMatch = parsed.pathname.match(
-      /^\/repos\/Nightf1ower\/portfolio\/contents\/public\/works\/(zny|stayugly)\/([^/]+)$/i
-    );
-
-    if (contentsMatch) {
-      const project = contentsMatch[1].toLowerCase();
-      const folder = decodeURIComponent(contentsMatch[2]).toLowerCase();
-      const source = project === 'zny' ? ZNY : STAY_UGLY;
-      const paths = source[folder] || [];
-
-      return Promise.resolve(new Response(JSON.stringify(directoryItems(paths)), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-      }));
-    }
-
-    return originalFetch(input, init);
+    image.dataset.portfolioOriginal = original;
+    bindFallback(image);
+    image.src = thumb;
+    return thumb;
   };
 
   window.PORTFOLIO_STATIC_ASSETS = Object.freeze({
@@ -176,5 +156,13 @@
     zny: ZNY,
     stayUgly: STAY_UGLY,
     merch: MERCH,
+    toLocalUrl,
+  });
+
+  window.PORTFOLIO_THUMBS = Object.freeze({
+    url: thumbUrl,
+    apply: applyThumb,
+    local: toLocalUrl,
+    worksPath,
   });
 })();
