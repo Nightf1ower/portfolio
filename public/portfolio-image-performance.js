@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioImagePerformanceV3) return;
-  window.__portfolioImagePerformanceV3 = true;
+  if (window.__portfolioImagePerformanceV4) return;
+  window.__portfolioImagePerformanceV4 = true;
 
-  const VERSION = 'portfolio-image-performance-3';
+  const VERSION = 'portfolio-image-performance-4';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
   const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
   const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
@@ -17,6 +17,7 @@
     '.posters-modal',
     '.su-modal',
     '.vtb-modal',
+    '.cr-modal',
     '.blandetto-modal',
     '.bf',
     '.fable-modal',
@@ -33,6 +34,7 @@
     '.zny-modal',
     '.su-modal',
     '.vtb-modal',
+    '.cr-modal',
     '.project9006-modal',
     '.mc-modal',
     '.blandetto-modal',
@@ -48,6 +50,7 @@
     '.zny-light',
     '.su-light',
     '.vtb-light',
+    '.cr-light',
     '.mc-light',
     '.pag-light',
     '.lcg-light',
@@ -65,19 +68,11 @@
     return IMAGE_PATH_RE.test(value) || RAW_WORKS_RE.test(value);
   };
 
-  const sourceOf = (image) => (
-    image.dataset.src
-    || image.getAttribute('src')
-    || image.currentSrc
-    || image.src
-    || ''
-  );
-
   const isFullResolutionImage = (image) => {
     if (!(image instanceof HTMLImageElement)) return false;
     if (image.closest(FULLRES_SELECTOR)) return true;
     const className = String(image.className || '').toLowerCase();
-    return className.includes('lightbox') || className.includes('light-image');
+    return className.includes('lightbox') || className.includes('light-image') || className.includes('light-img');
   };
 
   const shouldThumb = (image, modal) => (
@@ -85,12 +80,24 @@
     && !isFullResolutionImage(image)
   );
 
+  const bindDeferredFallback = (image) => {
+    if (!(image instanceof HTMLImageElement) || image.dataset.portfolioDeferredFallback === 'true') return;
+    image.dataset.portfolioDeferredFallback = 'true';
+    image.addEventListener('error', () => {
+      const current = image.getAttribute('src') || '';
+      if (!GENERATED_RE.test(current)) return;
+      const original = image.dataset.portfolioOriginal;
+      if (original && original !== current) image.src = original;
+    });
+  };
+
   const thumbDeferredSource = (image, original) => {
     const helper = thumbs();
     if (!helper?.url || !original || GENERATED_RE.test(original)) return;
     const thumbnail = helper.url(original);
     if (!thumbnail || thumbnail === original) return;
     image.dataset.portfolioOriginal = original;
+    bindDeferredFallback(image);
     image.dataset.src = thumbnail;
   };
 
