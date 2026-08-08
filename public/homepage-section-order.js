@@ -1,8 +1,8 @@
 (() => {
-  if (window.__homepageSectionOrderV1) return;
-  window.__homepageSectionOrderV1 = true;
+  if (window.__homepageSectionOrderV2) return;
+  window.__homepageSectionOrderV2 = true;
 
-  const VERSION = 'homepage-section-order-1';
+  const VERSION = 'homepage-section-order-2';
   const SECTION_ORDER = ['top', 'about', 'services', 'works', 'contacts'];
   const NAV_ORDER = ['#about', '#services', '#works', '#contacts'];
 
@@ -45,6 +45,27 @@
     return true;
   }
 
+  function scrollToTarget(href) {
+    if (!href?.startsWith('#')) return false;
+    const target = document.getElementById(href.slice(1));
+    if (!target) return false;
+
+    const header = document.querySelector('header');
+    const headerHeight = header?.getBoundingClientRect().height || 0;
+    const targetTop = window.scrollY + target.getBoundingClientRect().top - headerHeight - 12;
+
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: 'smooth',
+    });
+
+    try {
+      history.replaceState(null, '', href);
+    } catch {}
+
+    return true;
+  }
+
   function apply() {
     const sectionsReady = reorderSections();
     const navReady = reorderNavigation();
@@ -74,7 +95,19 @@
   observer.observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('click', (event) => {
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+    const navLink = event.target instanceof Element
+      ? event.target.closest('header a.nav-link[href^="#"]')
+      : null;
+
+    if (navLink) {
+      const href = navLink.getAttribute('href');
+      if (scrollToTarget(href)) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    if (event.target instanceof Element && event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
       setTimeout(schedule, 0);
       setTimeout(schedule, 100);
     }
