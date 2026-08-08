@@ -1,12 +1,9 @@
 (() => {
-  if (window.__stayUglyV5Loaded) return;
-  window.__stayUglyV5Loaded = true;
+  if (window.__stayUglyV6Loaded) return;
+  window.__stayUglyV6Loaded = true;
 
-  const V = 'stayugly-14';
-  const REPO = 'Nightf1ower/portfolio';
-  const BRANCH = 'main';
+  const V = 'stayugly-15';
   const FOLDERS = { concept: 'concept', final: 'final', photoshoot: 'photo', packaging: 'package' };
-  const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
 
   const COPY = {
     ru: {
@@ -89,7 +86,33 @@
     if (htmlLanguage === 'ru' || htmlLanguage === 'en') return htmlLanguage;
     return localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en';
   };
-  const q = (path) => `${path}?v=${V}`;
+
+  const q = (value) => {
+    const path = String(value || '');
+    if (!path) return path;
+    return `${path}${path.includes('?') ? '&' : '?'}v=${V}`;
+  };
+
+  const localUrl = (value) => {
+    const localizer = window.PORTFOLIO_STATIC_ASSETS?.toLocalUrl;
+    if (typeof localizer === 'function') return localizer(value);
+    return String(value || '').replace(/^public\//, '/');
+  };
+
+  const load = async (sectionKey) => {
+    const folder = FOLDERS[sectionKey];
+    const source = window.PORTFOLIO_STATIC_ASSETS?.stayUgly?.[folder] || [];
+    return [...source].map(localUrl);
+  };
+
+  const setPreviewSource = (image, original) => {
+    const source = q(original);
+    const helper = window.PORTFOLIO_THUMBS;
+    if (helper?.apply) helper.apply(image, source);
+    else image.src = source;
+    image.decoding = 'async';
+  };
+
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
@@ -125,7 +148,7 @@
     const style = el('style');
     style.id = 'stayugly-v5-style';
     style.textContent = `
-      .su-modal{position:fixed;inset:0;z-index:320;background:linear-gradient(180deg,#fff 0%,#fff 35%,#57bd93 75%,#57bd93 100%);background-attachment:local;color:#050505;overflow:auto;padding:1.5rem 1rem 4rem}.su-inner{width:min(100%,80rem);margin:0 auto}.su-head{position:relative;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:transparent}.su-label,.su-close,.su-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.su-kicker{margin:0 0 clamp(1.5rem,2.5vw,2.75rem)}.su-label{background:#050505;color:#fcfcfa;padding:.35rem .75rem}.su-close{border:1px solid #050505;background:#050505;color:#fcfcfa;padding:.55rem 1rem}.su-hero{padding-top:1.25rem;margin-bottom:5rem}.su-title{margin:0;font-size:clamp(4rem,12vw,12rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.su-lead{width:100%;max-width:none;margin:1.5rem 0 0;font-size:clamp(1.45rem,3vw,3rem);font-weight:800;line-height:.92;letter-spacing:-.055em;text-transform:uppercase}.su-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem}.su-section+.su-section{margin-top:5rem}.su-section-head{margin-bottom:1.25rem}.su-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.su-text{max-width:52rem;margin:0 0 1.5rem;color:rgba(5,5,5,.72);font-size:clamp(1rem,1.6vw,1.35rem);font-weight:700;line-height:1.05;letter-spacing:-.035em}.su-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.su-card{border:0;background:#fcfcfa;padding:0;cursor:zoom-in}.su-card img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover}.su-grid--portrait .su-card img{height:auto;aspect-ratio:3/4;object-fit:cover}.su-specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem;width:100%;max-width:none;margin:0 0 1.5rem;padding:0;list-style:none}.su-specs li{border:1px solid rgba(5,5,5,.22);padding:1.05rem 1.2rem;font-size:.82rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;min-height:4.2rem;display:flex;align-items:center}
+      .su-modal{position:fixed;inset:0;z-index:320;background:linear-gradient(180deg,#fff 0%,#fff 35%,#57bd93 75%,#57bd93 100%);background-attachment:local;color:#050505;overflow:auto;padding:1.5rem 1rem 4rem}.su-inner{width:min(100%,80rem);margin:0 auto}.su-head{position:relative;display:flex;justify-content:space-between;gap:1rem;margin-bottom:2rem;padding:.7rem 0 1rem;border-bottom:1px solid rgba(5,5,5,.22);background:transparent}.su-label,.su-close,.su-kicker{font-size:.68rem;font-weight:900;letter-spacing:.28em;text-transform:uppercase}.su-kicker{margin:0 0 clamp(1.5rem,2.5vw,2.75rem)}.su-label{background:#050505;color:#fcfcfa;padding:.35rem .75rem}.su-close{border:1px solid #050505;background:#050505;color:#fcfcfa;padding:.55rem 1rem}.su-hero{padding-top:1.25rem;margin-bottom:5rem}.su-title{margin:0;font-size:clamp(4rem,12vw,12rem);font-weight:900;line-height:.78;letter-spacing:-.09em;text-transform:uppercase}.su-lead{width:100%;max-width:none;margin:1.5rem 0 0;font-size:clamp(1.45rem,3vw,3rem);font-weight:800;line-height:.92;letter-spacing:-.055em;text-transform:uppercase}.su-section{border-top:1px solid rgba(5,5,5,.22);padding-top:1.25rem;content-visibility:auto;contain-intrinsic-size:auto 760px}.su-section+.su-section{margin-top:5rem}.su-section-head{margin-bottom:1.25rem}.su-h{margin:0;font-size:clamp(2.8rem,6vw,6.5rem);font-weight:900;line-height:.82;letter-spacing:-.085em;text-transform:uppercase}.su-text{max-width:52rem;margin:0 0 1.5rem;color:rgba(5,5,5,.72);font-size:clamp(1rem,1.6vw,1.35rem);font-weight:700;line-height:1.05;letter-spacing:-.035em}.su-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}.su-card{border:0;background:#fcfcfa;padding:0;cursor:zoom-in;content-visibility:auto;contain-intrinsic-size:420px 420px}.su-card img{display:block;width:100%;height:100%;aspect-ratio:1/1;object-fit:cover}.su-grid--portrait .su-card img{height:auto;aspect-ratio:3/4;object-fit:cover}.su-specs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem;width:100%;max-width:none;margin:0 0 1.5rem;padding:0;list-style:none}.su-specs li{border:1px solid rgba(5,5,5,.22);padding:1.05rem 1.2rem;font-size:.82rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;min-height:4.2rem;display:flex;align-items:center}
       .su-concept{display:flex;flex-direction:column;gap:2rem}.su-concept-main{display:block;width:100%;border:0;background:transparent;padding:0;cursor:zoom-in}.su-concept-main img{display:block;width:100%;height:auto;max-height:none;object-fit:contain}.su-concept-flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);align-items:start;gap:.7rem}.su-concept-item{min-width:0}.su-concept-step{display:block;width:100%;border:0;background:transparent;padding:0;cursor:zoom-in}.su-concept-step img{display:block;width:100%;height:auto;object-fit:contain}.su-concept-caption{margin:.75rem 0 0;font-size:.7rem;font-weight:900;line-height:1.15;letter-spacing:.18em;text-transform:uppercase}.su-concept-arrow{align-self:center;font-family:inherit;font-size:clamp(2.2rem,4vw,4.8rem);font-weight:900;line-height:1;color:#050505}
       .su-empty{font-size:.72rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:rgba(5,5,5,.45)}.su-light{position:fixed;inset:0;z-index:420;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.92);padding:1rem}.su-light img{max-width:92vw;max-height:90vh;object-fit:contain}.su-light button{position:absolute;right:1rem;top:1rem;border:0;background:#fcfcfa;color:#050505;padding:.7rem 1rem;font-weight:900;letter-spacing:.24em;text-transform:uppercase}
       @media(max-width:900px){.su-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.su-concept-flow{grid-template-columns:1fr}.su-concept-arrow{transform:rotate(90deg);justify-self:center;margin:.25rem 0}.su-concept-caption{text-align:center}.su-specs{grid-template-columns:1fr}}@media(max-width:560px){.su-grid{grid-template-columns:1fr}}
@@ -168,30 +191,15 @@
     });
   }
 
-  const apiUrl = (folder) => `https://api.github.com/repos/${REPO}/contents/public/works/stayugly/${folder}?ref=${BRANCH}`;
-
-  async function fetchFolder(folder) {
-    try {
-      const response = await fetch(apiUrl(folder), { cache: 'no-store' });
-      if (!response.ok) return [];
-      const items = await response.json();
-      return (Array.isArray(items) ? items : [])
-        .filter((item) => item.type === 'file' && IMAGE_RE.test(item.name || item.path))
-        .sort((a, b) => (a.name || '').localeCompare(b.name || '', undefined, { numeric: true }))
-        .map((item) => item.download_url || `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${item.path}`);
-    } catch {
-      return [];
-    }
-  }
-
-  const load = (sectionKey) => fetchFolder(FOLDERS[sectionKey]);
-
   function lightbox(list, index = 0) {
     let currentIndex = index;
     const overlay = el('div', 'su-light');
     const closeButton = el('button', '', COPY[currentLanguage()].close);
     const image = el('img');
-    const draw = () => { image.src = q(list[currentIndex]); };
+    const draw = () => {
+      image.src = q(list[currentIndex]);
+      image.decoding = 'async';
+    };
     closeButton.onclick = () => overlay.remove();
     overlay.onclick = () => overlay.remove();
     image.onclick = (event) => {
@@ -216,8 +224,9 @@
       const button = el('button', 'su-card');
       const image = el('img');
       button.type = 'button';
-      image.src = q(src);
-      image.loading = 'lazy';
+      setPreviewSource(image, src);
+      image.loading = index < 3 ? 'eager' : 'lazy';
+      image.draggable = false;
       button.append(image);
       button.onclick = (event) => {
         event.stopPropagation();
@@ -240,7 +249,9 @@
     const main = el('button', 'su-concept-main');
     const mainImage = el('img');
     main.type = 'button';
-    mainImage.src = q(list[0]);
+    setPreviewSource(mainImage, list[0]);
+    mainImage.loading = 'eager';
+    mainImage.draggable = false;
     main.append(mainImage);
     main.onclick = (event) => {
       event.stopPropagation();
@@ -257,7 +268,9 @@
       const image = el('img');
       const caption = el('p', 'su-concept-caption', captions[position] || '');
       button.type = 'button';
-      image.src = q(list[imageIndex]);
+      setPreviewSource(image, list[imageIndex]);
+      image.loading = 'lazy';
+      image.draggable = false;
       button.append(image);
       button.onclick = (event) => {
         event.stopPropagation();
