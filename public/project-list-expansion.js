@@ -1,64 +1,11 @@
 (() => {
-  if (window.__projectListExpansionV2) return;
-  window.__projectListExpansionV2 = true;
+  if (window.__projectListExpansionV3) return;
+  window.__projectListExpansionV3 = true;
 
-  const VERSION = 'project-list-expansion-2';
-  const FALLBACK_ASSETS = [
-    '/works/anka-peresild/acs/LOGO-ANKA-2.jpg',
-    '/works/anka-peresild/acs/LOGO-ANKA.jpg',
-    '/works/anka-peresild/acs/button-concept-1.jpg',
-    '/works/anka-peresild/acs/button-concept-2.jpg',
-    '/works/anka-peresild/acs/button-concept-art-1.jpg',
-    '/works/anka-peresild/acs/button-concept-art-2.jpg',
-    '/works/anka-peresild/acs/button-concept-final-1.jpg',
-    '/works/anka-peresild/acs/button-concept-final-2.jpg',
-    '/works/anka-peresild/acs/button-concept-wings.jpg',
-    '/works/anka-peresild/acs/button-new-1.jpg',
-    '/works/anka-peresild/acs/button-new-2.jpg',
-    '/works/anka-peresild/acs/button-new-3.jpg',
-    '/works/anka-peresild/acs/button-new-4.jpg',
-    '/works/anka-peresild/acs/misc-1.png',
-    '/works/anka-peresild/acs/misc-2.png',
-    '/works/anka-peresild/acs/misc-3.png',
-    '/works/anka-peresild/acs/needles-1.png',
-    '/works/anka-peresild/acs/needles-2.png',
-    '/works/anka-peresild/acs/needles-3.png',
-    '/works/anka-peresild/babes/draw-baba-1.jpg',
-    '/works/anka-peresild/babes/draw-baba-2.jpg',
-    '/works/anka-peresild/babes/draw-baba-3.jpg',
-    '/works/anka-peresild/babes/draw-baba-4.jpg',
-    '/works/anka-peresild/babes/draw-baba-5.jpg',
-    '/works/anka-peresild/babes/real-baba-1.webp',
-    '/works/anka-peresild/babes/real-baba-2.webp',
-    '/works/anka-peresild/babes/real-baba-3.webp',
-    '/works/anka-peresild/babes/real-baba-4.webp',
-    '/works/anka-peresild/babes/real-baba-5.webp',
-    '/works/anka-peresild/clothes/costume-blackl-art.jpg',
-    '/works/anka-peresild/clothes/costume-blackl-final.jpg',
-    '/works/anka-peresild/clothes/costume-blackl-mockup.jpg',
-    '/works/anka-peresild/clothes/costume-white-art.jpg',
-    '/works/anka-peresild/clothes/costume-white-final.jpg',
-    '/works/anka-peresild/clothes/costume-white-mockup.jpg',
-    '/works/anka-peresild/clothes/olymp-jacket-art.jpg',
-    '/works/anka-peresild/clothes/olymp-jacket-final.webp',
-    '/works/anka-peresild/clothes/olymp-jacket-mockup-back.webp',
-    '/works/anka-peresild/clothes/olymp-jacket-mockup-flat.jpg',
-    '/works/anka-peresild/clothes/olymp-jacket-mockup.jpg',
-    '/works/anka-peresild/clothes/olymp-pants-art.jpg',
-    '/works/anka-peresild/clothes/olymp-pants-final-side.webp',
-    '/works/anka-peresild/clothes/olymp-pants-final.webp',
-    '/works/anka-peresild/clothes/olymp-pants-mockup.jpg',
-    '/works/anka-peresild/clothes/shirt-blue-art.jpg',
-    '/works/anka-peresild/clothes/shirt-blue-final.jpg',
-    '/works/anka-peresild/clothes/shirt-blue-mockup.jpg',
-    '/works/anka-peresild/clothes/shirt-white-art.jpg',
-    '/works/anka-peresild/clothes/shirt-white-final.jpg',
-    '/works/anka-peresild/clothes/shirt-white-mockup.jpg',
-  ];
-
+  const VERSION = 'project-list-expansion-3';
   const COPY = {
-    ru: { close: 'ЗАКРЫТЬ', images: 'ИЗОБРАЖЕНИЙ' },
-    en: { close: 'CLOSE', images: 'IMAGES' },
+    ru: { close: 'ЗАКРЫТЬ', images: 'ИЗОБРАЖЕНИЙ', empty: 'ИЗОБРАЖЕНИЯ НЕ НАЙДЕНЫ' },
+    en: { close: 'CLOSE', images: 'IMAGES', empty: 'NO IMAGES FOUND' },
   };
 
   let modal = null;
@@ -68,17 +15,27 @@
   let previousHtmlOverflow = '';
   let touchStartX = 0;
 
-  const language = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
+  const language = () => (
+    document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru'
+      ? 'ru'
+      : 'en'
+  );
   const copy = () => COPY[language()];
-  const normalized = (value) => String(value || '').trim().toUpperCase().replace(/\s+/g, ' ');
-  const naturalCompare = (a, b) => String(a).localeCompare(String(b), 'en', { numeric: true, sensitivity: 'base' });
+  const normalized = (value) => String(value || '')
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, ' ');
+  const naturalCompare = (a, b) => String(a).localeCompare(String(b), 'en', {
+    numeric: true,
+    sensitivity: 'base',
+  });
 
   function assets() {
     const generated = window.PORTFOLIO_GALLERY_MANIFEST?.ankaPeresild || [];
-    const sources = generated.length
-      ? generated.map((item) => item.src)
-      : FALLBACK_ASSETS;
-    return [...new Set(sources)].sort(naturalCompare);
+    return generated
+      .filter((item) => item?.src)
+      .slice()
+      .sort((a, b) => naturalCompare(a.relative || a.src, b.relative || b.src));
   }
 
   function injectStyles() {
@@ -90,10 +47,13 @@
     style.id = 'project-list-expansion-style';
     style.dataset.version = VERSION;
     style.textContent = `
+      html:has(.anka-peresild-modal), body:has(.anka-peresild-modal) {
+        overflow: hidden !important;
+      }
       .anka-peresild-modal {
         position: fixed;
         inset: 0;
-        z-index: 760000;
+        z-index: 965000;
         box-sizing: border-box;
         width: 100vw;
         height: 100dvh;
@@ -123,10 +83,7 @@
       .anka-peresild-close,
       .anka-peresild-count {
         margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: .68rem;
-        font-weight: 900;
-        line-height: 1;
+        font: 900 .68rem/1 Arial, Helvetica, sans-serif;
         letter-spacing: .24em;
         text-transform: uppercase;
       }
@@ -141,10 +98,7 @@
       .anka-peresild-hero { padding: clamp(4rem, 9vw, 8rem) 0 clamp(3rem, 7vw, 6rem); }
       .anka-peresild-title {
         margin: 0;
-        font-family: Arial Black, Arial, Helvetica, sans-serif;
-        font-size: clamp(4rem, 12vw, 12rem);
-        font-weight: 900;
-        line-height: .78;
+        font: 900 clamp(4rem, 12vw, 12rem)/.78 Arial Black, Arial, Helvetica, sans-serif;
         letter-spacing: -.08em;
         text-transform: uppercase;
       }
@@ -158,26 +112,41 @@
         border-top: 1px solid rgba(5,5,5,.28);
       }
       .anka-peresild-gallery-card {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
+        min-height: 12rem;
         margin: 0;
         padding: 0;
         border: 1px solid rgba(5,5,5,.18);
         background: #fff;
         cursor: zoom-in;
         overflow: hidden;
+        content-visibility: auto;
+        contain-intrinsic-size: 360px 360px;
       }
       .anka-peresild-gallery-card img {
         display: block;
         width: 100%;
         height: auto;
+        max-height: 78vh;
         margin: 0;
         object-fit: contain;
+      }
+      .anka-peresild-empty {
+        grid-column: 1 / -1;
+        padding: 3rem 1rem;
+        border: 1px solid rgba(5,5,5,.22);
+        font: 900 .72rem/1.35 Arial,Helvetica,sans-serif;
+        letter-spacing: .2em;
+        text-align: center;
+        text-transform: uppercase;
       }
       .anka-peresild-lightbox {
         position: fixed;
         inset: 0;
-        z-index: 990000;
+        z-index: 995000;
         display: grid;
         grid-template-columns: auto minmax(0,1fr) auto;
         align-items: center;
@@ -263,6 +232,7 @@
       const grid = document.querySelector('#works .mt-10.grid');
       const source = findCard('STAY UGLY', 'STAYUGLY') || cards().at(-1);
       if (!grid || !source) return false;
+
       card = document.createElement('button');
       card.type = 'button';
       card.className = `${source.className} cursor-pointer`.replace(/\s+/g, ' ').trim();
@@ -273,7 +243,7 @@
     card.dataset.ankaPeresildCard = 'true';
     card.setAttribute('aria-label', 'Open ANKA PERESILD project');
     const heading = card.querySelector('h3');
-    if (heading && heading.textContent !== 'ANKA PERESILD') heading.textContent = 'ANKA PERESILD';
+    if (heading) heading.textContent = 'ANKA PERESILD';
     return true;
   }
 
@@ -295,9 +265,10 @@
     const list = assets();
     if (!list.length) return;
     activeIndex = (activeIndex + list.length) % list.length;
+    const item = list[activeIndex];
     const image = lightbox.querySelector('.anka-peresild-lightbox-image');
     const counter = lightbox.querySelector('.anka-peresild-lightbox-counter');
-    image.src = list[activeIndex];
+    image.src = item.src;
     image.alt = `ANKA PERESILD ${activeIndex + 1}`;
     counter.textContent = `${activeIndex + 1} / ${list.length}`;
   }
@@ -338,6 +309,7 @@
     close.onclick = (event) => { event.stopPropagation(); closeLightbox(); };
     stage.onclick = (event) => event.stopPropagation();
     overlay.onclick = closeLightbox;
+
     overlay.addEventListener('touchstart', (event) => {
       touchStartX = event.touches[0]?.clientX || 0;
     }, { passive: true });
@@ -357,6 +329,7 @@
   function openAnka() {
     closeAnka();
     injectStyles();
+
     const list = assets();
     const current = copy();
     previousHtmlOverflow = document.documentElement.style.overflow;
@@ -392,44 +365,64 @@
 
     const grid = document.createElement('div');
     grid.className = 'anka-peresild-grid';
-    list.forEach((src, index) => {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'anka-peresild-gallery-card';
-      const image = document.createElement('img');
-      image.src = src;
-      image.alt = `ANKA PERESILD ${index + 1}`;
-      image.loading = 'lazy';
-      image.decoding = 'async';
-      image.draggable = false;
-      card.append(image);
-      card.onclick = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        openLightbox(index);
-      };
-      grid.append(card);
-    });
+
+    if (!list.length) {
+      const empty = document.createElement('div');
+      empty.className = 'anka-peresild-empty';
+      empty.textContent = current.empty;
+      grid.append(empty);
+    } else {
+      list.forEach((item, index) => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'anka-peresild-gallery-card';
+        const image = document.createElement('img');
+        image.src = item.thumb || item.src;
+        image.alt = `ANKA PERESILD ${index + 1}`;
+        image.loading = index < 6 ? 'eager' : 'lazy';
+        image.decoding = 'async';
+        image.fetchPriority = index < 3 ? 'high' : 'low';
+        image.draggable = false;
+        card.append(image);
+        card.onclick = (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          openLightbox(index);
+        };
+        grid.append(card);
+      });
+    }
 
     inner.append(head, hero, grid);
     root.append(inner);
     document.body.append(root);
     modal = root;
-  }
-
-  function apply() {
-    ensureAnkaCard();
+    root.scrollTop = 0;
   }
 
   injectStyles();
-  [0, 120, 450, 1000].forEach((delay) => window.setTimeout(apply, delay));
+
+  let attempts = 0;
+  const retry = window.setInterval(() => {
+    attempts += 1;
+    if (ensureAnkaCard() || attempts >= 30) window.clearInterval(retry);
+  }, 100);
+  ensureAnkaCard();
 
   document.addEventListener('click', (event) => {
-    const card = event.target.closest('[data-anka-peresild-card]');
+    const target = event.target instanceof Element ? event.target : null;
+    const card = target?.closest('[data-anka-peresild-card]');
     if (!card) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     openAnka();
+  }, true);
+
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target?.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) return;
+    window.setTimeout(ensureAnkaCard, 0);
+    window.setTimeout(ensureAnkaCard, 120);
   }, true);
 
   document.addEventListener('keydown', (event) => {
@@ -447,12 +440,11 @@
       }
       return;
     }
+
     if (event.key === 'Escape' && modal) {
       event.preventDefault();
       event.stopImmediatePropagation();
       closeAnka();
     }
   }, true);
-
-  new MutationObserver(apply).observe(document.body, { childList: true, subtree: true });
 })();
