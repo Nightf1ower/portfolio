@@ -1,10 +1,12 @@
 (() => {
-  if (window.__portfolioImagePerformanceV2) return;
-  window.__portfolioImagePerformanceV2 = true;
+  if (window.__portfolioImagePerformanceV3) return;
+  window.__portfolioImagePerformanceV3 = true;
 
-  const VERSION = 'portfolio-image-performance-2';
+  const VERSION = 'portfolio-image-performance-3';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
-  const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/public\/works\//i;
+  const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
+  const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
+
   const MODAL_SELECTOR = [
     '.m10-modal',
     '.stk-modal',
@@ -19,7 +21,6 @@
     '.bf',
     '.fable-modal',
     '.zny-modal',
-    '.pink-punk-modal',
     '.pink-punk-fullscreen',
     '.album-covers-modal',
     '.collages-modal',
@@ -27,39 +28,145 @@
     '.mc-modal',
   ].join(',');
 
+  const THUMB_MODAL_SELECTOR = [
+    '.fable-modal',
+    '.zny-modal',
+    '.su-modal',
+    '.vtb-modal',
+    '.project9006-modal',
+    '.mc-modal',
+    '.blandetto-modal',
+    '.bf',
+    '.pink-punk-fullscreen',
+    '.anka-peresild-modal',
+    '.pag-modal',
+    '.lcg-modal',
+  ].join(',');
+
+  const FULLRES_SELECTOR = [
+    '.fable-light',
+    '.zny-light',
+    '.su-light',
+    '.vtb-light',
+    '.mc-light',
+    '.pag-light',
+    '.lcg-light',
+    '.anka-peresild-lightbox',
+    '.blandetto-lightbox',
+    '.bf-lightbox',
+    '.pink-punk-lightbox',
+  ].join(',');
+
+  const modalObservers = new WeakMap();
+  const thumbs = () => window.PORTFOLIO_THUMBS || null;
+
   const isPortfolioImage = (value) => {
     if (typeof value !== 'string' || !value) return false;
     return IMAGE_PATH_RE.test(value) || RAW_WORKS_RE.test(value);
   };
+
+  const sourceOf = (image) => (
+    image.dataset.src
+    || image.getAttribute('src')
+    || image.currentSrc
+    || image.src
+    || ''
+  );
+
+  const isFullResolutionImage = (image) => {
+    if (!(image instanceof HTMLImageElement)) return false;
+    if (image.closest(FULLRES_SELECTOR)) return true;
+    const className = String(image.className || '').toLowerCase();
+    return className.includes('lightbox') || className.includes('light-image');
+  };
+
+  const shouldThumb = (image, modal) => (
+    modal?.matches?.(THUMB_MODAL_SELECTOR)
+    && !isFullResolutionImage(image)
+  );
+
+  const thumbDeferredSource = (image, original) => {
+    const helper = thumbs();
+    if (!helper?.url || !original || GENERATED_RE.test(original)) return;
+    const thumbnail = helper.url(original);
+    if (!thumbnail || thumbnail === original) return;
+    image.dataset.portfolioOriginal = original;
+    image.dataset.src = thumbnail;
+  };
+
+  const thumbLoadedSource = (image, original) => {
+    const helper = thumbs();
+    if (!helper?.apply || !original || GENERATED_RE.test(original)) return;
+    helper.apply(image, original);
+  };
+
+  function optimizeImage(image, modal) {
+    if (!(image instanceof HTMLImageElement)) return;
+
+    const deferred = image.dataset.src || '';
+    const current = image.getAttribute('src') || image.currentSrc || image.src || '';
+    const source = deferred || current;
+
+    if (shouldThumb(image, modal) && isPortfolioImage(source)) {
+      if (deferred) thumbDeferredSource(image, deferred);
+      else thumbLoadedSource(image, current);
+    }
+
+    image.decoding = 'async';
+    if (!isFullResolutionImage(image) && !image.dataset.portfolioCritical) {
+      image.loading = 'lazy';
+      try { image.fetchPriority = 'low'; } catch {}
+    }
+  }
 
   const isNearViewport = (image, modal) => {
     const imageRect = image.getBoundingClientRect();
     const modalRect = modal.getBoundingClientRect();
     const viewportTop = Math.max(0, modalRect.top);
     const viewportBottom = Math.min(window.innerHeight || 900, modalRect.bottom);
-    return imageRect.bottom >= viewportTop - 180 && imageRect.top <= viewportBottom + 320;
+    return imageRect.bottom >= viewportTop - 180 && imageRect.top <= viewportBottom + 360;
   };
+
+  function installModalObserver(modal) {
+    if (!(modal instanceof Element) || modalObservers.has(modal)) return;
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.target instanceof HTMLImageElement) {
+          optimizeImage(mutation.target, modal);
+          return;
+        }
+
+        mutation.addedNodes.forEach((node) => {
+          if (!(node instanceof Element)) return;
+          if (node instanceof HTMLImageElement) optimizeImage(node, modal);
+          node.querySelectorAll?.('img').forEach((image) => optimizeImage(image, modal));
+        });
+      });
+    });
+
+    observer.observe(modal, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['src', 'data-src'],
+    });
+    modalObservers.set(modal, observer);
+  }
 
   function optimizeModal(modal) {
     if (!(modal instanceof Element) || !modal.isConnected) return;
+    installModalObserver(modal);
 
-    const images = [...modal.querySelectorAll('img')].filter((image) => {
-      const source = image.currentSrc || image.getAttribute('src') || image.src || '';
-      return isPortfolioImage(source);
-    });
+    const images = [...modal.querySelectorAll('img')];
+    images.forEach((image) => optimizeImage(image, modal));
 
-    if (!images.length) return;
+    const candidates = images.filter((image) => (
+      !isFullResolutionImage(image)
+      && isNearViewport(image, modal)
+    )).slice(0, 3);
 
-    images.forEach((image) => {
-      if (!image.dataset.portfolioCritical) {
-        image.loading = 'lazy';
-        try { image.fetchPriority = 'low'; } catch {}
-      }
-      image.decoding = 'async';
-    });
-
-    const critical = images.filter((image) => isNearViewport(image, modal)).slice(0, 3);
-    (critical.length ? critical : images.slice(0, 2)).forEach((image) => {
+    candidates.forEach((image) => {
       image.dataset.portfolioCritical = VERSION;
       image.loading = 'eager';
       image.decoding = 'async';
@@ -82,14 +189,14 @@
 
   const optimizeWithPasses = (modal = null) => {
     const run = () => modal && modal.isConnected ? optimizeModal(modal) : scheduleAll();
-    [0, 90, 260].forEach((delay) => window.setTimeout(run, delay));
+    [0, 90, 240, 520].forEach((delay) => window.setTimeout(run, delay));
   };
 
-  const observer = new MutationObserver((mutations) => {
+  new MutationObserver((mutations) => {
     const discovered = new Set();
 
     mutations.forEach((mutation) => {
-      [...mutation.addedNodes].forEach((node) => {
+      mutation.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
         if (node.matches?.(MODAL_SELECTOR)) discovered.add(node);
         node.querySelectorAll?.(MODAL_SELECTOR).forEach((modal) => discovered.add(modal));
@@ -97,9 +204,7 @@
     });
 
     discovered.forEach((modal) => optimizeWithPasses(modal));
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
+  }).observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
