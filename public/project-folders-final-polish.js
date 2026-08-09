@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectFoldersFinalPolishV1) return;
-  window.__projectFoldersFinalPolishV1 = true;
+  if (window.__projectFoldersFinalPolishV2) return;
+  window.__projectFoldersFinalPolishV2 = true;
 
-  const VERSION = 'project-folders-final-polish-1';
+  const VERSION = 'project-folders-final-polish-2';
   const STYLE_ID = 'project-folders-final-polish-style';
 
   function installStyles() {
@@ -296,6 +296,16 @@
     }
   }
 
+  function carnivalImageSource(image) {
+    if (!(image instanceof HTMLImageElement)) return '';
+    return normalizeUrl(
+      image.dataset.portfolioOriginal
+      || image.getAttribute('data-original')
+      || image.currentSrc
+      || image.getAttribute('src')
+    );
+  }
+
   function visible(node) {
     if (!node?.isConnected) return false;
     const styles = getComputedStyle(node);
@@ -333,14 +343,14 @@
   function openCarnivalLightbox(card, clickedImage = null) {
     const sources = [...new Set(
       [...card.querySelectorAll('img')]
-        .map((image) => normalizeUrl(image.currentSrc || image.getAttribute('src')))
+        .map(carnivalImageSource)
         .filter(Boolean)
     )];
     if (!sources.length) return;
 
     closeCarnivalLightbox();
     carnivalSources = sources;
-    const clickedSource = normalizeUrl(clickedImage?.currentSrc || clickedImage?.getAttribute?.('src'));
+    const clickedSource = carnivalImageSource(clickedImage);
     carnivalIndex = Math.max(0, sources.indexOf(clickedSource));
 
     const overlay = document.createElement('div');
