@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioImagePerformanceV6) return;
-  window.__portfolioImagePerformanceV6 = true;
+  if (window.__portfolioImagePerformanceV7) return;
+  window.__portfolioImagePerformanceV7 = true;
 
-  const VERSION = 'portfolio-image-performance-6';
+  const VERSION = 'portfolio-image-performance-7';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
   const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
   const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
@@ -62,20 +62,31 @@
 
   const modalObservers = new WeakMap();
   const thumbs = () => window.PORTFOLIO_THUMBS || null;
+  const normalizedText = value => String(value || '').trim().toUpperCase().replace(/\s+/g, ' ');
 
   const isPortfolioImage = (value) => {
     if (typeof value !== 'string' || !value) return false;
     return IMAGE_PATH_RE.test(value) || RAW_WORKS_RE.test(value);
   };
 
+  const isCarnivalAlbumArtwork = (image) => {
+    const subgroup = image.closest?.('.cr-subgroup');
+    if (!subgroup) return false;
+    const title = normalizedText(subgroup.querySelector(':scope > .cr-subtitle')?.textContent);
+    return title === 'ALBUM ARTWORK' || title === 'ОБЛОЖКИ';
+  };
+
   const isFullResolutionImage = (image) => {
     if (!(image instanceof HTMLImageElement)) return false;
     if (image.dataset.portfolioFullres === 'true') return true;
     if (image.closest(FULLRES_SELECTOR)) return true;
-    // ZNY SS25 campaign posters contain small typography and texture that visibly
-    // suffer at the generic 1200px/q76 thumbnail setting. Keep these five images
-    // on their original files while the rest of ZNY stays thumbnail-optimized.
+
+    // Detailed campaign/editorial sections where generic 1200px/q76 thumbnails
+    // visibly damage typography, grain and photographic detail.
     if (image.closest('.zny-poster-grid')) return true;
+    if (image.closest('.project9006-photoshoot-card')) return true;
+    if (isCarnivalAlbumArtwork(image)) return true;
+
     const className = String(image.className || '').toLowerCase();
     return className.includes('lightbox') || className.includes('light-image') || className.includes('light-img');
   };
@@ -85,6 +96,15 @@
     && modal?.matches?.(THUMB_MODAL_SELECTOR)
     && !isFullResolutionImage(image)
   );
+
+  const restoreOriginalIfNeeded = (image) => {
+    if (!(image instanceof HTMLImageElement) || !isFullResolutionImage(image)) return;
+    const original = image.dataset.portfolioOriginal;
+    const current = image.getAttribute('src') || image.currentSrc || image.src || '';
+    if (!original || original === current || !GENERATED_RE.test(current)) return;
+    image.dataset.portfolioFullres = 'true';
+    image.src = original;
+  };
 
   const bindDeferredFallback = (image) => {
     if (!(image instanceof HTMLImageElement) || image.dataset.portfolioDeferredFallback === 'true') return;
@@ -116,6 +136,8 @@
 
   function optimizeImage(image, modal) {
     if (!(image instanceof HTMLImageElement)) return;
+
+    restoreOriginalIfNeeded(image);
 
     const deferred = image.dataset.src || '';
     const current = image.getAttribute('src') || image.currentSrc || image.src || '';
