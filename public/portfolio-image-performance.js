@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioImagePerformanceV5) return;
-  window.__portfolioImagePerformanceV5 = true;
+  if (window.__portfolioImagePerformanceV6) return;
+  window.__portfolioImagePerformanceV6 = true;
 
-  const VERSION = 'portfolio-image-performance-5';
+  const VERSION = 'portfolio-image-performance-6';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
   const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
   const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
@@ -70,7 +70,12 @@
 
   const isFullResolutionImage = (image) => {
     if (!(image instanceof HTMLImageElement)) return false;
+    if (image.dataset.portfolioFullres === 'true') return true;
     if (image.closest(FULLRES_SELECTOR)) return true;
+    // ZNY SS25 campaign posters contain small typography and texture that visibly
+    // suffer at the generic 1200px/q76 thumbnail setting. Keep these five images
+    // on their original files while the rest of ZNY stays thumbnail-optimized.
+    if (image.closest('.zny-poster-grid')) return true;
     const className = String(image.className || '').toLowerCase();
     return className.includes('lightbox') || className.includes('light-image') || className.includes('light-img');
   };
