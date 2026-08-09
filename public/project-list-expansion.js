@@ -1,9 +1,9 @@
 (() => {
-  if (window.__projectListExpansionV4) return;
-  window.__projectListExpansionV4 = true;
+  if (window.__projectListExpansionV5) return;
+  window.__projectListExpansionV5 = true;
 
-  const VERSION = 'project-list-expansion-4';
-  const BADGE_SRC = '/works/NEW.png?v=anka-badge-1';
+  const VERSION = 'project-list-expansion-5';
+  const BADGE_SRC = '/works/NEW.png?v=anka-card-badge-2';
   const COPY = {
     ru: { close: 'ЗАКРЫТЬ', images: 'ИЗОБРАЖЕНИЙ', empty: 'ИЗОБРАЖЕНИЯ НЕ НАЙДЕНЫ' },
     en: { close: 'CLOSE', images: 'IMAGES', empty: 'NO IMAGES FOUND' },
@@ -17,40 +17,61 @@
   let touchStartX = 0;
 
   const language = () => (
-    document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru'
-      ? 'ru'
-      : 'en'
+    document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en'
   );
   const copy = () => COPY[language()];
-  const normalized = (value) => String(value || '')
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, ' ');
-  const naturalCompare = (a, b) => String(a).localeCompare(String(b), 'en', {
-    numeric: true,
-    sensitivity: 'base',
-  });
+  const normalize = (value) => String(value || '').trim().toUpperCase().replace(/\s+/g, ' ');
+  const naturalCompare = (a, b) => String(a).localeCompare(String(b), 'en', { numeric: true, sensitivity: 'base' });
 
   function assets() {
-    const generated = window.PORTFOLIO_GALLERY_MANIFEST?.ankaPeresild || [];
-    return generated
+    return (window.PORTFOLIO_GALLERY_MANIFEST?.ankaPeresild || [])
       .filter((item) => item?.src)
       .slice()
       .sort((a, b) => naturalCompare(a.relative || a.src, b.relative || b.src));
   }
 
   function injectStyles() {
-    const old = document.getElementById('project-list-expansion-style');
-    if (old?.dataset.version === VERSION) return;
-    old?.remove();
+    const current = document.getElementById('project-list-expansion-style');
+    if (current?.dataset.version === VERSION) return;
+    current?.remove();
 
     const style = document.createElement('style');
     style.id = 'project-list-expansion-style';
     style.dataset.version = VERSION;
     style.textContent = `
-      html:has(.anka-peresild-modal), body:has(.anka-peresild-modal) {
-        overflow: hidden !important;
+      #works [data-anka-peresild-card="true"] {
+        position: relative !important;
+        overflow: visible !important;
+        isolation: isolate;
       }
+      #works [data-anka-peresild-card="true"] .anka-peresild-card-native-dot {
+        display: none !important;
+      }
+      #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
+        position: absolute !important;
+        top: .9rem !important;
+        right: .75rem !important;
+        z-index: 30 !important;
+        display: block !important;
+        width: clamp(5.2rem, 6.8vw, 7.25rem) !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        pointer-events: none !important;
+        user-select: none !important;
+        -webkit-user-drag: none !important;
+        transform-origin: 50% 50% !important;
+        animation: anka-card-badge-pulse 4.8s ease-in-out infinite !important;
+        will-change: transform;
+      }
+      @keyframes anka-card-badge-pulse {
+        0%, 100% { transform: scale(.96); }
+        50% { transform: scale(1.04); }
+      }
+
+      html:has(.anka-peresild-modal), body:has(.anka-peresild-modal) { overflow: hidden !important; }
       .anka-peresild-modal {
         position: fixed;
         inset: 0;
@@ -96,46 +117,14 @@
         color: #fff;
       }
       .anka-peresild-close { cursor: pointer; }
-      .anka-peresild-hero {
-        position: relative;
-        isolation: isolate;
-        padding: clamp(4rem, 9vw, 8rem) 0 clamp(3rem, 7vw, 6rem);
-      }
+      .anka-peresild-hero { padding: clamp(4rem, 9vw, 8rem) 0 clamp(3rem, 7vw, 6rem); }
       .anka-peresild-title {
-        position: relative;
-        z-index: 1;
         margin: 0;
         font: 900 clamp(4rem, 12vw, 12rem)/.78 Arial Black, Arial, Helvetica, sans-serif;
         letter-spacing: -.08em;
         text-transform: uppercase;
       }
-      .anka-peresild-count {
-        position: relative;
-        z-index: 4;
-        margin-top: 2rem;
-        color: rgba(5,5,5,.55);
-      }
-      .anka-peresild-badge {
-        position: absolute;
-        top: clamp(-1.6rem, -1.4vw, -.55rem);
-        right: clamp(-2.4rem, -1.8vw, -.8rem);
-        z-index: 3;
-        display: block;
-        width: clamp(15rem, 29vw, 30rem);
-        max-width: 44%;
-        height: auto;
-        margin: 0;
-        pointer-events: none;
-        user-select: none;
-        -webkit-user-drag: none;
-        transform-origin: 50% 50%;
-        animation: anka-peresild-badge-pulse 4.8s ease-in-out infinite;
-        will-change: transform;
-      }
-      @keyframes anka-peresild-badge-pulse {
-        0%, 100% { transform: scale(.965); }
-        50% { transform: scale(1.035); }
-      }
+      .anka-peresild-count { margin-top: 2rem; color: rgba(5,5,5,.55); }
       .anka-peresild-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -238,28 +227,30 @@
       }
       @media (max-width: 900px) {
         .anka-peresild-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-        .anka-peresild-badge {
-          right: -.8rem;
-          width: clamp(11rem, 30vw, 18rem);
-          max-width: 40%;
+        #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
+          width: 5.25rem !important;
+          top: .8rem !important;
+          right: .7rem !important;
         }
       }
       @media (max-width: 620px), (hover:none), (pointer:coarse) {
         .anka-peresild-title { font-size: clamp(3.25rem, 16vw, 6rem); }
-        .anka-peresild-badge {
-          top: .3rem;
-          right: -.45rem;
-          width: clamp(8.5rem, 37vw, 12rem);
-          max-width: 39%;
-          animation-duration: 5.2s;
-        }
         .anka-peresild-grid { grid-template-columns: 1fr; }
         .anka-peresild-lightbox { grid-template-columns: 1fr; padding: .75rem; }
         .anka-peresild-lightbox-nav { display: none; }
         .anka-peresild-lightbox-stage { height: calc(100dvh - 1.5rem); }
+        #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
+          width: 4.25rem !important;
+          top: .65rem !important;
+          right: .55rem !important;
+          animation-duration: 5.2s !important;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
-        .anka-peresild-badge { animation: none; transform: none; }
+        #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
+          animation: none !important;
+          transform: none !important;
+        }
       }
     `;
     document.head.append(style);
@@ -270,8 +261,8 @@
   }
 
   function findCard(...titles) {
-    const accepted = new Set(titles.map(normalized));
-    return cards().find((card) => accepted.has(normalized(card.querySelector('h3')?.textContent)));
+    const accepted = new Set(titles.map(normalize));
+    return cards().find((card) => accepted.has(normalize(card.querySelector('h3')?.textContent))) || null;
   }
 
   function ensureAnkaCard() {
@@ -292,6 +283,27 @@
     card.setAttribute('aria-label', 'Open ANKA PERESILD project');
     const heading = card.querySelector('h3');
     if (heading) heading.textContent = 'ANKA PERESILD';
+
+    const nativeDot = [...card.querySelectorAll('span')].find((span) => (
+      span.classList.contains('h-3')
+      && span.classList.contains('w-3')
+      && span.classList.contains('rounded-full')
+    ));
+    nativeDot?.classList.add('anka-peresild-card-native-dot');
+
+    let badge = card.querySelector(':scope > .anka-peresild-card-badge');
+    if (!badge) {
+      badge = document.createElement('img');
+      badge.className = 'anka-peresild-card-badge';
+      badge.alt = '';
+      badge.setAttribute('aria-hidden', 'true');
+      badge.draggable = false;
+      badge.decoding = 'async';
+      badge.fetchPriority = 'high';
+      badge.dataset.portfolioFullres = 'true';
+      card.append(badge);
+    }
+    if (badge.getAttribute('src') !== BADGE_SRC) badge.src = BADGE_SRC;
     return true;
   }
 
@@ -357,10 +369,7 @@
     close.onclick = (event) => { event.stopPropagation(); closeLightbox(); };
     stage.onclick = (event) => event.stopPropagation();
     overlay.onclick = closeLightbox;
-
-    overlay.addEventListener('touchstart', (event) => {
-      touchStartX = event.touches[0]?.clientX || 0;
-    }, { passive: true });
+    overlay.addEventListener('touchstart', (event) => { touchStartX = event.touches[0]?.clientX || 0; }, { passive: true });
     overlay.addEventListener('touchend', (event) => {
       const endX = event.changedTouches[0]?.clientX || touchStartX;
       const delta = endX - touchStartX;
@@ -409,20 +418,10 @@
     const count = document.createElement('p');
     count.className = 'anka-peresild-count';
     count.textContent = `${list.length} ${current.images}`;
-    const badge = document.createElement('img');
-    badge.className = 'anka-peresild-badge';
-    badge.src = BADGE_SRC;
-    badge.alt = '';
-    badge.setAttribute('aria-hidden', 'true');
-    badge.dataset.portfolioFullres = 'true';
-    badge.decoding = 'async';
-    badge.fetchPriority = 'high';
-    badge.draggable = false;
-    hero.append(title, count, badge);
+    hero.append(title, count);
 
     const grid = document.createElement('div');
     grid.className = 'anka-peresild-grid';
-
     if (!list.length) {
       const empty = document.createElement('div');
       empty.className = 'anka-peresild-empty';
@@ -497,7 +496,6 @@
       }
       return;
     }
-
     if (event.key === 'Escape' && modal) {
       event.preventDefault();
       event.stopImmediatePropagation();
