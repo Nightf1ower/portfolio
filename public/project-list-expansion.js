@@ -1,8 +1,9 @@
 (() => {
-  if (window.__projectListExpansionV3) return;
-  window.__projectListExpansionV3 = true;
+  if (window.__projectListExpansionV4) return;
+  window.__projectListExpansionV4 = true;
 
-  const VERSION = 'project-list-expansion-3';
+  const VERSION = 'project-list-expansion-4';
+  const BADGE_SRC = '/works/NEW.png?v=anka-badge-1';
   const COPY = {
     ru: { close: 'ЗАКРЫТЬ', images: 'ИЗОБРАЖЕНИЙ', empty: 'ИЗОБРАЖЕНИЯ НЕ НАЙДЕНЫ' },
     en: { close: 'CLOSE', images: 'IMAGES', empty: 'NO IMAGES FOUND' },
@@ -95,14 +96,46 @@
         color: #fff;
       }
       .anka-peresild-close { cursor: pointer; }
-      .anka-peresild-hero { padding: clamp(4rem, 9vw, 8rem) 0 clamp(3rem, 7vw, 6rem); }
+      .anka-peresild-hero {
+        position: relative;
+        isolation: isolate;
+        padding: clamp(4rem, 9vw, 8rem) 0 clamp(3rem, 7vw, 6rem);
+      }
       .anka-peresild-title {
+        position: relative;
+        z-index: 1;
         margin: 0;
         font: 900 clamp(4rem, 12vw, 12rem)/.78 Arial Black, Arial, Helvetica, sans-serif;
         letter-spacing: -.08em;
         text-transform: uppercase;
       }
-      .anka-peresild-count { margin-top: 2rem; color: rgba(5,5,5,.55); }
+      .anka-peresild-count {
+        position: relative;
+        z-index: 4;
+        margin-top: 2rem;
+        color: rgba(5,5,5,.55);
+      }
+      .anka-peresild-badge {
+        position: absolute;
+        top: clamp(-1.6rem, -1.4vw, -.55rem);
+        right: clamp(-2.4rem, -1.8vw, -.8rem);
+        z-index: 3;
+        display: block;
+        width: clamp(15rem, 29vw, 30rem);
+        max-width: 44%;
+        height: auto;
+        margin: 0;
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-drag: none;
+        transform-origin: 50% 50%;
+        animation: anka-peresild-badge-pulse 4.8s ease-in-out infinite;
+        will-change: transform;
+      }
+      @keyframes anka-peresild-badge-pulse {
+        0%, 100% { transform: scale(.965); }
+        50% { transform: scale(1.035); }
+      }
       .anka-peresild-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -205,13 +238,28 @@
       }
       @media (max-width: 900px) {
         .anka-peresild-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .anka-peresild-badge {
+          right: -.8rem;
+          width: clamp(11rem, 30vw, 18rem);
+          max-width: 40%;
+        }
       }
       @media (max-width: 620px), (hover:none), (pointer:coarse) {
         .anka-peresild-title { font-size: clamp(3.25rem, 16vw, 6rem); }
+        .anka-peresild-badge {
+          top: .3rem;
+          right: -.45rem;
+          width: clamp(8.5rem, 37vw, 12rem);
+          max-width: 39%;
+          animation-duration: 5.2s;
+        }
         .anka-peresild-grid { grid-template-columns: 1fr; }
         .anka-peresild-lightbox { grid-template-columns: 1fr; padding: .75rem; }
         .anka-peresild-lightbox-nav { display: none; }
         .anka-peresild-lightbox-stage { height: calc(100dvh - 1.5rem); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .anka-peresild-badge { animation: none; transform: none; }
       }
     `;
     document.head.append(style);
@@ -361,7 +409,16 @@
     const count = document.createElement('p');
     count.className = 'anka-peresild-count';
     count.textContent = `${list.length} ${current.images}`;
-    hero.append(title, count);
+    const badge = document.createElement('img');
+    badge.className = 'anka-peresild-badge';
+    badge.src = BADGE_SRC;
+    badge.alt = '';
+    badge.setAttribute('aria-hidden', 'true');
+    badge.dataset.portfolioFullres = 'true';
+    badge.decoding = 'async';
+    badge.fetchPriority = 'high';
+    badge.draggable = false;
+    hero.append(title, count, badge);
 
     const grid = document.createElement('div');
     grid.className = 'anka-peresild-grid';
