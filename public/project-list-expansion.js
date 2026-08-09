@@ -1,9 +1,9 @@
 (() => {
-  if (window.__projectListExpansionV5) return;
-  window.__projectListExpansionV5 = true;
+  if (window.__projectListExpansionV6) return;
+  window.__projectListExpansionV6 = true;
 
-  const VERSION = 'project-list-expansion-5';
-  const BADGE_SRC = '/works/NEW.png?v=anka-card-badge-2';
+  const VERSION = 'project-list-expansion-6';
+  const BADGE_SRC = '/works/NEW.png?v=anka-card-badge-3';
   const COPY = {
     ru: { close: 'ЗАКРЫТЬ', images: 'ИЗОБРАЖЕНИЙ', empty: 'ИЗОБРАЖЕНИЯ НЕ НАЙДЕНЫ' },
     en: { close: 'CLOSE', images: 'IMAGES', empty: 'NO IMAGES FOUND' },
@@ -41,6 +41,7 @@
     style.textContent = `
       #works [data-anka-peresild-card="true"] {
         position: relative !important;
+        z-index: 6 !important;
         overflow: visible !important;
         isolation: isolate;
       }
@@ -49,11 +50,12 @@
       }
       #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
         position: absolute !important;
-        top: .9rem !important;
-        right: .75rem !important;
-        z-index: 30 !important;
+        top: -2.4rem !important;
+        right: -2.8rem !important;
+        z-index: 60 !important;
         display: block !important;
-        width: clamp(5.2rem, 6.8vw, 7.25rem) !important;
+        width: clamp(10.5rem, 14vw, 14.5rem) !important;
+        max-width: none !important;
         height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -67,7 +69,7 @@
         will-change: transform;
       }
       @keyframes anka-card-badge-pulse {
-        0%, 100% { transform: scale(.96); }
+        0%, 100% { transform: scale(.965); }
         50% { transform: scale(1.04); }
       }
 
@@ -228,9 +230,9 @@
       @media (max-width: 900px) {
         .anka-peresild-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
         #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
-          width: 5.25rem !important;
-          top: .8rem !important;
-          right: .7rem !important;
+          width: 10rem !important;
+          top: -2rem !important;
+          right: -2rem !important;
         }
       }
       @media (max-width: 620px), (hover:none), (pointer:coarse) {
@@ -240,9 +242,9 @@
         .anka-peresild-lightbox-nav { display: none; }
         .anka-peresild-lightbox-stage { height: calc(100dvh - 1.5rem); }
         #works [data-anka-peresild-card="true"] > .anka-peresild-card-badge {
-          width: 4.25rem !important;
-          top: .65rem !important;
-          right: .55rem !important;
+          width: clamp(9rem, 33vw, 11.5rem) !important;
+          top: -1.75rem !important;
+          right: -1.5rem !important;
           animation-duration: 5.2s !important;
         }
       }
