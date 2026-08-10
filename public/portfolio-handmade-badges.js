@@ -1,9 +1,9 @@
 (() => {
-  if (window.__portfolioHandmadeBadgesV1) return;
-  window.__portfolioHandmadeBadgesV1 = true;
+  if (window.__portfolioHandmadeBadgesV2) return;
+  window.__portfolioHandmadeBadgesV2 = true;
 
-  const VERSION = 'handmade-badges-1';
-  const BADGE_SRC = '/works/HANDMADE.png?v=handmade-badge-1';
+  const VERSION = 'handmade-badges-2';
+  const BADGE_SRC = '/works/HANDMADE.png?v=handmade-badge-2';
   const STYLE_ID = 'portfolio-handmade-badges-style';
 
   const normalize = (value) => String(value || '')
@@ -21,10 +21,13 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
-      .portfolio-handmade-heading-anchor {
+      .portfolio-handmade-title-wrap {
         position: relative !important;
         display: inline-block !important;
+        width: auto !important;
+        max-width: 100% !important;
         overflow: visible !important;
+        vertical-align: top !important;
       }
 
       .portfolio-handmade-media-anchor,
@@ -35,7 +38,7 @@
 
       .portfolio-handmade-badge {
         position: absolute !important;
-        z-index: 120 !important;
+        z-index: 500 !important;
         display: block !important;
         max-width: none !important;
         height: auto !important;
@@ -52,40 +55,40 @@
       }
 
       .portfolio-handmade-badge--zny {
-        top: -2.55rem !important;
-        right: -3.15rem !important;
-        width: clamp(9.5rem, 12.5vw, 15.5rem) !important;
+        top: -2.7rem !important;
+        right: -4.4rem !important;
+        width: clamp(10rem, 12.5vw, 15.5rem) !important;
       }
 
       .portfolio-handmade-badge--ninety-identity {
-        top: -2.55rem !important;
-        right: -2.85rem !important;
-        width: clamp(8.75rem, 11vw, 13.5rem) !important;
+        top: -2.2rem !important;
+        right: -4.6rem !important;
+        width: clamp(9rem, 10.5vw, 13rem) !important;
       }
 
       .portfolio-handmade-badge--ninety-lookbook {
-        top: -1.85rem !important;
-        right: -1rem !important;
-        width: clamp(8rem, 9.5vw, 11.5rem) !important;
+        top: -1.9rem !important;
+        right: -1.15rem !important;
+        width: clamp(8.5rem, 10vw, 12rem) !important;
       }
 
       .portfolio-handmade-badge--klubique {
-        top: -2.55rem !important;
-        right: -2.4rem !important;
-        width: clamp(7.75rem, 9vw, 11rem) !important;
+        top: -2.25rem !important;
+        right: -3.7rem !important;
+        width: clamp(8rem, 9.5vw, 11.5rem) !important;
       }
 
       .portfolio-handmade-badge--flawa {
-        top: -2.7rem !important;
-        right: -2.65rem !important;
-        width: clamp(8.5rem, 10vw, 12.5rem) !important;
+        top: -2.8rem !important;
+        right: -4.4rem !important;
+        width: clamp(9rem, 10.5vw, 13rem) !important;
       }
 
       .portfolio-handmade-badge--merch-prints {
-        top: -2.45rem !important;
+        top: -2.5rem !important;
         left: 25% !important;
         right: auto !important;
-        width: clamp(8rem, 9.5vw, 11.5rem) !important;
+        width: clamp(8.5rem, 10vw, 12rem) !important;
         animation-name: portfolio-handmade-pulse-centered !important;
       }
 
@@ -104,7 +107,7 @@
         top: -2.4rem !important;
         right: -2.8rem !important;
         width: clamp(10.5rem, 14vw, 14.5rem) !important;
-        z-index: 160 !important;
+        z-index: 600 !important;
       }
 
       @keyframes portfolio-handmade-pulse {
@@ -118,31 +121,31 @@
       }
 
       @media (max-width: 900px) {
-        .portfolio-handmade-badge--zny,
+        .portfolio-handmade-badge--zny {
+          width: clamp(8.5rem, 22vw, 11.5rem) !important;
+          top: -2rem !important;
+          right: -2.4rem !important;
+        }
         .portfolio-handmade-badge--ninety-identity,
         .portfolio-handmade-badge--flawa {
-          width: clamp(8rem, 22vw, 11rem) !important;
-          top: -2rem !important;
-          right: -1.5rem !important;
+          width: clamp(8rem, 21vw, 11rem) !important;
+          top: -1.9rem !important;
+          right: -2.2rem !important;
         }
-
         .portfolio-handmade-badge--klubique {
           width: clamp(7.25rem, 20vw, 9.5rem) !important;
-          top: -1.9rem !important;
-          right: -1.2rem !important;
+          top: -1.75rem !important;
+          right: -1.9rem !important;
         }
-
         .portfolio-handmade-badge--ninety-lookbook {
           width: clamp(7.5rem, 20vw, 9.5rem) !important;
           top: -1.5rem !important;
           right: -.75rem !important;
         }
-
         .portfolio-handmade-badge--merch-prints {
           width: clamp(7.5rem, 20vw, 9.5rem) !important;
           top: -1.8rem !important;
         }
-
         #works [data-handmade-collages-card="true"] > .portfolio-handmade-badge--collages {
           width: 10rem !important;
           top: -2rem !important;
@@ -155,32 +158,28 @@
         .portfolio-handmade-badge--ninety-identity,
         .portfolio-handmade-badge--flawa {
           width: clamp(7.25rem, 31vw, 9.75rem) !important;
-          top: -1.45rem !important;
-          right: -.8rem !important;
+          top: -1.35rem !important;
+          right: -1.15rem !important;
           animation-duration: 5.2s !important;
         }
-
         .portfolio-handmade-badge--klubique {
           width: clamp(6.75rem, 28vw, 8.75rem) !important;
-          top: -1.35rem !important;
-          right: -.7rem !important;
+          top: -1.25rem !important;
+          right: -1rem !important;
           animation-duration: 5.2s !important;
         }
-
         .portfolio-handmade-badge--ninety-lookbook {
           width: clamp(7rem, 29vw, 9rem) !important;
           top: -1.2rem !important;
           right: -.55rem !important;
           animation-duration: 5.2s !important;
         }
-
         .portfolio-handmade-badge--merch-prints {
           left: 50% !important;
           width: clamp(7rem, 29vw, 9rem) !important;
           top: -1.35rem !important;
           animation-duration: 5.2s !important;
         }
-
         #works [data-handmade-collages-card="true"] > .portfolio-handmade-badge--collages {
           width: clamp(9rem, 33vw, 11.5rem) !important;
           top: -1.75rem !important;
@@ -190,18 +189,14 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .portfolio-handmade-badge {
-          animation: none !important;
-        }
-        .portfolio-handmade-badge--merch-prints {
-          transform: translateX(-50%) !important;
-        }
+        .portfolio-handmade-badge { animation: none !important; }
+        .portfolio-handmade-badge--merch-prints { transform: translateX(-50%) !important; }
       }
     `;
     document.head.append(style);
   }
 
-  function badge(className) {
+  function badge(className, key) {
     const image = document.createElement('img');
     image.className = `portfolio-handmade-badge ${className}`;
     image.src = BADGE_SRC;
@@ -210,17 +205,27 @@
     image.draggable = false;
     image.decoding = 'async';
     image.dataset.portfolioFullres = 'true';
+    image.dataset.handmadeKey = key;
     return image;
   }
 
   function addHeadingBadge(heading, className, key) {
-    if (!(heading instanceof Element)) return false;
-    heading.classList.add('portfolio-handmade-heading-anchor');
-    let image = heading.querySelector(`:scope > [data-handmade-key="${key}"]`);
+    if (!(heading instanceof HTMLElement)) return false;
+
+    let wrap = heading.querySelector(':scope > .portfolio-handmade-title-wrap');
+    if (!wrap) {
+      const label = heading.textContent?.replace(/\s+/g, ' ').trim() || '';
+      heading.textContent = '';
+      wrap = document.createElement('span');
+      wrap.className = 'portfolio-handmade-title-wrap';
+      wrap.textContent = label;
+      heading.append(wrap);
+    }
+
+    let image = wrap.querySelector(`:scope > [data-handmade-key="${key}"]`);
     if (!image) {
-      image = badge(className);
-      image.dataset.handmadeKey = key;
-      heading.append(image);
+      image = badge(className, key);
+      wrap.append(image);
     }
     return true;
   }
@@ -234,7 +239,7 @@
     const modal = document.querySelector('.zny-modal');
     if (!modal) return false;
     const heading = findHeading(modal, (text) => (
-      /FW\s*24\s*[\/-]\s*25/.test(text)
+      (text.includes('FW 24/25') || text.includes('FW24/25') || text.includes('FW 24 25'))
       && (text.includes('ХЭНДМЕЙД') || text.includes('HANDMADE'))
     ));
     return addHeadingBadge(heading, 'portfolio-handmade-badge--zny', 'zny-handmade-prints');
@@ -243,20 +248,23 @@
   function applyMerch() {
     const modal = document.querySelector('.mc-modal');
     if (!modal) return false;
+
     const title = [...modal.querySelectorAll('.mc-section-title')].find((heading) => {
       const text = normalize(heading.textContent);
       return text === 'ГРАФИКА ДЛЯ МЕРЧА' || text === 'MERCH GRAPHICS';
     });
     const section = title?.closest('.mc-section');
-    const grids = section ? [...section.querySelectorAll('.mc-grid')] : [];
-    const printsGrid = grids[1] || null;
+    if (!section) return false;
+
+    const printsGrid = section.querySelector('.mc-grid--4')
+      || [...section.querySelectorAll('.mc-grid')].find((grid) => grid.querySelector('img[src*="/yablochko/print/"]'))
+      || null;
     if (!printsGrid) return false;
 
     printsGrid.classList.add('portfolio-handmade-merch-anchor');
     let image = printsGrid.querySelector(':scope > [data-handmade-key="merch-yablochko-prints"]');
     if (!image) {
-      image = badge('portfolio-handmade-badge--merch-prints');
-      image.dataset.handmadeKey = 'merch-yablochko-prints';
+      image = badge('portfolio-handmade-badge--merch-prints', 'merch-yablochko-prints');
       printsGrid.append(image);
     }
     return true;
@@ -270,32 +278,35 @@
       text === 'АЙДЕНТИКА И ЛОГОТИП'
       || text === 'VISUAL IDENTITY & LOGO DESIGN'
     ));
-    addHeadingBadge(identityHeading, 'portfolio-handmade-badge--ninety-identity', 'ninety-identity');
+    const identityDone = addHeadingBadge(identityHeading, 'portfolio-handmade-badge--ninety-identity', 'ninety-identity');
 
-    const lastCard = modal.querySelector('.project9006-photoshoot-list .project9006-photoshoot-card:last-child');
+    const cards = [...modal.querySelectorAll('.project9006-photoshoot-card')];
+    const lastCard = cards.at(-1) || null;
+    let lookbookDone = false;
     if (lastCard) {
       lastCard.classList.add('portfolio-handmade-media-anchor');
       let image = lastCard.querySelector(':scope > [data-handmade-key="ninety-lookbook-last"]');
       if (!image) {
-        image = badge('portfolio-handmade-badge--ninety-lookbook');
-        image.dataset.handmadeKey = 'ninety-lookbook-last';
+        image = badge('portfolio-handmade-badge--ninety-lookbook', 'ninety-lookbook-last');
         lastCard.append(image);
       }
+      lookbookDone = true;
     }
-    return Boolean(identityHeading || lastCard);
+    return identityDone || lookbookDone;
   }
 
   function applyPosters() {
     const modal = document.querySelector('.pcg-modal');
     if (!modal) return false;
 
-    const klubiqueHeading = modal.querySelector('.pcg-event-block--klubique .pcg-event-subtitle');
-    addHeadingBadge(klubiqueHeading, 'portfolio-handmade-badge--klubique', 'posters-klubique');
+    const klubiqueHeading = modal.querySelector('.pcg-event-block--klubique .pcg-event-subtitle')
+      || findHeading(modal, (text) => text === 'KLUBIQUE PARTY');
+    const flawaHeading = modal.querySelector('.pcg-flawa-section .pcg-section-title')
+      || findHeading(modal, (text) => text === 'FLAWA POSTERS');
 
-    const flawaHeading = modal.querySelector('.pcg-flawa-section .pcg-section-title');
-    addHeadingBadge(flawaHeading, 'portfolio-handmade-badge--flawa', 'posters-flawa');
-
-    return Boolean(klubiqueHeading || flawaHeading);
+    const klubiqueDone = addHeadingBadge(klubiqueHeading, 'portfolio-handmade-badge--klubique', 'posters-klubique');
+    const flawaDone = addHeadingBadge(flawaHeading, 'portfolio-handmade-badge--flawa', 'posters-flawa');
+    return klubiqueDone || flawaDone;
   }
 
   function findCollagesCard() {
@@ -320,8 +331,7 @@
 
     let image = card.querySelector(':scope > [data-handmade-key="collages-card"]');
     if (!image) {
-      image = badge('portfolio-handmade-badge--collages');
-      image.dataset.handmadeKey = 'collages-card';
+      image = badge('portfolio-handmade-badge--collages', 'collages-card');
       card.append(image);
     }
     return true;
@@ -346,7 +356,7 @@
   }
 
   function runPasses() {
-    [0, 80, 220, 520, 1000, 1800].forEach((delay) => window.setTimeout(schedule, delay));
+    [0, 70, 160, 320, 650, 1100, 1800, 2800].forEach((delay) => window.setTimeout(schedule, delay));
   }
 
   const relevantProjects = new Set([
@@ -358,18 +368,35 @@
     'COLLAGES PHOTO EDIT',
   ]);
 
-  document.addEventListener('click', (event) => {
+  // Window capture fires before legacy document capture handlers that can stop propagation.
+  window.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
     if (!target) return;
-
     const card = target.closest('#works article,#works button');
     const title = normalize(card?.querySelector('h3')?.textContent);
     if (relevantProjects.has(title)) runPasses();
-
-    if (target.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) {
-      runPasses();
-    }
   }, true);
+
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) runPasses();
+  }, true);
+
+  // Small scoped observer: only reacts when one of the relevant project modals is inserted.
+  // It does not re-run on image loads, attributes or inner gallery mutations.
+  const modalSelectors = ['.zny-modal', '.mc-modal', '.project9006-modal', '.pcg-modal'];
+  const modalObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!(node instanceof Element)) continue;
+        if (modalSelectors.some((selector) => node.matches?.(selector) || node.querySelector?.(selector))) {
+          runPasses();
+          return;
+        }
+      }
+    }
+  });
+  modalObserver.observe(document.body, { childList: true });
 
   window.addEventListener('load', runPasses, { once: true });
   installStyles();
