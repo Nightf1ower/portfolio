@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioImagePerformanceV7) return;
-  window.__portfolioImagePerformanceV7 = true;
+  if (window.__portfolioImagePerformanceV8) return;
+  window.__portfolioImagePerformanceV8 = true;
 
-  const VERSION = 'portfolio-image-performance-7';
+  const VERSION = 'portfolio-image-performance-8';
   const IMAGE_PATH_RE = /(?:^|\/)(?:public\/)?works\//i;
   const RAW_WORKS_RE = /raw\.githubusercontent\.com\/Nightf1ower\/portfolio\/[^/]+\/(?:public\/)?works\//i;
   const GENERATED_RE = /\/generated\/(?:portfolio-thumbs|dxs-thumbs|posters-thumbs)\//i;
@@ -69,6 +69,33 @@
     return IMAGE_PATH_RE.test(value) || RAW_WORKS_RE.test(value);
   };
 
+  const imageSource = (image) => String(
+    image?.dataset?.portfolioOriginal
+    || image?.getAttribute?.('data-original')
+    || image?.getAttribute?.('src')
+    || image?.currentSrc
+    || ''
+  ).split('#')[0].split('?')[0];
+
+  const isNinetyPhotoshoot = (image) => /\/works\/90-06\/photoshoot\//i.test(imageSource(image));
+
+  const isVinylPath = (image) => {
+    const source = imageSource(image);
+    return /(?:^|[\/_-])vinyl(?:[\/_-]|\.|$)/i.test(source)
+      || /\/vinyl\//i.test(source);
+  };
+
+  const isVinylSection = (image) => {
+    const container = image.closest?.('.cr-subgroup,section,.album-covers-section,.album-section,.project-section,div');
+    if (!container) return false;
+    const heading = container.querySelector?.(':scope > h1,:scope > h2,:scope > h3,:scope > h4,.cr-subtitle,.section-title');
+    const title = normalizedText(heading?.textContent);
+    return title === 'VINYL'
+      || title === 'ВИНИЛ'
+      || title.includes('РАЗВОРОТ ВИНИЛА')
+      || title.includes('VINYL SPREAD');
+  };
+
   const isCarnivalAlbumArtwork = (image) => {
     const subgroup = image.closest?.('.cr-subgroup');
     if (!subgroup) return false;
@@ -81,8 +108,9 @@
     if (image.dataset.portfolioFullres === 'true') return true;
     if (image.closest(FULLRES_SELECTOR)) return true;
 
-    // Detailed campaign/editorial sections where generic 1200px/q76 thumbnails
-    // visibly damage typography, grain and photographic detail.
+    // Detailed editorial / typography-heavy sections stay on their originals.
+    if (isNinetyPhotoshoot(image)) return true;
+    if (isVinylPath(image) || isVinylSection(image)) return true;
     if (image.closest('.zny-poster-grid')) return true;
     if (image.closest('.project9006-photoshoot-card')) return true;
     if (isCarnivalAlbumArtwork(image)) return true;
@@ -99,10 +127,10 @@
 
   const restoreOriginalIfNeeded = (image) => {
     if (!(image instanceof HTMLImageElement) || !isFullResolutionImage(image)) return;
-    const original = image.dataset.portfolioOriginal;
+    const original = image.dataset.portfolioOriginal || image.getAttribute('data-original') || '';
     const current = image.getAttribute('src') || image.currentSrc || image.src || '';
-    if (!original || original === current || !GENERATED_RE.test(current)) return;
     image.dataset.portfolioFullres = 'true';
+    if (!original || original === current || !GENERATED_RE.test(current)) return;
     image.src = original;
   };
 
