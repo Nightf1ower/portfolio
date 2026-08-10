@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioAutoGalleriesV2) return;
-  window.__portfolioAutoGalleriesV2 = true;
+  if (window.__portfolioAutoGalleriesV3) return;
+  window.__portfolioAutoGalleriesV3 = true;
 
-  const VERSION = 'portfolio-auto-galleries-2';
+  const VERSION = 'portfolio-auto-galleries-3';
   const manifest = window.PORTFOLIO_GALLERY_MANIFEST || {
     logos: [],
     collages: [],
@@ -36,6 +36,23 @@
   const LOGOS = items(manifest.logos, 'Logo');
   const COLLAGES = items(manifest.collages, 'Collage');
   const POSTERS = items(manifest.posters, 'Poster');
+
+  const COLLAGES_DESCRIPTION = {
+    ru: [
+      'COLLAGES — серия авторских работ, построенных на ручной обработке, ретуши и переосмыслении фотографии в эстетике papercut.',
+      'В основе каждого коллажа — физическая работа с изображением. Я печатаю фотографии, разрезаю их ножницами и канцелярским ножом, собираю заново, накладываю друг на друга, сгибаю, рву и мну бумагу, повторно сканирую и перепечатываю отдельные элементы.',
+      'В процессе я не ограничиваю себя конкретной техникой — в ход идут сканер, принтер, бумага, клей, ножницы, лезвия и любые другие подручные средства, которые помогают получить нужную фактуру, искажение или случайный визуальный эффект.',
+      'Для меня это способ редактировать фотографию не только на экране, а буквально физически вмешиваться в изображение: разрушать его первоначальную структуру, менять композицию, создавать новые слои, дефекты и текстуры.',
+      'Большая часть эффектов появляется непосредственно в процессе ручной работы — через неровные края, следы бумаги, смещения при сканировании, заломы, разрывы и несовершенства печати. Благодаря этому каждый коллаж остается уникальным и сохраняет ощущение реального, физического объекта.',
+    ],
+    en: [
+      'COLLAGES is a series of personal works based on manual photo editing, retouching and reinterpretation through a papercut-inspired aesthetic.',
+      'Each collage starts with physical interaction with the image. I print photographs, cut them with scissors and a craft knife, rearrange and layer the fragments, fold, tear and crumple the paper, then scan and reprint individual elements again.',
+      'I do not limit myself to a single technique or set of tools. A scanner, printer, paper, glue, scissors, blades and basically any available material or object can become part of the process if it helps create the right texture, distortion or unexpected visual effect.',
+      'For me, this is a way of editing photography beyond the screen — physically interfering with the image itself, breaking apart its original structure, rebuilding the composition and introducing new layers, imperfections and textures.',
+      'Most of the final effects come directly from the handmade process: uneven edges, paper marks, scanning shifts, folds, tears and printing imperfections. As a result, every collage becomes a unique piece that still carries the feeling of a real, tangible object.',
+    ],
+  };
 
   let modal = null;
   let lightbox = null;
@@ -112,6 +129,25 @@
         width: 100%; max-width: none; margin: 0; font: 900 clamp(4.2rem,14vw,13rem)/.82 Arial,Helvetica,sans-serif;
         letter-spacing: -.075em; text-transform: uppercase;
       }
+      .pag-description {
+        width: min(100%, 78rem);
+        margin-top: clamp(2.5rem,5vw,4.5rem);
+        font-family: Arial,Helvetica,sans-serif;
+      }
+      .pag-description p {
+        max-width: 72rem;
+        margin: 0;
+        font-size: clamp(1rem,1.45vw,1.35rem);
+        font-weight: 500;
+        line-height: 1.42;
+        letter-spacing: -.02em;
+      }
+      .pag-description p:first-child {
+        max-width: 68rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+      .pag-description p + p { margin-top: 1.15rem; }
       .pag-section { padding: clamp(3.5rem,7vw,6.5rem) 0; border-top: 1px solid rgba(5,5,5,.25); }
       .pag-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: clamp(1.5rem,3vw,2.5rem); }
       .pag-section-title { margin: 0; font: 900 clamp(2.8rem,7vw,7.5rem)/.84 Arial,Helvetica,sans-serif; letter-spacing: -.07em; text-transform: uppercase; }
@@ -143,6 +179,8 @@
       @media (max-width: 920px) { .pag-grid, .pag-grid.is-logos { grid-template-columns: repeat(2,minmax(0,1fr)); } }
       @media (max-width: 620px), (hover:none), (pointer:coarse) {
         .pag-title { font-size: clamp(3rem,16vw,6rem); }
+        .pag-description { margin-top: 2rem; }
+        .pag-description p { font-size: 1rem; line-height: 1.45; }
         .pag-section-head { display: block; }
         .pag-count { margin-top: .75rem; }
         .pag-grid, .pag-grid.is-logos { grid-template-columns: 1fr; gap: .8rem; }
@@ -196,7 +234,11 @@
   function galleryConfig(project) {
     const text = copy();
     if (project === 'LOGOS') return { title: text.logos, sections: [{ title: text.logos, items: LOGOS, className: 'is-logos' }] };
-    if (project === 'COLLAGES PHOTO EDIT') return { title: text.collages, sections: groupCollages() };
+    if (project === 'COLLAGES PHOTO EDIT') return {
+      title: text.collages,
+      description: COLLAGES_DESCRIPTION[language()],
+      sections: groupCollages(),
+    };
     return { title: text.posters, sections: groupPosters() };
   }
 
@@ -329,6 +371,11 @@
     close.onclick = (event) => { event.stopPropagation(); closeModal(); };
     head.append(label, close);
     hero.append(title);
+    if (Array.isArray(config.description) && config.description.length) {
+      const description = el('div', 'pag-description');
+      config.description.forEach((paragraph) => description.append(el('p', '', paragraph)));
+      hero.append(description);
+    }
     inner.append(head, hero);
     if (config.sections.length) config.sections.forEach((section) => inner.append(createSection(section)));
     else inner.append(el('p', 'pag-empty', copy().empty));
