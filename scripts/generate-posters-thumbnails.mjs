@@ -7,6 +7,8 @@ const PUBLIC_DIR = path.join(process.cwd(), 'public');
 const SOURCE_DIR = path.join(PUBLIC_DIR, 'works', 'posters');
 const OUTPUT_DIR = path.join(PUBLIC_DIR, 'generated', 'posters-thumbs');
 const IMAGE_RE = /\.(?:avif|jpe?g|png|webp)$/i;
+const WIDTH = 1800;
+const QUALITY = 86;
 
 async function walk(directory) {
   let entries;
@@ -45,15 +47,8 @@ for (const input of files) {
     await mkdir(path.dirname(output), { recursive: true });
     await sharp(input, { limitInputPixels: false })
       .rotate()
-      .resize({
-        width: 1200,
-        withoutEnlargement: true,
-      })
-      .webp({
-        quality: 76,
-        effort: 4,
-        smartSubsample: true,
-      })
+      .resize({ width: WIDTH, withoutEnlargement: true })
+      .webp({ quality: QUALITY, effort: 4, smartSubsample: true })
       .toFile(output);
     generated += 1;
   } catch (error) {
@@ -62,4 +57,4 @@ for (const input of files) {
   }
 }
 
-console.log(`[posters thumbs] generated=${generated}, failed=${failed}`);
+console.log(`[posters thumbs] generated=${generated}, failed=${failed}, width<=${WIDTH}, quality=${QUALITY}`);
