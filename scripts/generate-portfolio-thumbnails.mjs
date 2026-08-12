@@ -8,8 +8,6 @@ const WORKS_DIR = path.join(PUBLIC_DIR, 'works');
 const OUTPUT_DIR = path.join(PUBLIC_DIR, 'generated', 'portfolio-thumbs');
 const IMAGE_RE = /\.(?:avif|gif|jpe?g|png|webp)$/i;
 
-// Heavy projects that should never render full-resolution originals in their grids.
-// Missing folders are ignored, so this list is safe across project revisions.
 const TARGETS = [
   'logo',
   'logos',
@@ -28,11 +26,27 @@ const TARGETS = [
   'carnival-records',
 ];
 
-// DXS already has its own smaller, more aggressive thumbnail pipeline.
+// DXS has its own dedicated quality profile.
 const SKIP_RELATIVE_PREFIXES = ['merch/dxs/'];
-const MAX_WIDTH = 1200;
-const QUALITY = 76;
+
+// Photos and simple mockups remain relatively light. Artwork with typography,
+// grain, scans, linework or print detail gets a substantially larger preview.
+const DEFAULT_PROFILE = { width: 1400, quality: 82 };
+const DETAIL_PROFILE = { width: 1800, quality: 88 };
 const CONCURRENCY = 6;
+
+const DETAIL_PATTERNS = [
+  /^(?:logo|logos|collage|collages)\//i,
+  /^fable\//i,
+  /^zny\/(?:afisha|prints|example|stickers)\//i,
+  /^90-06\/(?:photoshoot|posters|logo-variations)\//i,
+  /^VTB DESIGN TEAM\/print\//i,
+  /^merch\/yablochko\/(?:brochure|print|poster|ad|billboard)\//i,
+  /^stayugly\/(?:concept|final|package)\//i,
+  /^pink-punk\//i,
+  /^carnival(?:-records)?\//i,
+  /^blandetto\//i,
+];
 
 async function walk(directory) {
   let entries;
@@ -61,6 +75,13 @@ function shouldSkip(source) {
   return SKIP_RELATIVE_PREFIXES.some((prefix) => relative.startsWith(prefix.toLowerCase()));
 }
 
+function profileFor(source) {
+  const relative = relativeFromWorks(source);
+  return DETAIL_PATTERNS.some((pattern) => pattern.test(relative))
+    ? DETAIL_PROFILE
+    : DEFAULT_PROFILE;
+}
+
 function outputPath(source) {
   const relative = path.relative(WORKS_DIR, source);
   const parsed = path.parse(relative);
@@ -69,18 +90,19 @@ function outputPath(source) {
 
 async function makeThumbnail(source) {
   const destination = outputPath(source);
+  const profile = profileFor(source);
   await mkdir(path.dirname(destination), { recursive: true });
 
   try {
-    await sharp(source, { animated: false, failOn: 'none' })
+    await sharp(source, { animated: false, failOn: 'none', limitInputPixels: false })
       .rotate()
-      .resize({ width: MAX_WIDTH, withoutEnlargement: true, fastShrinkOnLoad: true })
-      .webp({ quality: QUALITY, effort: 4, smartSubsample: true })
+      .resize({ width: profile.width, withoutEnlargement: true, fastShrinkOnLoad: true })
+      .webp({ quality: profile.quality, effort: 4, smartSubsample: true })
       .toFile(destination);
-    return true;
+    return profile;
   } catch (error) {
     console.warn(`[portfolio thumbs] skipped ${path.relative(PUBLIC_DIR, source)}: ${error.message}`);
-    return false;
+    return null;
   }
 }
 
@@ -97,13 +119,18 @@ for (const target of TARGETS) {
 const sources = [...unique];
 let cursor = 0;
 let generated = 0;
+let detailed = 0;
 
 async function worker() {
   while (cursor < sources.length) {
     const index = cursor++;
-    if (await makeThumbnail(sources[index])) generated += 1;
+    const profile = await makeThumbnail(sources[index]);
+    if (profile) {
+      generated += 1;
+      if (profile === DETAIL_PROFILE) detailed += 1;
+    }
   }
 }
 
 await Promise.all(Array.from({ length: Math.min(CONCURRENCY, sources.length || 1) }, worker));
-console.log(`[portfolio thumbs] generated=${generated}/${sources.length}, width<=${MAX_WIDTH}, quality=${QUALITY}`);
+console.log(`[portfolio thumbs] generated=${generated}/${sources.length}, detailed=${detailed}, default=${DEFAULT_PROFILE.width}px/q${DEFAULT_PROFILE.quality}, detail=${DETAIL_PROFILE.width}px/q${DETAIL_PROFILE.quality}`);
