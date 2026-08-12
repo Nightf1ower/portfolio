@@ -3,15 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Portfolio website for Yaroslav, a graphic designer working with posters, covers, merch, logos, and AI visuals."
-    />
+    <meta name="description" content="Graphic design portfolio by Yaroslav — posters, album covers, merch, identity, logos and AI visuals." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Yaroslav — Graphic Designer" />
+    <meta property="og:description" content="Posters, album covers, merch, identity, logos and AI visuals." />
+    <meta property="og:image" content="https://raw.githubusercontent.com/Nightf1ower/portfolio/main/public/works/90-06/photoshoot/photoshoot3.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Yaroslav — Graphic Designer" />
+    <meta name="twitter:description" content="Posters, album covers, merch, identity, logos and AI visuals." />
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/Nightf1ower/portfolio/main/public/works/90-06/photoshoot/photoshoot3.jpg" />
+    <link rel="icon" type="image/png" href="/works/NEW.png" />
+    <link rel="apple-touch-icon" href="/works/NEW.png" />
     <title>Yaroslav — Graphic Designer</title>
     <link rel="stylesheet" href="/card-overrides.css" />
-    <script>
-      window.__carnivalRecordsClickGuardV5 = true;
-    </script>
+    <script>window.__carnivalRecordsClickGuardV5 = true;</script>
     <style>
       .blandetto-card:not(.blandetto-card--has-hover):hover .blandetto-card__img--main { opacity: 1 !important; }
       .blandetto-card:not(.blandetto-card--has-hover) .blandetto-card__img--hover { display: none !important; }
@@ -41,81 +46,31 @@
     <script type="module" src="/src/main.jsx"></script>
     <script>
       (() => {
-        let logo = null;
-        let targetX = 0;
-        let targetY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let animationFrame = null;
-        const radius = 430;
-        const maxMove = 30;
-        const getLogo = () => {
-          if (!logo || !document.body.contains(logo)) logo = document.querySelector('#top h1');
-          return logo;
-        };
-        const setLogoPosition = () => {
-          const element = getLogo();
-          if (!element) return;
-          element.style.setProperty('--logo-x', `${currentX.toFixed(2)}px`);
-          element.style.setProperty('--logo-y', `${currentY.toFixed(2)}px`);
-        };
-        const animate = () => {
-          currentX += (targetX - currentX) * 0.16;
-          currentY += (targetY - currentY) * 0.16;
-          setLogoPosition();
-          if (Math.abs(targetX - currentX) > 0.08 || Math.abs(targetY - currentY) > 0.08) animationFrame = requestAnimationFrame(animate);
-          else {
-            currentX = targetX;
-            currentY = targetY;
-            setLogoPosition();
-            animationFrame = null;
-          }
-        };
+        let logo = null, targetX = 0, targetY = 0, currentX = 0, currentY = 0, animationFrame = null;
+        const radius = 430, maxMove = 30;
+        const getLogo = () => { if (!logo || !document.body.contains(logo)) logo = document.querySelector('#top h1'); return logo; };
+        const setLogoPosition = () => { const element = getLogo(); if (!element) return; element.style.setProperty('--logo-x', `${currentX.toFixed(2)}px`); element.style.setProperty('--logo-y', `${currentY.toFixed(2)}px`); };
+        const animate = () => { currentX += (targetX - currentX) * 0.16; currentY += (targetY - currentY) * 0.16; setLogoPosition(); if (Math.abs(targetX - currentX) > 0.08 || Math.abs(targetY - currentY) > 0.08) animationFrame = requestAnimationFrame(animate); else { currentX = targetX; currentY = targetY; setLogoPosition(); animationFrame = null; } };
         const startAnimation = () => { if (!animationFrame) animationFrame = requestAnimationFrame(animate); };
         const reset = () => { targetX = 0; targetY = 0; startAnimation(); };
         window.addEventListener('mousemove', (event) => {
           if (window.innerWidth < 769) { reset(); return; }
-          const element = getLogo();
-          if (!element) return;
+          const element = getLogo(); if (!element) return;
           const rect = element.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          const dx = centerX - event.clientX;
-          const dy = centerY - event.clientY;
-          const distance = Math.hypot(dx, dy);
+          const centerX = rect.left + rect.width / 2, centerY = rect.top + rect.height / 2;
+          const dx = centerX - event.clientX, dy = centerY - event.clientY, distance = Math.hypot(dx, dy);
           if (distance > radius || distance === 0) { targetX = 0; targetY = 0; }
-          else {
-            const force = 1 - distance / radius;
-            targetX = (dx / distance) * maxMove * force;
-            targetY = (dy / distance) * maxMove * force;
-          }
+          else { const force = 1 - distance / radius; targetX = (dx / distance) * maxMove * force; targetY = (dy / distance) * maxMove * force; }
           startAnimation();
         }, { passive: true });
-        window.addEventListener('mouseleave', reset);
-        window.addEventListener('blur', reset);
+        window.addEventListener('mouseleave', reset); window.addEventListener('blur', reset);
       })();
-
       (() => {
         const fixedCaption = 'за основу взят этот логотип';
-        const applyCaptionFix = () => {
-          document.querySelectorAll('.blandetto-cap-reference__caption').forEach((caption) => {
-            if (caption.textContent !== fixedCaption) caption.textContent = fixedCaption;
-          });
-        };
+        const applyCaptionFix = () => document.querySelectorAll('.blandetto-cap-reference__caption').forEach((caption) => { if (caption.textContent !== fixedCaption) caption.textContent = fixedCaption; });
         let scheduled = false;
-        const scheduleCaptionFix = () => {
-          if (scheduled) return;
-          scheduled = true;
-          requestAnimationFrame(() => { scheduled = false; applyCaptionFix(); });
-        };
-        document.addEventListener('click', (event) => {
-          const card = event.target.closest('#works article, #works button');
-          if (!card) return;
-          const title = card.querySelector('h3')?.textContent?.trim().toUpperCase();
-          if (title !== 'BLANDETTO') return;
-          setTimeout(scheduleCaptionFix, 0);
-          setTimeout(scheduleCaptionFix, 120);
-        }, true);
+        const scheduleCaptionFix = () => { if (scheduled) return; scheduled = true; requestAnimationFrame(() => { scheduled = false; applyCaptionFix(); }); };
+        document.addEventListener('click', (event) => { const card = event.target.closest('#works article, #works button'); if (!card) return; const title = card.querySelector('h3')?.textContent?.trim().toUpperCase(); if (title !== 'BLANDETTO') return; setTimeout(scheduleCaptionFix, 0); setTimeout(scheduleCaptionFix, 120); }, true);
         window.addEventListener('load', scheduleCaptionFix);
       })();
     </script>
@@ -148,8 +103,8 @@
     <script src="/portfolio-mobile-heading-fit.js?v=portfolio-mobile-heading-fit-2"></script>
     <script src="/portfolio-content-media-spacing.js?v=portfolio-content-media-spacing-1"></script>
     <script src="/blandetto-reference-center.js?v=blandetto-reference-center-2"></script>
-    <script src="/homepage-mobile-responsive.js?v=homepage-mobile-responsive-2"></script>
-    <script src="/project-card-categories.js?v=project-card-categories-3"></script>
+    <script src="/homepage-mobile-responsive.js?v=homepage-mobile-responsive-3"></script>
+    <script src="/project-card-categories.js?v=project-card-categories-4"></script>
     <script src="/carnival-card-hover-motion.js?v=carnival-card-hover-motion-1"></script>
     <script src="/project-wide-layout-final.js?v=project-wide-layout-final-2"></script>
     <script src="/about-content-update.js?v=about-content-update-1"></script>
