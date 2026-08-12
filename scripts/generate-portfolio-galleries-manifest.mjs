@@ -5,6 +5,8 @@ import process from 'node:process';
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 const OUTPUT = path.join(PUBLIC_DIR, 'portfolio-gallery-manifest.js');
 const IMAGE_RE = /\.(?:avif|gif|jpe?g|png|webp)$/i;
+const POSTERS_THUMB_VERSION = 'posters-quality-2';
+const PORTFOLIO_THUMB_VERSION = 'quality-2';
 
 const SOURCES = {
   logos: ['works/logo', 'works/logos'],
@@ -83,7 +85,7 @@ async function addPosterThumbnail(item) {
 
   try {
     await access(absoluteThumb);
-    return { ...item, thumb: encodePublicUrl(absoluteThumb) };
+    return { ...item, thumb: `${encodePublicUrl(absoluteThumb)}?v=${POSTERS_THUMB_VERSION}` };
   } catch {
     return item;
   }
@@ -110,7 +112,7 @@ async function addPortfolioThumbnail(item) {
 
   try {
     await access(absoluteThumb);
-    return { ...item, thumb: encodePublicUrl(absoluteThumb) };
+    return { ...item, thumb: `${encodePublicUrl(absoluteThumb)}?v=${PORTFOLIO_THUMB_VERSION}` };
   } catch {
     return item;
   }
