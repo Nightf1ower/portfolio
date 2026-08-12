@@ -1,8 +1,8 @@
 (() => {
-  if (window.__projectCardCategoriesV4) return;
-  window.__projectCardCategoriesV4 = true;
+  if (window.__projectCardCategoriesV5) return;
+  window.__projectCardCategoriesV5 = true;
 
-  const VERSION = 'project-card-categories-4';
+  const VERSION = 'project-card-categories-5';
   const STYLE_ID = 'project-card-categories-style';
   const FEATURED_ORDER = ['ZNY', 'FABLE', 'PINK PUNK', 'CARNIVAL RECORDS', 'NINETY Z S', 'VTB DESIGN TEAM'];
 
@@ -49,6 +49,14 @@
     style.dataset.version = VERSION;
     style.textContent = `
       #works .project-card-category-guard { display: none !important; }
+
+      /* Keep the project cards as the real interactive layer. */
+      #works .mt-10.grid > article,
+      #works .mt-10.grid > button {
+        position: relative !important;
+        pointer-events: auto !important;
+      }
+
       #works .project-card-category-row {
         box-sizing: border-box !important;
         display: flex !important;
@@ -87,6 +95,34 @@
         border-color: #050505 !important;
         background: #a6ff00 !important;
       }
+
+      /* Restore the original desktop folder motion explicitly. */
+      @media (hover: hover) and (pointer: fine) {
+        #works .mt-10.grid > article,
+        #works .mt-10.grid > button {
+          transition: transform 300ms ease, box-shadow 300ms ease !important;
+          transform: translateY(0) !important;
+        }
+
+        #works .mt-10.grid > article:hover,
+        #works .mt-10.grid > button:hover {
+          transform: translateY(-.5rem) !important;
+        }
+
+        #works .group .project-card-preview-v5,
+        #works .group .project-card-placeholder-v5,
+        #works .group .my-10 > div {
+          transition: transform 500ms ease !important;
+          transform-origin: center center !important;
+        }
+
+        #works .group:hover .project-card-preview-v5,
+        #works .group:hover .project-card-placeholder-v5,
+        #works .group:hover .my-10 > div {
+          transform: rotate(3deg) scale(1.05) !important;
+        }
+      }
+
       @media (max-width: 820px) {
         #works .project-card-category-row { gap: .42rem !important; margin-top: .9rem !important; }
         #works .project-card-category-chip {
@@ -113,24 +149,22 @@
     );
   }
 
-  function reorderFeatured() {
-    const grid = getGrid();
+  /*
+   * Do not append/move React-owned cards in the DOM.
+   * CSS Grid supports the `order` property, so we can keep the requested visual
+   * priority without detaching nodes from the tree React rendered.
+   */
+  function applyFeaturedOrder() {
     const cards = getCards();
-    if (!grid || cards.length < FEATURED_ORDER.length) return;
+    if (!cards.length) return;
 
-    const byTitle = new Map(cards.map((card) => [normalize(card.querySelector('h3')?.textContent), card]));
-    if (!FEATURED_ORDER.every((title) => byTitle.has(title))) return;
-
-    const featured = FEATURED_ORDER.map((title) => byTitle.get(title));
-    const featuredSet = new Set(featured);
-    const desired = [...featured, ...cards.filter((card) => !featuredSet.has(card))];
-    const alreadyCorrect = desired.every((card, index) => cards[index] === card);
-    if (alreadyCorrect) return;
-
-    const fragment = document.createDocumentFragment();
-    desired.forEach((card) => fragment.append(card));
-    grid.append(fragment);
-    grid.dataset.featuredOrder = VERSION;
+    const rank = new Map(FEATURED_ORDER.map((title, index) => [title, index]));
+    cards.forEach((card, index) => {
+      const title = normalize(card.querySelector('h3')?.textContent);
+      const order = rank.has(title) ? rank.get(title) : FEATURED_ORDER.length + index;
+      if (card.style.order !== String(order)) card.style.order = String(order);
+      card.dataset.featuredOrder = VERSION;
+    });
   }
 
   function protectGuard(guard) {
@@ -212,7 +246,7 @@
 
   function apply() {
     installStyles();
-    reorderFeatured();
+    applyFeaturedOrder();
     getCards().forEach(updateCard);
   }
 
