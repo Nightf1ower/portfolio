@@ -4,6 +4,35 @@
 
   const EMAIL = 'Nightflowerrrrr@gmail.com';
   const isRussian = () => document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru';
+  const aliases = new Map([
+    ['f-able', 'fable'],
+    ['pinkpunk', 'pink-punk'],
+    ['carnival', 'carnival-records'],
+    ['90-06', 'ninety-z-s'],
+    ['9006', 'ninety-z-s'],
+    ['ninety-zs', 'ninety-z-s'],
+    ['covers', 'album-covers'],
+    ['stayugly', 'stay-ugly'],
+    ['anka', 'anka-peresild'],
+    ['vtb', 'vtb-design-team'],
+    ['collages', 'collages-photo-edit'],
+  ]);
+
+  function canonicalizeProjectAlias() {
+    const url = new URL(location.href);
+    const raw = String(url.searchParams.get('project') || '').trim().toLowerCase();
+    const normalized = raw
+      .replace(/[._|]+/g, '-')
+      .replace(/[^a-zа-я0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .replace(/-+/g, '-');
+    const canonical = aliases.get(normalized);
+    if (!canonical) return;
+    url.searchParams.set('project', canonical);
+    history.replaceState(history.state, '', `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  canonicalizeProjectAlias();
 
   function apply() {
     const contacts = document.getElementById('contacts');
