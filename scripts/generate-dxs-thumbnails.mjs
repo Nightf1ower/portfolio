@@ -8,6 +8,14 @@ const SOURCE_DIR = path.join(PUBLIC_DIR, 'works', 'merch', 'dxs');
 const OUTPUT_DIR = path.join(PUBLIC_DIR, 'generated', 'dxs-thumbs');
 const IMAGE_RE = /\.(?:avif|jpe?g|png|webp)$/i;
 
+const profileFor = (relative) => {
+  const normalized = relative.split(path.sep).join('/').toLowerCase();
+  if (normalized.startsWith('poster/') || normalized.startsWith('ad/')) {
+    return { width: 1600, quality: 84 };
+  }
+  return { width: 1200, quality: 80 };
+};
+
 async function walk(directory) {
   let entries;
   try {
@@ -40,13 +48,14 @@ for (const input of files) {
   const relative = path.relative(SOURCE_DIR, input);
   const parsed = path.parse(relative);
   const output = path.join(OUTPUT_DIR, parsed.dir, `${parsed.name}.webp`);
+  const profile = profileFor(relative);
 
   try {
     await mkdir(path.dirname(output), { recursive: true });
     await sharp(input, { limitInputPixels: false })
       .rotate()
-      .resize({ width: 900, withoutEnlargement: true })
-      .webp({ quality: 70, effort: 4, smartSubsample: true })
+      .resize({ width: profile.width, withoutEnlargement: true })
+      .webp({ quality: profile.quality, effort: 4, smartSubsample: true })
       .toFile(output);
     generated += 1;
   } catch (error) {
