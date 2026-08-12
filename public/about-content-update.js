@@ -4,7 +4,7 @@
 
   const VERSION = 'about-content-update-2';
   const STYLE_ID = 'about-content-update-style';
-  const EMAIL = 'Nightf1ower@yandex.ru';
+  const EMAIL = 'Nightflowerrrrr@gmail.com';
 
   const COPY = {
     ru: {
