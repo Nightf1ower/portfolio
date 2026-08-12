@@ -1,8 +1,8 @@
 (() => {
-  if (window.__homepageMobileResponsiveV2) return;
-  window.__homepageMobileResponsiveV2 = true;
+  if (window.__homepageMobileResponsiveV3) return;
+  window.__homepageMobileResponsiveV3 = true;
 
-  const VERSION = 'homepage-mobile-responsive-2';
+  const VERSION = 'homepage-mobile-responsive-3';
   const MAX_WIDTH = 820;
   const STYLE_ID = 'homepage-mobile-responsive-style';
   const FIT_ATTR = 'homepageMobileFit';
@@ -23,9 +23,7 @@
           --nf-mobile-gutter-right: max(1rem, env(safe-area-inset-right));
         }
 
-        html,
-        body,
-        #root {
+        html, body, #root {
           box-sizing: border-box !important;
           width: 100% !important;
           max-width: 100% !important;
@@ -61,9 +59,7 @@
           grid-template-columns: minmax(0, 1fr) !important;
         }
 
-        #works > div > div:first-child > p {
-          max-width: 100% !important;
-        }
+        #works > div > div:first-child > p { max-width: 100% !important; }
 
         #works > div > div:first-child > h2 {
           box-sizing: border-box !important;
@@ -112,10 +108,16 @@
           transform: none !important;
         }
 
-        #works .mt-10.grid > article:hover,
-        #works .mt-10.grid > button:hover {
-          transform: none !important;
+        /* Decorative badges intentionally extend outside these cards. */
+        #works [data-anka-peresild-card="true"],
+        #works [data-handmade-collages-card="true"] {
+          overflow: visible !important;
+          isolation: isolate !important;
+          z-index: 8 !important;
         }
+
+        #works .mt-10.grid > article:hover,
+        #works .mt-10.grid > button:hover { transform: none !important; }
 
         #works .mt-10.grid > article > div,
         #works .mt-10.grid > button > div {
@@ -151,9 +153,7 @@
 
         #works .group:hover .project-card-preview-v5,
         #works .group:hover .project-card-placeholder-v5,
-        #works .group:hover .my-10 > div {
-          transform: none !important;
-        }
+        #works .group:hover .my-10 > div { transform: none !important; }
 
         #works .mt-10.grid h3 {
           box-sizing: border-box !important;
@@ -173,14 +173,8 @@
         }
 
         #works .mt-10.grid h3 + p,
-        #works .mt-10.grid h3 ~ div {
-          box-sizing: border-box !important;
-          max-width: 100% !important;
-        }
-
-        #works .mt-10.grid h3 ~ div {
-          justify-content: flex-start !important;
-        }
+        #works .mt-10.grid h3 ~ div { box-sizing: border-box !important; max-width: 100% !important; }
+        #works .mt-10.grid h3 ~ div { justify-content: flex-start !important; }
       }
     `;
     document.head.append(style);
@@ -193,13 +187,7 @@
     probe.id = PROBE_ID;
     probe.setAttribute('aria-hidden', 'true');
     Object.assign(probe.style, {
-      position: 'fixed',
-      left: '-100000px',
-      top: '0',
-      visibility: 'hidden',
-      whiteSpace: 'nowrap',
-      pointerEvents: 'none',
-      contain: 'layout style paint',
+      position: 'fixed', left: '-100000px', top: '0', visibility: 'hidden', whiteSpace: 'nowrap', pointerEvents: 'none', contain: 'layout style paint',
     });
     document.body.append(probe);
     return probe;
@@ -217,7 +205,6 @@
   function measureWidestWord(element) {
     const text = element.textContent?.replace(/\s+/g, ' ').trim() || '';
     if (!text) return 0;
-
     const computed = getComputedStyle(element);
     const probe = getProbe();
     probe.style.fontFamily = computed.fontFamily;
@@ -227,7 +214,6 @@
     probe.style.fontSize = computed.fontSize;
     probe.style.letterSpacing = computed.letterSpacing;
     probe.style.textTransform = computed.textTransform;
-
     let widest = 0;
     text.split(/\s+/).forEach((word) => {
       probe.textContent = word;
@@ -240,21 +226,17 @@
   function fitHeading(element, minimumSize) {
     if (!(element instanceof HTMLElement) || !element.isConnected) return;
     clearFit(element);
-
     const available = element.clientWidth;
     let size = parseFloat(getComputedStyle(element).fontSize || '0');
     if (!Number.isFinite(size) || available < 120) return;
-
     element.dataset[FIT_ATTR] = VERSION;
     element.style.setProperty('font-size', `${size}px`, 'important');
-
     let guard = 0;
     while (measureWidestWord(element) > available - 2 && size > minimumSize && guard < 100) {
       size -= 1;
       element.style.setProperty('font-size', `${size}px`, 'important');
       guard += 1;
     }
-
     if (measureWidestWord(element) > available - 2) {
       element.style.setProperty('overflow-wrap', 'anywhere', 'important');
       element.style.setProperty('word-break', 'normal', 'important');
@@ -265,16 +247,13 @@
     installStyles();
     const works = document.getElementById('works');
     if (!works) return;
-
     const mainHeading = works.querySelector(':scope > div > div:first-child h2');
     const cardHeadings = works.querySelectorAll('.mt-10.grid h3');
-
     if (window.innerWidth > MAX_WIDTH) {
       if (mainHeading) clearFit(mainHeading);
       cardHeadings.forEach(clearFit);
       return;
     }
-
     if (mainHeading) fitHeading(mainHeading, 29);
     cardHeadings.forEach((heading) => fitHeading(heading, 27));
   }
@@ -283,22 +262,14 @@
   function schedule() {
     if (scheduled) return;
     scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      apply();
-    });
+    requestAnimationFrame(() => { scheduled = false; apply(); });
   }
 
   function observeWorks() {
     const works = document.getElementById('works');
     if (!works || works.dataset.homepageMobileObserved === VERSION) return false;
     works.dataset.homepageMobileObserved = VERSION;
-
-    new MutationObserver(() => schedule()).observe(works, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
+    new MutationObserver(() => schedule()).observe(works, { childList: true, subtree: true, characterData: true });
     return true;
   }
 
@@ -313,12 +284,8 @@
   window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule);
   window.visualViewport?.addEventListener('resize', schedule, { passive: true });
-  window.addEventListener('load', () => {
-    observeWorks();
-    schedule();
-  }, { once: true });
+  window.addEventListener('load', () => { observeWorks(); schedule(); }, { once: true });
   document.fonts?.ready?.then(schedule).catch(() => {});
-
   installStyles();
   schedule();
 })();
