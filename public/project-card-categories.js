@@ -1,9 +1,10 @@
 (() => {
-  if (window.__projectCardCategoriesV3) return;
-  window.__projectCardCategoriesV3 = true;
+  if (window.__projectCardCategoriesV4) return;
+  window.__projectCardCategoriesV4 = true;
 
-  const VERSION = 'project-card-categories-3';
+  const VERSION = 'project-card-categories-4';
   const STYLE_ID = 'project-card-categories-style';
+  const FEATURED_ORDER = ['ZNY', 'FABLE', 'PINK PUNK', 'CARNIVAL RECORDS', 'NINETY Z S', 'VTB DESIGN TEAM'];
 
   const CATEGORIES = {
     FABLE: ['LOGOS', 'GRAPHICS', 'APPAREL'],
@@ -47,10 +48,7 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
-      #works .project-card-category-guard {
-        display: none !important;
-      }
-
+      #works .project-card-category-guard { display: none !important; }
       #works .project-card-category-row {
         box-sizing: border-box !important;
         display: flex !important;
@@ -65,7 +63,6 @@
         padding: 0 !important;
         list-style: none !important;
       }
-
       #works .project-card-category-chip {
         box-sizing: border-box !important;
         display: inline-flex !important;
@@ -86,18 +83,12 @@
         white-space: nowrap !important;
         transition: background-color .25s ease, border-color .25s ease !important;
       }
-
       #works .group:hover .project-card-category-chip {
         border-color: #050505 !important;
         background: #a6ff00 !important;
       }
-
       @media (max-width: 820px) {
-        #works .project-card-category-row {
-          gap: .42rem !important;
-          margin-top: .9rem !important;
-        }
-
+        #works .project-card-category-row { gap: .42rem !important; margin-top: .9rem !important; }
         #works .project-card-category-chip {
           min-height: 1.55rem !important;
           padding: .3rem .5rem !important;
@@ -105,39 +96,48 @@
           letter-spacing: .15em !important;
         }
       }
-
       @media (max-width: 350px) {
-        #works .project-card-category-chip {
-          white-space: normal !important;
-          text-align: center !important;
-        }
+        #works .project-card-category-chip { white-space: normal !important; text-align: center !important; }
       }
     `;
     document.head.append(style);
   }
 
-  function getGrid() {
-    return document.querySelector('#works .mt-10.grid');
-  }
+  function getGrid() { return document.querySelector('#works .mt-10.grid'); }
 
   function getCards() {
     const grid = getGrid();
     if (!grid) return [];
     return [...grid.children].filter((node) =>
-      node instanceof HTMLElement &&
-      node.matches('article, button') &&
-      node.querySelector('h3')
+      node instanceof HTMLElement && node.matches('article, button') && node.querySelector('h3')
     );
+  }
+
+  function reorderFeatured() {
+    const grid = getGrid();
+    const cards = getCards();
+    if (!grid || cards.length < FEATURED_ORDER.length) return;
+
+    const byTitle = new Map(cards.map((card) => [normalize(card.querySelector('h3')?.textContent), card]));
+    if (!FEATURED_ORDER.every((title) => byTitle.has(title))) return;
+
+    const featured = FEATURED_ORDER.map((title) => byTitle.get(title));
+    const featuredSet = new Set(featured);
+    const desired = [...featured, ...cards.filter((card) => !featuredSet.has(card))];
+    const alreadyCorrect = desired.every((card, index) => cards[index] === card);
+    if (alreadyCorrect) return;
+
+    const fragment = document.createDocumentFragment();
+    desired.forEach((card) => fragment.append(card));
+    grid.append(fragment);
+    grid.dataset.featuredOrder = VERSION;
   }
 
   function protectGuard(guard) {
     if (guard.dataset.removeProtected === VERSION) return;
     guard.dataset.removeProtected = VERSION;
     try {
-      Object.defineProperty(guard, 'remove', {
-        configurable: true,
-        value: () => {},
-      });
+      Object.defineProperty(guard, 'remove', { configurable: true, value: () => {} });
     } catch {
       guard.remove = () => {};
     }
@@ -148,11 +148,9 @@
     if (!node.matches('div, ul, ol')) return false;
     if (node.classList.contains('project-card-category-row')) return true;
     if (node.querySelector('h1, h2, h3, h4, p, img, picture, video, canvas, svg, button, a')) return false;
-
     const labels = [...node.querySelectorAll('span, li')]
       .map((item) => item.textContent?.trim() || '')
       .filter(Boolean);
-
     return labels.length > 0 && labels.every((label) => label.length <= 40);
   }
 
@@ -164,7 +162,6 @@
   function findOrCreateRow(heading) {
     const content = heading.parentElement;
     if (!(content instanceof HTMLElement)) return null;
-
     const typeParagraph = findTypeParagraph(content, heading);
     let guard = content.querySelector(':scope > .project-card-category-guard');
     if (!guard) {
@@ -179,7 +176,6 @@
     let row = existingRows.shift() || document.createElement('div');
     row.className = 'project-card-category-row';
     row.dataset.projectCategoriesFinal = VERSION;
-
     existingRows.forEach((duplicate) => duplicate.remove());
 
     [...content.children].forEach((node) => {
@@ -196,17 +192,13 @@
   function updateCard(card) {
     const heading = card.querySelector('h3');
     if (!(heading instanceof HTMLElement)) return;
-
     const categories = CATEGORIES[normalize(heading.textContent)];
     if (!categories) return;
-
     const row = findOrCreateRow(heading);
     if (!row) return;
 
     const current = [...row.children].map((child) => child.textContent?.trim() || '');
-    const matches = current.length === categories.length
-      && current.every((value, index) => value === categories[index]);
-
+    const matches = current.length === categories.length && current.every((value, index) => value === categories[index]);
     if (matches && row.dataset.categorySignature === categories.join('|')) return;
 
     row.dataset.categorySignature = categories.join('|');
@@ -220,6 +212,7 @@
 
   function apply() {
     installStyles();
+    reorderFeatured();
     getCards().forEach(updateCard);
   }
 
@@ -254,12 +247,8 @@
   }, 120);
 
   document.addEventListener('click', () => setTimeout(schedule, 0), true);
-  window.addEventListener('load', () => {
-    observeGrid();
-    schedule();
-  }, { once: true });
+  window.addEventListener('load', () => { observeGrid(); schedule(); }, { once: true });
   window.addEventListener('resize', schedule, { passive: true });
-
   installStyles();
   schedule();
 })();
