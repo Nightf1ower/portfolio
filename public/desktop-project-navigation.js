@@ -1,8 +1,8 @@
 (() => {
-  if (window.__desktopProjectNavigationV1) return;
-  window.__desktopProjectNavigationV1 = true;
+  if (window.__desktopProjectNavigationV2) return;
+  window.__desktopProjectNavigationV2 = true;
 
-  const VERSION = 'desktop-project-navigation-1';
+  const VERSION = 'desktop-project-navigation-2';
   const STYLE_ID = 'desktop-project-navigation-style';
   const FOOTER_CLASS = 'desktop-project-navigation';
 
@@ -259,10 +259,15 @@
     }
 
     footer.dataset.currentProject = project.slug;
-    footer.replaceChildren(
-      previous ? makeButton('previous', previous) : Object.assign(document.createElement('span'), { className: `${FOOTER_CLASS}__spacer` }),
-      next ? makeButton('next', next) : Object.assign(document.createElement('span'), { className: `${FOOTER_CLASS}__spacer` }),
-    );
+    const signature = `${project.slug}|${previous?.slug || ''}|${next?.slug || ''}|${language()}`;
+    if (footer.dataset.signature !== signature) {
+      footer.dataset.signature = signature;
+      footer.setAttribute('aria-label', language() === 'ru' ? 'Навигация между проектами' : 'Project navigation');
+      footer.replaceChildren(
+        previous ? makeButton('previous', previous) : Object.assign(document.createElement('span'), { className: `${FOOTER_CLASS}__spacer` }),
+        next ? makeButton('next', next) : Object.assign(document.createElement('span'), { className: `${FOOTER_CLASS}__spacer` }),
+      );
+    }
 
     if (footer.parentElement !== host || host.lastElementChild !== footer) host.append(footer);
     return true;
