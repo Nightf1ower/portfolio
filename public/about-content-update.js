@@ -2,7 +2,7 @@
   if (window.__aboutContentUpdateV2) return;
   window.__aboutContentUpdateV2 = true;
 
-  const VERSION = 'about-content-update-2';
+  const VERSION = 'about-content-update-3';
   const STYLE_ID = 'about-content-update-style';
   const EMAIL = 'Nightflowerrrrr@gmail.com';
 
@@ -137,6 +137,12 @@
     const inner = section?.querySelector(':scope > .mx-auto');
     const linksGrid = inner?.querySelector('.mt-10.grid');
     if (!section || !inner || !linksGrid) return false;
+
+    linksGrid.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+      link.href = `mailto:${EMAIL}`;
+      link.textContent = EMAIL;
+      link.setAttribute('aria-label', `Email ${EMAIL}`);
+    });
 
     const selected = COPY[language()];
     let cta = inner.querySelector(':scope > .portfolio-contact-cta');
