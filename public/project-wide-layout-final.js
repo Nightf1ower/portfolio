@@ -1,9 +1,9 @@
 (() => {
-  if (window.__projectWideLayoutFinalV1) return;
-  window.__projectWideLayoutFinalV1 = true;
+  if (window.__projectWideLayoutFinalV2) return;
+  window.__projectWideLayoutFinalV2 = true;
 
   const STYLE_ID = 'project-wide-layout-final-style';
-  const VERSION = 'project-wide-layout-final-1';
+  const VERSION = 'project-wide-layout-final-2';
   const existing = document.getElementById(STYLE_ID);
   if (existing?.dataset.version === VERSION) return;
   existing?.remove();
@@ -12,6 +12,36 @@
   style.id = STYLE_ID;
   style.dataset.version = VERSION;
   style.textContent = `
+    /* Project context: fast role/scope read before the case study. */
+    .portfolio-project-context {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      gap: .55rem !important;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      margin: clamp(1.25rem,2.3vw,2rem) 0 clamp(2.5rem,5vw,4.5rem) !important;
+    }
+
+    .portfolio-project-context__chip {
+      display: inline-flex !important;
+      align-items: center !important;
+      min-height: 2rem !important;
+      margin: 0 !important;
+      padding: .55rem .72rem !important;
+      border: 1px solid currentColor !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      color: inherit !important;
+      font: 900 .62rem/1 Arial,Helvetica,sans-serif !important;
+      letter-spacing: .16em !important;
+      text-transform: uppercase !important;
+      white-space: nowrap !important;
+    }
+
+    .zny-modal .portfolio-project-context { padding: 0 !important; }
+    .cr-modal .portfolio-project-context { color: #f5f1e8 !important; }
+
     /* NINETY Z S — remove the legacy narrow desktop container. */
     .project9006-modal {
       box-sizing: border-box !important;
@@ -164,6 +194,14 @@
     }
 
     @media (max-width: 720px) {
+      .portfolio-project-context { gap: .4rem !important; }
+      .portfolio-project-context__chip {
+        min-height: 1.8rem !important;
+        padding: .48rem .58rem !important;
+        font-size: .56rem !important;
+        letter-spacing: .12em !important;
+      }
+
       .project9006-modal .project9006-pendant-grid,
       .m10-modal .m10-dxs-zone .m10-dxs-posters {
         grid-template-columns: 1fr !important;
@@ -186,4 +224,73 @@
   `;
 
   document.head.append(style);
+
+  const PROJECTS = [
+    { selector: '.zny-modal', chips: ['GRAPHIC DESIGN', 'PRINTS', 'CAMPAIGN', 'STICKERS'], anchors: ['.zny-head'] },
+    { selector: '.fable-modal', chips: ['GRAPHIC DESIGN', 'PRINTS', 'BRAND VISUALS'], anchors: ['h1', 'h2'] },
+    { selector: '.anka-peresild-modal', chips: ['AI ILLUSTRATION', '3D MOCKUPS', 'APPAREL'], anchors: ['.anka-peresild-title'] },
+    { selector: '.pink-punk-fullscreen', chips: ['GRAPHIC DESIGN', 'PRINTS', 'POSTERS'], anchors: ['h1', 'h2'] },
+    { selector: '.cr-modal', chips: ['GRAPHIC DESIGN', 'ALBUM ART', 'MERCH'], anchors: ['.cr-lead', '.cr-title'] },
+    { selector: '.blandetto-modal', chips: ['LOGO DESIGN', 'GRAPHICS', 'ACCESSORIES'], anchors: ['h1', 'h2'] },
+    { selector: '.project9006-modal', chips: ['IDENTITY', 'LOOKBOOK', 'POSTERS'], anchors: ['.project9006-brand h1', '.project9006-brand h2', '.project9006-brand h3', '.project9006-brand'] },
+    { selector: '.vtb-modal', chips: ['MERCH', 'ACCESSORIES', 'PRINTS'], anchors: ['h1', 'h2'] },
+    { selector: '.m10-modal', chips: ['GRAPHIC DESIGN', 'MERCH', 'POSTERS'], anchors: ['h1', 'h2'] },
+    { selector: '.su-modal', chips: ['DEVELOPMENT', 'LOOKBOOK', 'PACKAGING'], anchors: ['h1', 'h2'] },
+  ];
+
+  function createContext(chips) {
+    const node = document.createElement('div');
+    node.className = 'portfolio-project-context';
+    node.dataset.projectContext = VERSION;
+    chips.forEach((label) => {
+      const chip = document.createElement('span');
+      chip.className = 'portfolio-project-context__chip';
+      chip.textContent = label;
+      node.append(chip);
+    });
+    return node;
+  }
+
+  function enhanceModal(modal, config) {
+    if (!(modal instanceof Element) || modal.dataset.projectContext === VERSION) return false;
+    if (modal.querySelector(':scope .portfolio-project-context')) {
+      modal.dataset.projectContext = VERSION;
+      return true;
+    }
+
+    const anchor = config.anchors
+      .map((selector) => modal.querySelector(selector))
+      .find(Boolean);
+    if (!anchor) return false;
+
+    const context = createContext(config.chips);
+    anchor.after(context);
+    modal.dataset.projectContext = VERSION;
+    return true;
+  }
+
+  function enhanceAll() {
+    PROJECTS.forEach((config) => {
+      document.querySelectorAll(config.selector).forEach((modal) => enhanceModal(modal, config));
+    });
+  }
+
+  let frame = 0;
+  function schedule() {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      enhanceAll();
+    });
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => [...mutation.addedNodes].some((node) => (
+      node instanceof Element && PROJECTS.some(({ selector }) => node.matches?.(selector) || node.querySelector?.(selector))
+    )))) schedule();
+  });
+  observer.observe(document.body, { childList: true });
+
+  window.addEventListener('load', schedule, { once: true });
+  schedule();
 })();
