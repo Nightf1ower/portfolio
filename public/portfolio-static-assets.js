@@ -1,6 +1,9 @@
 (() => {
-  if (window.__portfolioStaticAssetsV5) return;
-  window.__portfolioStaticAssetsV5 = true;
+  if (window.__portfolioStaticAssetsV6) return;
+  window.__portfolioStaticAssetsV6 = true;
+
+  const THUMB_VERSION = 'quality-2';
+  const DXS_THUMB_VERSION = 'dxs-quality-2';
 
   const FABLE = Array.from({ length: 40 }, (_, index) =>
     `public/works/fable/fprint-${String(index + 1).padStart(2, '0')}.jpg`
@@ -129,10 +132,12 @@
     if (!pathname) return '';
 
     if (pathname.toLowerCase().startsWith('/works/merch/dxs/')) {
-      return replaceExtension(pathname.replace(/^\/works\/merch\/dxs\//i, '/generated/dxs-thumbs/'));
+      const thumb = replaceExtension(pathname.replace(/^\/works\/merch\/dxs\//i, '/generated/dxs-thumbs/'));
+      return `${thumb}?v=${DXS_THUMB_VERSION}`;
     }
 
-    return replaceExtension(pathname.replace(/^\/works\//i, '/generated/portfolio-thumbs/'));
+    const thumb = replaceExtension(pathname.replace(/^\/works\//i, '/generated/portfolio-thumbs/'));
+    return `${thumb}?v=${THUMB_VERSION}`;
   };
 
   const bindFallback = (image) => {
