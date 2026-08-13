@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioFinalQaFixesV3) return;
-  window.__portfolioFinalQaFixesV3 = true;
+  if (window.__portfolioFinalQaFixesV4) return;
+  window.__portfolioFinalQaFixesV4 = true;
 
-  const VERSION = 'portfolio-final-qa-fixes-3';
+  const VERSION = 'portfolio-final-qa-fixes-4';
   const PROJECT_NAMES = 'ZNY | FABLE | CARNIVAL RECORDS | ANKA PERESILD | PINK PUNK';
   const LEGACY_LIGHTBOXES = [
     '.vtb-light','.stk-light','.cr-light','.cr-lightbox','.cr-final-lightbox','.zny-light','.zny-lightbox',
@@ -18,20 +18,17 @@
   style.dataset.version = VERSION;
   style.textContent = `
     #top .portfolio-hero-brands{display:block!important;width:max-content!important;max-width:100%!important;margin-top:clamp(.8rem,1.4vw,1.15rem)!important;font:900 clamp(.62rem,.78vw,.82rem)/1.25 Arial,Helvetica,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;white-space:normal!important}
-
     .pink-punk-fullscreen .portfolio-qa-stable-title,.pink-punk-fullscreen .portfolio-qa-stable-title *{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important;backface-visibility:hidden!important;-webkit-font-smoothing:antialiased!important}
-
     .vtb-head,.portfolio-qa-static-head{position:sticky!important;top:0!important;z-index:900500!important;transform:none!important;will-change:auto!important}
 
-    /* 90.06 / NINETY Z S must always be a true full-screen project folder. */
     .project9006-modal{position:fixed!important;inset:0!important;box-sizing:border-box!important;width:100vw!important;max-width:none!important;height:100dvh!important;min-height:100dvh!important;margin:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+    .project9006-modal>.mx-auto,.project9006-modal>[class*="max-w-"],.project9006-modal>.project9006-inner,.project9006-modal>.project9006-shell{box-sizing:border-box!important;width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important}
 
     .desktop-project-navigation{position:relative!important;z-index:900200!important;isolation:isolate!important;pointer-events:auto!important}
     .desktop-project-navigation__button{position:relative!important;z-index:2!important;pointer-events:auto!important;touch-action:manipulation!important}
     .desktop-project-navigation::before{content:'';position:absolute;z-index:-1;left:50%;width:100vw;top:calc(-1 * clamp(5rem,9vw,9rem));bottom:0;transform:translateX(-50%);background:var(--portfolio-nav-surround,transparent);pointer-events:none}
     .desktop-project-navigation[data-qa-project="merch"]{--portfolio-nav-surround:#e5312b}
     .desktop-project-navigation[data-qa-project="posters"]{--portfolio-nav-surround:#56876D}
-
     .stk-subtitle{margin:0 0 clamp(1.35rem,2.5vw,2rem)!important;font:900 clamp(1.25rem,2.25vw,2.15rem)/.95 Arial,Helvetica,sans-serif!important;letter-spacing:.1em!important;text-transform:uppercase!important}
 
     @media(max-width:820px){
@@ -47,50 +44,23 @@
   `;
   document.head.append(style);
 
-  const norm = value => String(value || '').replace(/\s+/g,' ').trim().toUpperCase();
-  const visible = node => {
-    if (!(node instanceof Element) || !node.isConnected) return false;
-    const css=getComputedStyle(node),rect=node.getBoundingClientRect();
-    return css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity||1)!==0&&rect.width>2&&rect.height>2;
-  };
+  const norm=value=>String(value||'').replace(/\s+/g,' ').trim().toUpperCase();
+  const visible=node=>{if(!(node instanceof Element)||!node.isConnected)return false;const css=getComputedStyle(node),rect=node.getBoundingClientRect();return css.display!=='none'&&css.visibility!=='hidden'&&Number(css.opacity||1)!==0&&rect.width>2&&rect.height>2};
 
-  function fixHero(){
-    const hero=document.getElementById('top');if(!hero)return;
-    const profession=[...hero.querySelectorAll('p')].find(p=>/GRAPHIC DESIGNER|ГРАФИЧЕСКИЙ ДИЗАЙНЕР/.test(norm(p.textContent)));if(!profession)return;
-    let brands=profession.querySelector(':scope>.portfolio-hero-brands');
-    if(!brands){brands=document.createElement('span');brands.className='portfolio-hero-brands';profession.append(brands)}
-    if(brands.textContent!==PROJECT_NAMES)brands.textContent=PROJECT_NAMES;
-  }
-
-  function fixPinkTitle(){
-    const modal=document.querySelector('.pink-punk-fullscreen');if(!modal)return;
-    [...modal.querySelectorAll('h1,h2,h3,p')].forEach(node=>{if(norm(node.textContent).includes('GRAPHIC T-SHIRT DESIGN'))node.classList.add('portfolio-qa-stable-title')});
-  }
-
-  function fixStaticHeads(){
-    document.querySelectorAll('.vtb-head').forEach(node=>node.classList.add('portfolio-qa-static-head'));
-    const anka=document.querySelector('.anka-peresild-modal');
-    const close=anka?.querySelector('.anka-peresild-close,[class*="close"],button[aria-label*="close" i]');
-    if(close){const head=close.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"]')||close.parentElement;if(head&&head!==anka)head.classList.add('portfolio-qa-static-head')}
-  }
-
-  function fixNav(){
-    const slug=new URLSearchParams(location.search).get('project')||'';
-    document.querySelectorAll('.desktop-project-navigation').forEach(nav=>{if(nav.dataset.qaProject!==slug)nav.dataset.qaProject=slug});
-  }
-
+  function fixHero(){const hero=document.getElementById('top');if(!hero)return;const profession=[...hero.querySelectorAll('p')].find(p=>/GRAPHIC DESIGNER|ГРАФИЧЕСКИЙ ДИЗАЙНЕР/.test(norm(p.textContent)));if(!profession)return;let brands=profession.querySelector(':scope>.portfolio-hero-brands');if(!brands){brands=document.createElement('span');brands.className='portfolio-hero-brands';profession.append(brands)}if(brands.textContent!==PROJECT_NAMES)brands.textContent=PROJECT_NAMES}
+  function fixPinkTitle(){const modal=document.querySelector('.pink-punk-fullscreen');if(!modal)return;[...modal.querySelectorAll('h1,h2,h3,p')].forEach(node=>{if(norm(node.textContent).includes('GRAPHIC T-SHIRT DESIGN'))node.classList.add('portfolio-qa-stable-title')})}
+  function fixStaticHeads(){document.querySelectorAll('.vtb-head').forEach(node=>node.classList.add('portfolio-qa-static-head'));const anka=document.querySelector('.anka-peresild-modal');const close=anka?.querySelector('.anka-peresild-close,[class*="close"],button[aria-label*="close" i]');if(close){const head=close.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"]')||close.parentElement;if(head&&head!==anka)head.classList.add('portfolio-qa-static-head')}}
+  function fixNav(){const slug=new URLSearchParams(location.search).get('project')||'';document.querySelectorAll('.desktop-project-navigation').forEach(nav=>{if(nav.dataset.qaProject!==slug)nav.dataset.qaProject=slug})}
   function apply(){fixHero();fixPinkTitle();fixStaticHeads();fixNav()}
+
   let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;apply()})};
   new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true,characterData:true});
   new MutationObserver(schedule).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
   addEventListener('popstate',schedule);addEventListener('resize',schedule,{passive:true});
 
-  /* Only legacy image overlays are handled here. Project NEXT/PREV clicks are intentionally
-     NOT intercepted: desktop-project-navigation owns those buttons now. */
-  window.addEventListener('keydown',(event)=>{
+  window.addEventListener('keydown',event=>{
     if(event.key!=='Escape'||document.querySelector('.desktop-unified-lightbox'))return;
-    const light=LEGACY_LIGHTBOXES.flatMap(selector=>[...document.querySelectorAll(selector)]).filter(visible).at(-1);
-    if(!light)return;
+    const light=LEGACY_LIGHTBOXES.flatMap(selector=>[...document.querySelectorAll(selector)]).filter(visible).at(-1);if(!light)return;
     event.preventDefault();event.stopPropagation();event.stopImmediatePropagation();
     const close=[...light.querySelectorAll('button,[role="button"]')].find(button=>/CLOSE|ЗАКРЫТЬ|×|✕/.test(norm([button.className,button.getAttribute('aria-label'),button.textContent].filter(Boolean).join(' '))));
     if(close)close.click();else light.remove();
