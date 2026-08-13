@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioFinalQaFixesV1) return;
-  window.__portfolioFinalQaFixesV1 = true;
+  if (window.__portfolioFinalQaFixesV2) return;
+  window.__portfolioFinalQaFixesV2 = true;
 
-  const VERSION = 'portfolio-final-qa-fixes-1';
+  const VERSION = 'portfolio-final-qa-fixes-2';
   const PROJECT_NAMES = 'ZNY | FABLE | CARNIVAL RECORDS | ANKA PERESILD | PINK PUNK';
   const LEGACY_LIGHTBOXES = [
     '.vtb-light','.stk-light','.cr-light','.cr-lightbox','.cr-final-lightbox','.zny-light','.zny-lightbox',
@@ -82,6 +82,24 @@
 
     @media(max-width:820px){
       #top .portfolio-hero-brands{font-size:.64rem!important;letter-spacing:.12em!important;line-height:1.45!important}
+      .desktop-project-navigation{
+        display:grid!important;
+        grid-template-columns:1fr!important;
+        width:100%!important;
+        margin-top:4rem!important;
+      }
+      .desktop-project-navigation__button,
+      .desktop-project-navigation__spacer{
+        min-height:9rem!important;
+      }
+      .desktop-project-navigation__button{
+        padding:1.15rem!important;
+      }
+      .desktop-project-navigation__title{
+        margin-top:2rem!important;
+        font-size:clamp(2.2rem,13vw,4.6rem)!important;
+        line-height:.84!important;
+      }
       .desktop-project-navigation::before{top:-4rem!important}
       .stk-subtitle{font-size:1.2rem!important}
     }
