@@ -1,11 +1,14 @@
 (() => {
-  if (window.__albumCoversGalleryV2) return;
-  window.__albumCoversGalleryV2 = true;
+  if (window.__albumCoversGalleryV3) return;
+  window.__albumCoversGalleryV3 = true;
 
-  const VERSION = 'album-covers-2';
-  const IMAGES = Array.from({ length: 15 }, (_, index) => ({
-    src: `/works/album-covers/cover-${String(index + 1).padStart(2, '0')}.jpg?v=${VERSION}`,
-    alt: `Album cover ${String(index + 1).padStart(2, '0')}`,
+  const VERSION = 'album-covers-3';
+  const ORDER = ['10','01','08','11','14','12','04','02','03','05','07','06','13','09','14'];
+  const IMAGES = ORDER.map((number, index) => ({
+    src: `/works/album-covers/cover-${number}.jpg?v=${VERSION}`,
+    alt: `Album cover ${number}`,
+    number,
+    position: index + 1,
   }));
 
   let modal = null;
@@ -22,14 +25,15 @@
   const el = (tag, className, text) => {
     const node = document.createElement(tag);
     if (className) node.className = className;
-    if (text) node.textContent = text;
+    if (text !== undefined) node.textContent = text;
     return node;
   };
 
   function injectStyles() {
-    if (document.getElementById('album-covers-gallery-style')) return;
+    document.getElementById('album-covers-gallery-style')?.remove();
     const style = el('style');
     style.id = 'album-covers-gallery-style';
+    style.dataset.version = VERSION;
     style.textContent = `
       html:has(.album-covers-modal), body:has(.album-covers-modal) { overflow: hidden !important; }
       .album-covers-modal {
@@ -59,8 +63,13 @@
         margin: 1.3rem 0 0; font: 900 .72rem/1.2 Arial, Helvetica, sans-serif;
         letter-spacing: .32em; text-transform: uppercase; color: rgba(5,5,5,.58);
       }
-      .album-covers-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
-      .album-covers-card { margin: 0; padding: 0; border: 0; background: transparent; cursor: zoom-in; }
+      .album-covers-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 1rem;
+        align-items: start;
+      }
+      .album-covers-card { margin: 0; padding: 0; border: 0; background: transparent; cursor: zoom-in; min-width: 0; }
       .album-covers-card img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; background: #fff; }
       .album-covers-light {
         position: fixed; inset: 0; z-index: 960000; display: grid; grid-template-columns: auto minmax(0,1fr) auto;
@@ -77,9 +86,8 @@
       .album-covers-light-nav { width: 3.25rem; height: 3.25rem; }
       .album-covers-light-close { position: absolute; top: max(1rem, env(safe-area-inset-top)); right: max(1rem, env(safe-area-inset-right)); padding: .7rem .9rem; font-size: .68rem; letter-spacing: .2em; }
       .album-covers-light-count { position: absolute; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); transform: translateX(-50%); margin: 0; padding: .45rem .65rem; background: #fff; color: #050505; font: 900 .65rem/1 Arial, Helvetica, sans-serif; letter-spacing: .18em; }
-      @media (max-width: 900px) { .album-covers-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-      @media (hover: none), (pointer: coarse), (max-width: 640px) {
-        .album-covers-grid { grid-template-columns: 1fr; }
+      @media (max-width: 640px) {
+        .album-covers-grid { grid-template-columns: repeat(3, minmax(0,1fr)); gap: .45rem; }
         .album-covers-light { grid-template-columns: 1fr; padding: max(.75rem, env(safe-area-inset-top)) max(.75rem, env(safe-area-inset-right)) max(.75rem, env(safe-area-inset-bottom)) max(.75rem, env(safe-area-inset-left)); }
         .album-covers-light-nav { display: none !important; }
         .album-covers-light-stage { height: calc(100dvh - 1.5rem); }
@@ -144,7 +152,7 @@
     image.draggable = false;
     prev.onclick = (event) => { event.stopPropagation(); stepLightbox(-1); };
     next.onclick = (event) => { event.stopPropagation(); stepLightbox(1); };
-    close.onclick = closeLightbox;
+    close.onclick = (event) => { event.stopPropagation(); closeLightbox(); };
     stage.onclick = (event) => event.stopPropagation();
     overlay.onclick = closeLightbox;
 
@@ -194,7 +202,8 @@
       const card = el('button', 'album-covers-card');
       const image = el('img');
       card.type = 'button';
-      card.setAttribute('aria-label', `${copy().title} ${index + 1}`);
+      card.dataset.cover = item.number;
+      card.setAttribute('aria-label', `${copy().title} ${item.number}`);
       image.src = item.src;
       image.alt = item.alt;
       image.loading = index < 6 ? 'eager' : 'lazy';
@@ -252,13 +261,13 @@
   }
 
   document.addEventListener('click', (event) => {
-    const card = event.target.closest('#works article, #works button');
+    const card = event.target.closest?.('#works article, #works button');
     if (card?.querySelector('h3')?.textContent?.trim().toUpperCase() === 'ALBUM COVERS') {
       event.preventDefault();
       openModal();
       return;
     }
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
+    if (event.target.closest?.('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
       setTimeout(enhanceCard, 0);
       setTimeout(enhanceCard, 120);
     }
@@ -266,7 +275,8 @@
 
   document.addEventListener('keydown', (event) => {
     if (lightbox) {
-      if (event.key === 'ArrowLeft') { event.preventDefault(); stepLightbox(-1); }
+      if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); closeLightbox(); }
+      else if (event.key === 'ArrowLeft') { event.preventDefault(); stepLightbox(-1); }
       else if (event.key === 'ArrowRight') { event.preventDefault(); stepLightbox(1); }
       return;
     }
