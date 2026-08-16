@@ -1,16 +1,18 @@
 (() => {
-  if (window.__portfolioStableProjectShellV5) return;
+  if (window.__portfolioStableProjectShellV6) return;
+  window.__portfolioStableProjectShellV6 = true;
   window.__portfolioStableProjectShellV5 = true;
   window.__portfolioStableProjectShellV4 = true;
   window.__portfolioStableProjectShellV3 = true;
   window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-5';
+  const VERSION = 'portfolio-stable-project-shell-6';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
 
   const PROJECTS = [
     { slug:'zny', selector:'.zny-modal', title:'ZNY', aliases:['ZNY'], chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand', aboutHints:['.zny-brand-copy','.zny-about-copy','.zny-intro-copy','.zny-copy'] },
     { slug:'fable', selector:'.fable-modal', title:'F | ABLE', aliases:['F | ABLE','FABLE'], chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand', aboutHints:['.fable-brand-copy','.fable-about-copy','.fable-intro-copy','.fable-copy'] },
+    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', aliases:['PINK PUNK','PINKPUNK'], chips:[], kind:'brand', bg:'#9b0014', fg:'#fff', headerOnly:true },
     { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', aliases:['CARNIVAL RECORDS'], chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand', aboutHints:['.cr-brand-copy','.cr-about-copy','.cr-intro-copy','.cr-lead p','.cr-copy'] },
     { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', aliases:['BLANDETTO'], chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand', aboutHints:['.bf-brand-copy','.blandetto-brand-copy','.bf-about-copy'], legacy:['.bf-brand','.bf-h'] },
     { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', aliases:['NINETY Z S','90.06','90 06'], chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff', aboutHints:['.project9006-brand-copy'], legacy:['.project9006-brand'] },
@@ -44,9 +46,10 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
-      .portfolio-stable-head{position:fixed!important;inset:0 0 auto 0!important;z-index:1900000!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;width:100vw!important;min-height:4rem!important;margin:0!important;padding:.72rem clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid var(--psh-border,rgba(5,5,5,.14))!important;background:var(--psh-bg,#fff)!important;color:var(--psh-fg,#050505)!important;transform:none!important;animation:none!important;transition:none!important}
-      .portfolio-stable-head__label,.portfolio-stable-head__close{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:2.25rem!important;margin:0!important;padding:.68rem 1rem!important;border:0!important;border-radius:0!important;background:#050505!important;color:#fff!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.24em!important;text-transform:uppercase!important;white-space:nowrap!important}
-      .portfolio-stable-head__close{cursor:pointer!important}.portfolio-stable-head__close:hover{background:#a6ff00!important;color:#050505!important}
+      .portfolio-stable-head{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;z-index:1900000!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;width:auto!important;height:4rem!important;min-height:4rem!important;max-height:4rem!important;margin:0!important;padding:0 clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid var(--psh-border,rgba(5,5,5,.14))!important;background:var(--psh-bg,#fff)!important;color:var(--psh-fg,#050505)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important;translate:none!important;scale:none!important;rotate:none!important;animation:none!important;transition:none!important;will-change:auto!important;contain:layout paint style!important}
+      .portfolio-stable-head__label,.portfolio-stable-head__close{box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;height:2.35rem!important;min-height:2.35rem!important;max-height:2.35rem!important;margin:0!important;padding:0 1rem!important;border:0!important;border-radius:0!important;background:#050505!important;color:#fff!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.22em!important;text-transform:uppercase!important;white-space:nowrap!important;transform:none!important;translate:none!important;scale:none!important;rotate:none!important;animation:none!important;transition:none!important;will-change:auto!important}
+      .portfolio-stable-head__close{width:6.5rem!important;min-width:6.5rem!important;max-width:6.5rem!important;cursor:pointer!important}
+      .portfolio-stable-head__close:hover{background:#a6ff00!important;color:#050505!important}
       .portfolio-stable-intro{position:relative!important;z-index:2!important;box-sizing:border-box!important;display:block!important;width:100vw!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0 0 0 calc(50% - 50vw)!important;padding:clamp(5.8rem,7.5vw,7rem) clamp(1rem,3.2vw,4rem) clamp(2.5rem,3.8vw,3.5rem)!important;background:var(--psi-bg,#fff)!important;color:var(--psi-fg,#050505)!important;border:0!important;opacity:1!important;visibility:visible!important;transform:none!important;animation:none!important;transition:none!important}
       .portfolio-stable-intro__title{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;color:inherit!important;font:900 clamp(4.6rem,10.6vw,12rem)/.79 Arial,Helvetica,sans-serif!important;letter-spacing:-.075em!important;text-transform:uppercase!important}
       .portfolio-stable-intro__chips{display:flex!important;flex-wrap:wrap!important;gap:.55rem!important;margin:clamp(1.2rem,1.8vw,1.7rem) 0 0!important;padding:0!important}
@@ -60,7 +63,7 @@
       .portfolio-stable-copy:hover{background:#a6ff00!important;color:#050505!important;border-color:#050505!important}
       .zny-modal .zny-close,.fable-modal .fable-close,.cr-modal .cr-close,.blandetto-modal .blandetto-close,.blandetto-modal .bf-close,.blandetto-modal .bf-x,.bf .blandetto-close,.bf .bf-close,.bf .bf-x,.bf .bld-close,.project9006-modal .project9006-toolbar__close,.project9006-modal .project9006-close,.project9006-modal .p9006-close,.pcg-modal .pcg-close,.mc-modal .mc-close,.m10-modal .m10-close,.stk-modal .stk-close,.lcg-modal .lcg-close,.album-covers-modal .album-covers-close,.su-modal .su-close,.anka-peresild-modal .anka-peresild-close,.vtb-modal .vtb-close,.collages-modal .pag-close{display:none!important}
       ${ALL_SELECTORS}{animation:none!important;transition:none!important}
-      @media(max-width:820px){.portfolio-stable-head{min-height:3.65rem!important;padding:.62rem .75rem!important}.portfolio-stable-head__label,.portfolio-stable-head__close{min-height:2.05rem!important;padding:.62rem .72rem!important;font-size:.58rem!important;letter-spacing:.18em!important}.portfolio-stable-intro{padding:5.4rem 1rem 2.5rem!important}.portfolio-stable-intro__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}.portfolio-stable-copy{display:none!important}}
+      @media(max-width:820px){.portfolio-stable-head{padding:0 .75rem!important}.portfolio-stable-intro{padding:5.4rem 1rem 2.5rem!important}.portfolio-stable-intro__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}.portfolio-stable-copy{display:none!important}}
     `;
     document.head.append(style);
   }
@@ -77,10 +80,24 @@
     }) || null;
   }
 
+  function textTone(value, fallback = '#050505') {
+    const match = String(value || '').match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    if (!match) return fallback;
+    const lum = (Number(match[1])*299 + Number(match[2])*587 + Number(match[3])*114)/1000;
+    return lum > 150 ? '#fff' : '#050505';
+  }
+
   function detectTheme(modal, project) {
     if (project.bg) return { bg:project.bg, fg:project.fg || '#050505' };
-    for (const node of [modal, ...[...modal.children].slice(0,6)]) {
-      if (!(node instanceof HTMLElement)) continue;
+    const nodes = [modal, ...[...modal.children].slice(0,8)].filter(node => node instanceof HTMLElement);
+    for (const node of nodes) {
+      const css = getComputedStyle(node);
+      const image = css.backgroundImage;
+      if (image && image !== 'none' && /gradient\(/i.test(image)) {
+        return { bg:image, fg:textTone(css.color,'#050505') };
+      }
+    }
+    for (const node of nodes) {
       const css = getComputedStyle(node);
       const bg = css.backgroundColor;
       if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)' || bg === 'rgb(255, 255, 255)') continue;
@@ -129,12 +146,16 @@
     return wrapper;
   }
 
+  function nativeHead(nativeClose, modal) {
+    return nativeClose?.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],.sticky,.bf-h') || null;
+  }
+
   function collapseLegacy(modal, project, nativeClose, aboutNode) {
     const media = firstMedia(modal);
     const aliases = new Set((project.aliases || [project.title]).map(norm));
     const accepted = new Set([project.title,...(project.aliases || []),...project.chips].map(norm));
 
-    const originalHead = nativeClose?.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],.sticky,.bf-h');
+    const originalHead = nativeHead(nativeClose,modal);
     if (originalHead && originalHead !== modal) hide(originalHead);
 
     for (const selector of project.legacy || []) {
@@ -177,7 +198,20 @@
     });
   }
 
-  function createHead(modal, project, nativeClose, theme) {
+  function closeFallback(modal) {
+    const target = findClose(modal);
+    if (target) { target.click(); return; }
+    document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true}));
+    requestAnimationFrame(() => {
+      if (!modal.isConnected) return;
+      try {
+        const url = new URL(location.href);
+        if (url.searchParams.has('project')) history.back();
+      } catch {}
+    });
+  }
+
+  function createHead(modal, project, theme) {
     let head = modal.querySelector(':scope > .portfolio-stable-head');
     if (!head) {
       head = document.createElement('div');
@@ -190,8 +224,7 @@
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
-        const target = findClose(modal);
-        if (target) target.click();
+        closeFallback(modal);
       });
       head.append(label,button);
       modal.prepend(head);
@@ -270,10 +303,19 @@
     const project = projectFor(modal);
     if (!project || modal.children.length === 0) return false;
     const nativeClose = findClose(modal);
-    if (!nativeClose) return false;
-
     const theme = detectTheme(modal,project);
-    const head = createHead(modal,project,nativeClose,theme);
+    const head = createHead(modal,project,theme);
+    const originalHead = nativeHead(nativeClose,modal);
+    if (originalHead && originalHead !== modal) hide(originalHead);
+
+    if (project.headerOnly) {
+      modal.dataset.portfolioStableShell = VERSION;
+      modal.style.setProperty('animation','none','important');
+      modal.style.setProperty('transition','none','important');
+      syncCopy(project);
+      return true;
+    }
+
     const intro = createIntro(modal,project,head,theme);
     const about = findAbout(modal,project);
     syncAbout(intro,about);
@@ -300,9 +342,15 @@
       for (const added of record.addedNodes) {
         if (!(added instanceof Element)) continue;
         if (added.matches?.(ALL_SELECTORS)) candidates.add(added);
-        const parentModal = added.closest?.(ALL_SELECTORS);
-        if (parentModal) candidates.add(parentModal);
         added.querySelectorAll?.(ALL_SELECTORS).forEach(modal => candidates.add(modal));
+        const parentModal = added.closest?.(ALL_SELECTORS);
+        if (parentModal) {
+          const headerish = added.matches?.('header,.sticky,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],button,[role="button"]')
+            || added.querySelector?.('header,.sticky,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],button,[role="button"]');
+          const missingHead = !parentModal.querySelector(':scope > .portfolio-stable-head');
+          const uninitialized = parentModal.dataset.portfolioStableShell !== VERSION;
+          if (headerish || missingHead || uninitialized) candidates.add(parentModal);
+        }
       }
     }
     candidates.forEach(processModal);
