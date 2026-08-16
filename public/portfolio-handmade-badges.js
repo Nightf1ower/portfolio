@@ -1,8 +1,9 @@
 (() => {
-  if (window.__portfolioHandmadeBadgesV3) return;
+  if (window.__portfolioHandmadeBadgesV4) return;
+  window.__portfolioHandmadeBadgesV4 = true;
   window.__portfolioHandmadeBadgesV3 = true;
 
-  const VERSION = 'handmade-badges-3';
+  const VERSION = 'handmade-badges-4';
   const BADGE_SRC = '/works/HANDMADE.png?v=handmade-badge-3';
   const STYLE_ID = 'portfolio-handmade-badges-style';
 
@@ -11,6 +12,15 @@
     .replace(/Ё/g, 'Е')
     .replace(/\s+/g, ' ')
     .trim();
+
+  function preloadBadgeRatio() {
+    const probe = new Image();
+    probe.onload = () => {
+      if (!probe.naturalWidth || !probe.naturalHeight) return;
+      document.documentElement.style.setProperty('--portfolio-handmade-ratio', `${probe.naturalWidth} / ${probe.naturalHeight}`);
+    };
+    probe.src = BADGE_SRC;
+  }
 
   function installStyles() {
     const current = document.getElementById(STYLE_ID);
@@ -40,20 +50,24 @@
         position: absolute !important;
         z-index: 700 !important;
         display: block !important;
+        aspect-ratio: var(--portfolio-handmade-ratio, 2 / 1) !important;
         max-width: none !important;
         max-height: none !important;
-        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
         border: 0 !important;
-        background: transparent !important;
-        object-fit: contain !important;
+        background-color: transparent !important;
+        background-image: url('${BADGE_SRC}') !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        background-size: contain !important;
         pointer-events: auto !important;
         cursor: default !important;
         user-select: none !important;
-        -webkit-user-drag: none !important;
+        -webkit-user-select: none !important;
+        touch-action: pan-x pan-y !important;
         transform-origin: 50% 50% !important;
-        animation: portfolio-handmade-pulse-v3 4.8s ease-in-out infinite !important;
+        animation: portfolio-handmade-pulse-v4 4.8s ease-in-out infinite !important;
         will-change: scale;
       }
 
@@ -74,23 +88,20 @@
         overflow: visible !important;
       }
 
-      .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > img.portfolio-handmade-badge--ninety-lookbook {
+      .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > .portfolio-handmade-badge--ninety-lookbook {
         position: absolute !important;
         top: -1.6rem !important;
         right: -1rem !important;
         z-index: 900 !important;
         display: block !important;
         width: clamp(7.5rem, 9vw, 10.5rem) !important;
-        height: auto !important;
         max-width: none !important;
         max-height: none !important;
         margin: 0 !important;
         padding: 0 !important;
-        object-fit: contain !important;
-        object-position: center !important;
         pointer-events: auto !important;
         transform: none !important;
-        animation: portfolio-handmade-pulse-v3 4.8s ease-in-out infinite !important;
+        animation: portfolio-handmade-pulse-v4 4.8s ease-in-out infinite !important;
       }
 
       .portfolio-handmade-badge--klubique {
@@ -131,7 +142,7 @@
         z-index: 800 !important;
       }
 
-      @keyframes portfolio-handmade-pulse-v3 {
+      @keyframes portfolio-handmade-pulse-v4 {
         0%, 100% { scale: .965; }
         50% { scale: 1.04; }
       }
@@ -153,7 +164,7 @@
           top: -1.75rem !important;
           right: -1.9rem !important;
         }
-        .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > img.portfolio-handmade-badge--ninety-lookbook {
+        .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > .portfolio-handmade-badge--ninety-lookbook {
           width: clamp(7.25rem, 19vw, 9.25rem) !important;
           top: -1.35rem !important;
           right: -.7rem !important;
@@ -184,7 +195,7 @@
           right: -1rem !important;
           animation-duration: 5.2s !important;
         }
-        .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > img.portfolio-handmade-badge--ninety-lookbook {
+        .project9006-modal .project9006-photoshoot-card.portfolio-handmade-media-anchor > .portfolio-handmade-badge--ninety-lookbook {
           width: clamp(6.75rem, 28vw, 8.5rem) !important;
           top: -1.1rem !important;
           right: -.45rem !important;
@@ -210,31 +221,37 @@
     document.head.append(style);
   }
 
+  const BLOCKED_EVENTS = [
+    'pointerdown', 'pointerup', 'pointercancel',
+    'mousedown', 'mouseup',
+    'touchstart', 'touchend',
+    'click', 'dblclick', 'auxclick',
+    'contextmenu', 'dragstart',
+  ];
+
   function stopBadgeEvent(event) {
     const target = event.target instanceof Element ? event.target : null;
     if (!target?.closest('.portfolio-handmade-badge')) return;
-    event.preventDefault();
+    if (['click', 'dblclick', 'auxclick', 'contextmenu', 'dragstart'].includes(event.type)) event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
   }
 
-  // Block badge interaction before any legacy project/lightbox capture handler.
-  window.addEventListener('pointerdown', stopBadgeEvent, true);
-  window.addEventListener('mousedown', stopBadgeEvent, true);
-  window.addEventListener('click', stopBadgeEvent, true);
-  window.addEventListener('dblclick', stopBadgeEvent, true);
+  BLOCKED_EVENTS.forEach((type) => {
+    window.addEventListener(type, stopBadgeEvent, { capture: true, passive: type.startsWith('touch') });
+  });
 
   function badge(className, key) {
-    const image = document.createElement('img');
-    image.className = `portfolio-handmade-badge ${className}`;
-    image.src = BADGE_SRC;
-    image.alt = '';
-    image.setAttribute('aria-hidden', 'true');
-    image.draggable = false;
-    image.decoding = 'async';
-    image.dataset.portfolioFullres = 'true';
-    image.dataset.handmadeKey = key;
-    return image;
+    const node = document.createElement('span');
+    node.className = `portfolio-handmade-badge ${className}`;
+    node.setAttribute('aria-hidden', 'true');
+    node.setAttribute('role', 'presentation');
+    node.tabIndex = -1;
+    node.dataset.handmadeKey = key;
+    node.dataset.lightboxIgnore = 'true';
+    node.dataset.galleryIgnore = 'true';
+    node.dataset.portfolioNoOpen = 'true';
+    return node;
   }
 
   function addHeadingBadge(heading, className, key) {
@@ -250,10 +267,10 @@
       heading.append(wrap);
     }
 
-    let image = wrap.querySelector(`:scope > [data-handmade-key="${key}"]`);
-    if (!image) {
-      image = badge(className, key);
-      wrap.append(image);
+    let node = wrap.querySelector(`:scope > [data-handmade-key="${key}"]`);
+    if (!node) {
+      node = badge(className, key);
+      wrap.append(node);
     }
     return true;
   }
@@ -284,7 +301,6 @@
     const section = title?.closest('.mc-section');
     if (!section) return false;
 
-    // Remove the old V1/V2 badge if it was attached to the PRINTS grid.
     section.querySelectorAll('[data-handmade-key="merch-yablochko-prints"]').forEach((node) => node.remove());
 
     const brochureGrid = [...section.querySelectorAll('.mc-grid')].find((grid) => (
@@ -293,10 +309,10 @@
     if (!brochureGrid) return false;
 
     brochureGrid.classList.add('portfolio-handmade-merch-anchor');
-    let image = brochureGrid.querySelector(':scope > [data-handmade-key="merch-yablochko-brochures"]');
-    if (!image) {
-      image = badge('portfolio-handmade-badge--merch-brochures', 'merch-yablochko-brochures');
-      brochureGrid.append(image);
+    let node = brochureGrid.querySelector(':scope > [data-handmade-key="merch-yablochko-brochures"]');
+    if (!node) {
+      node = badge('portfolio-handmade-badge--merch-brochures', 'merch-yablochko-brochures');
+      brochureGrid.append(node);
     }
     return true;
   }
@@ -316,10 +332,10 @@
     let lookbookDone = false;
     if (lastCard) {
       lastCard.classList.add('portfolio-handmade-media-anchor');
-      let image = lastCard.querySelector(':scope > [data-handmade-key="ninety-lookbook-last"]');
-      if (!image) {
-        image = badge('portfolio-handmade-badge--ninety-lookbook', 'ninety-lookbook-last');
-        lastCard.append(image);
+      let node = lastCard.querySelector(':scope > [data-handmade-key="ninety-lookbook-last"]');
+      if (!node) {
+        node = badge('portfolio-handmade-badge--ninety-lookbook', 'ninety-lookbook-last');
+        lastCard.append(node);
       }
       lookbookDone = true;
     }
@@ -354,22 +370,28 @@
     card.dataset.handmadeCollagesCard = 'true';
 
     const nativeDot = [...card.querySelectorAll('span')].find((span) => (
-      span.classList.contains('h-3')
+      !span.classList.contains('portfolio-handmade-badge')
+      && span.classList.contains('h-3')
       && span.classList.contains('w-3')
       && span.classList.contains('rounded-full')
     ));
     nativeDot?.classList.add('portfolio-handmade-native-dot');
 
-    let image = card.querySelector(':scope > [data-handmade-key="collages-card"]');
-    if (!image) {
-      image = badge('portfolio-handmade-badge--collages', 'collages-card');
-      card.append(image);
+    let node = card.querySelector(':scope > [data-handmade-key="collages-card"]');
+    if (!node) {
+      node = badge('portfolio-handmade-badge--collages', 'collages-card');
+      card.append(node);
     }
     return true;
   }
 
+  function removeLegacyImageBadges() {
+    document.querySelectorAll('img.portfolio-handmade-badge').forEach((image) => image.remove());
+  }
+
   function applyAll() {
     installStyles();
+    removeLegacyImageBadges();
     applyCollagesCard();
     applyZny();
     applyMerch();
@@ -412,7 +434,6 @@
     if (target?.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) runPasses();
   }, true);
 
-  // Only watches direct project-modal insertion, not inner image/layout mutations.
   const modalSelectors = ['.zny-modal', '.mc-modal', '.project9006-modal', '.pcg-modal'];
   const modalObserver = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
@@ -428,6 +449,7 @@
   modalObserver.observe(document.body, { childList: true });
 
   window.addEventListener('load', runPasses, { once: true });
+  preloadBadgeRatio();
   installStyles();
   runPasses();
 })();
