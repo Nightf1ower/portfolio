@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioIntroDedupeFinalV2) return;
-  window.__portfolioIntroDedupeFinalV2 = true;
+  if (window.__portfolioIntroDedupeFinalV3) return;
+  window.__portfolioIntroDedupeFinalV3 = true;
 
-  const VERSION = 'portfolio-intro-dedupe-final-2';
+  const VERSION = 'portfolio-intro-dedupe-final-3';
   const STYLE_ID = 'portfolio-intro-dedupe-final-style';
   const MODALS = '.zny-modal,.fable-modal,.pink-punk-fullscreen,.cr-modal,.blandetto-modal,.bf,.project9006-modal,.pcg-modal,.mc-modal,.m10-modal,.stk-modal,.lcg-modal,.album-covers-modal,.su-modal,.anka-peresild-modal,.vtb-modal,.collages-modal';
   const ABOUT_LABELS = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
@@ -72,6 +72,21 @@
         text-align:left!important;
         justify-self:start!important;
       }
+
+      /* Blandetto keeps its native close target in DOM, but the old native header is never visible. */
+      .bf .bf-h,
+      .blandetto-modal .bf-h,
+      .bld-modal .bf-h{
+        display:none!important;
+        height:0!important;
+        min-height:0!important;
+        max-height:0!important;
+        margin:0!important;
+        padding:0!important;
+        border:0!important;
+        overflow:hidden!important;
+      }
+
       .portfolio-intro-duplicate-hidden{
         display:none!important;
         width:0!important;
@@ -204,8 +219,8 @@
       for (const node of record.addedNodes) {
         if (!(node instanceof Element)) continue;
         if (
-          node.matches('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label') ||
-          node.querySelector('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label')
+          node.matches('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label,.bf-h') ||
+          node.querySelector('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label,.bf-h')
         ) {
           schedule();
           return;
