@@ -1,9 +1,10 @@
 (() => {
-  if (window.__portfolioStableProjectShellV3) return;
+  if (window.__portfolioStableProjectShellV4) return;
+  window.__portfolioStableProjectShellV4 = true;
   window.__portfolioStableProjectShellV3 = true;
   window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-3';
+  const VERSION = 'portfolio-stable-project-shell-4';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
   const PROJECTS = [
     { slug:'zny', selector:'.zny-modal', title:'ZNY', chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand' },
@@ -87,7 +88,11 @@
     return { bg:'#fff', fg:'#050505' };
   }
 
-  function findAbout(modal) {
+  function findAbout(modal, project) {
+    if (project.slug === 'ninety-z-s') {
+      const native = modal.querySelector('.project9006-brand-copy');
+      if (native) return { node:native, text:String(native.textContent || '').replace(/\s+/g,' ').trim() };
+    }
     const node = [...modal.querySelectorAll('p')].find(candidate => {
       if (candidate.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-unified-lightbox')) return false;
       if (candidate.querySelector('img,video,picture,canvas')) return false;
@@ -104,6 +109,11 @@
     const aboutLabels = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
     const originalHead = nativeClose?.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],.sticky,.bf-h');
     if (originalHead && originalHead !== modal) hide(originalHead);
+
+    if (project.slug === 'ninety-z-s') {
+      const nativeBrand = modal.querySelector('.project9006-brand');
+      if (nativeBrand) hide(nativeBrand);
+    }
 
     const firstMedia = [...modal.querySelectorAll('img,video,picture,canvas')].find(node => !node.closest('.portfolio-stable-intro,.portfolio-stable-head,.desktop-unified-lightbox')) || null;
     const beforeMedia = node => !firstMedia || Boolean(node.compareDocumentPosition(firstMedia) & Node.DOCUMENT_POSITION_FOLLOWING);
@@ -213,9 +223,10 @@
     if (!(modal instanceof HTMLElement) || modal.dataset.portfolioStableShell === VERSION) return false;
     const project = projectFor(modal);
     if (!project || modal.children.length === 0) return false;
+    if (project.slug === 'ninety-z-s' && !modal.querySelector('.project9006-brand')) return false;
     const nativeClose = findClose(modal);
     if (!nativeClose) return false;
-    const about = findAbout(modal);
+    const about = findAbout(modal,project);
     const theme = detectTheme(modal,project);
     const head = createHead(modal,project,nativeClose,theme);
     createIntro(modal,project,head,about.text,theme);
