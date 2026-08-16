@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioFixedProjectHeaderV1) return;
-  window.__portfolioFixedProjectHeaderV1 = true;
+  if (window.__portfolioFixedProjectHeaderV2) return;
+  window.__portfolioFixedProjectHeaderV2 = true;
 
-  const VERSION = 'portfolio-fixed-project-header-1';
+  const VERSION = 'portfolio-fixed-project-header-2';
   const STYLE_ID = 'portfolio-fixed-project-header-style';
   const MODAL_SELECTOR = [
     '.zny-modal','.fable-modal','.pink-punk-fullscreen','.cr-modal','.blandetto-modal','.bf',
@@ -67,7 +67,7 @@
     if (!(modal instanceof HTMLElement)) return null;
     const close = [...modal.querySelectorAll(CLOSE_SELECTOR)]
       .filter(button => !button.closest('.desktop-unified-lightbox'))
-      .filter(visible)[0] || null;
+      .find(visible) || null;
     if (!close) return null;
 
     const explicit = close.closest([
@@ -92,8 +92,8 @@
   function pinModal(modal) {
     const head = findHead(modal);
     if (!head) return;
-    head.classList.add('portfolio-fixed-project-head');
-    head.dataset.portfolioFixedProjectHead = VERSION;
+    if (!head.classList.contains('portfolio-fixed-project-head')) head.classList.add('portfolio-fixed-project-head');
+    if (head.dataset.portfolioFixedProjectHead !== VERSION) head.dataset.portfolioFixedProjectHead = VERSION;
 
     const spacer = ensureSpacer(head);
     const height = Math.max(1, Math.ceil(head.getBoundingClientRect().height));
@@ -101,18 +101,7 @@
     if (spacer.style.height !== nextHeight) spacer.style.height = nextHeight;
   }
 
-  function cleanup() {
-    document.querySelectorAll('.portfolio-fixed-project-head').forEach(head => {
-      const modal = head.closest(MODAL_SELECTOR);
-      if (modal?.isConnected) return;
-      head.classList.remove('portfolio-fixed-project-head');
-      head.removeAttribute('data-portfolio-fixed-project-head');
-      head.nextElementSibling?.classList?.contains('portfolio-fixed-project-head-spacer') && head.nextElementSibling.remove();
-    });
-  }
-
   function apply() {
-    cleanup();
     document.querySelectorAll(MODAL_SELECTOR).forEach(modal => {
       if (visible(modal)) pinModal(modal);
     });
@@ -132,7 +121,7 @@
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ['class','style']
+    attributeFilter: ['class']
   });
   window.addEventListener('resize', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule, { passive: true });
