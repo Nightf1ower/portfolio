@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV9) return;
-  window.__desktopSiteExperienceLoaderV9 = true;
+  if (window.__desktopSiteExperienceLoaderV10) return;
+  window.__desktopSiteExperienceLoaderV10 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -16,6 +16,6 @@
   load('/portfolio-mobile-gestures-v2.js?v=portfolio-mobile-gestures-2', 'portfolio-mobile-gestures-2');
   load('/portfolio-mobile-touchend-guard-v3.js?v=portfolio-mobile-touchend-guard-3', 'portfolio-mobile-touchend-guard-3');
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-4', 'portfolio-final-qa-fixes-4');
-  load('/portfolio-fixed-project-header.js?v=portfolio-fixed-project-header-1', 'portfolio-fixed-project-header-1');
+  load('/portfolio-fixed-project-header.js?v=portfolio-fixed-project-header-2', 'portfolio-fixed-project-header-2');
   load('/desktop-site-experience-v2.js?v=desktop-site-experience-2', 'desktop-site-experience-2');
 })();
