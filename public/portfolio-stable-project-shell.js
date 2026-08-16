@@ -1,5 +1,6 @@
 (() => {
-  if (window.__portfolioStableProjectShellV7) return;
+  if (window.__portfolioStableProjectShellV8) return;
+  window.__portfolioStableProjectShellV8 = true;
   window.__portfolioStableProjectShellV7 = true;
   window.__portfolioStableProjectShellV6 = true;
   window.__portfolioStableProjectShellV5 = true;
@@ -7,24 +8,24 @@
   window.__portfolioStableProjectShellV3 = true;
   window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-7';
+  const VERSION = 'portfolio-stable-project-shell-8';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
 
   const PROJECTS = [
     { slug:'zny', selector:'.zny-modal', title:'ZNY', aliases:['ZNY'], chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand', aboutHints:['.zny-brand-copy','.zny-about-copy','.zny-intro-copy','.zny-copy'] },
     { slug:'fable', selector:'.fable-modal', title:'F | ABLE', aliases:['F | ABLE','FABLE'], chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand', aboutHints:['.fable-brand-copy','.fable-about-copy','.fable-intro-copy','.fable-copy'] },
-    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', aliases:['PINK PUNK','PINKPUNK'], chips:[], kind:'brand', bg:'#9b0014', fg:'#fff', nativeHeader:true },
+    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', aliases:['PINK PUNK','PINKPUNK'], chips:[], kind:'brand', headerBg:'#9b0014', fg:'#fff', nativeHeader:true },
     { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', aliases:['CARNIVAL RECORDS'], chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand', aboutHints:['.cr-brand-copy','.cr-about-copy','.cr-intro-copy','.cr-lead p','.cr-copy'] },
     { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', aliases:['BLANDETTO'], chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand', aboutHints:['.bf-brand-copy','.blandetto-brand-copy','.bf-about-copy'], legacy:['.bf-brand','.bf-h'] },
-    { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', aliases:['NINETY Z S','90.06','90 06'], chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff', aboutHints:['.project9006-brand-copy'], legacy:['.project9006-brand'] },
-    { slug:'posters', selector:'.pcg-modal', title:'POSTERS', aliases:['POSTERS'], chips:['INFOGRAPHICS','PROJECTS','PARTIES'], kind:'project', bg:'#2C3D55', fg:'#fff', aboutHints:['.pcg-project-copy','.pcg-about-copy','.pcg-intro-copy','.pcg-copy'] },
-    { slug:'merch', selector:'.mc-modal,.m10-modal', title:'MERCH', aliases:['MERCH'], chips:['POSTERS','PRINTS','AI ILLUSTRATIONS'], kind:'project', bg:'#87CEEB', fg:'#050505', aboutHints:['.m10-project-copy','.mc-project-copy','.m10-intro-copy'] },
-    { slug:'stickers', selector:'.stk-modal', title:'STICKERS', aliases:['STICKERS'], chips:['MNU','NIGHTFLOWER'], kind:'project', aboutHints:['.stk-project-copy','.stk-about-copy','.stk-intro-copy'] },
+    { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', aliases:['NINETY Z S','90.06','90 06'], chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', headerBg:'#050505', fg:'#fff', aboutHints:['.project9006-brand-copy'], legacy:['.project9006-brand'] },
+    { slug:'posters', selector:'.pcg-modal', title:'POSTERS', aliases:['POSTERS'], chips:['INFOGRAPHICS','PROJECTS','PARTIES'], kind:'project', headerBg:'#2C3D55', fg:'#fff', aboutHints:['.pcg-project-copy','.pcg-about-copy','.pcg-intro-copy','.pcg-copy'] },
+    { slug:'merch', selector:'.mc-modal,.m10-modal', title:'MERCH', aliases:['MERCH'], chips:['POSTERS','PRINTS','AI ILLUSTRATIONS'], kind:'project', headerBg:'#87CEEB', fg:'#050505', aboutHints:['.m10-project-copy','.mc-project-copy','.m10-intro-copy'] },
+    { slug:'stickers', selector:'.stk-modal', title:'STICKERS', aliases:['STICKERS'], chips:['MNU','NIGHTFLOWER'], kind:'project', headerBg:'#ffffff', fg:'#050505', aboutHints:['.stk-project-copy','.stk-about-copy','.stk-intro-copy'] },
     { slug:'logos', selector:'.lcg-modal', title:'LOGOS', aliases:['LOGOS'], chips:['IDENTITY','BRANDING','DEVELOPMENT'], kind:'project', aboutHints:['.lcg-project-copy','.lcg-about-copy','.lcg-intro-copy','.lcg-copy'] },
-    { slug:'album-covers', selector:'.album-covers-modal', title:'ALBUM COVERS', aliases:['ALBUM COVERS'], chips:['COVER ART','GRAPHICS'], kind:'project', aboutHints:['.album-covers-project-copy','.album-covers-about-copy','.album-covers-intro-copy'] },
-    { slug:'stay-ugly', selector:'.su-modal', title:'STAY UGLY', aliases:['STAY UGLY','STAYUGLY'], chips:['DEVELOPMENT','LOOKBOOK'], kind:'brand', aboutHints:['.su-brand-copy','.su-project-copy','.su-about-copy','.su-intro-copy','.su-copy'] },
+    { slug:'album-covers', selector:'.album-covers-modal', title:'ALBUM COVERS', aliases:['ALBUM COVERS'], chips:['COVER ART','GRAPHICS'], kind:'project', headerBg:'#f4f4f2', fg:'#050505', aboutHints:['.album-covers-project-copy','.album-covers-about-copy','.album-covers-intro-copy'] },
+    { slug:'stay-ugly', selector:'.su-modal', title:'STAY UGLY', aliases:['STAY UGLY','STAYUGLY'], chips:['DEVELOPMENT','LOOKBOOK'], kind:'brand', headerBg:'#ffffff', fg:'#050505', aboutHints:['.su-brand-copy','.su-project-copy','.su-about-copy','.su-intro-copy','.su-copy'] },
     { slug:'anka-peresild', selector:'.anka-peresild-modal', title:'ANKA PERESILD', aliases:['ANKA PERESILD'], chips:['APPAREL','AI ILLUSTRATIONS','MOCKUPS'], kind:'brand', aboutHints:['.anka-peresild-brand-copy','.anka-peresild-about-copy','.anka-peresild-intro-copy','.anka-peresild-copy'] },
-    { slug:'vtb-design-team', selector:'.vtb-modal', title:'VTB DESIGN TEAM', aliases:['VTB DESIGN TEAM'], chips:['MERCH','ACCESSORIES','PRINTS'], kind:'project', bg:'#ff0101', fg:'#050505', aboutHints:['.vtb-project-intro__text','.vtb-project-copy','.vtb-about-copy'], legacy:['.vtb-project-intro'] },
+    { slug:'vtb-design-team', selector:'.vtb-modal', title:'VTB DESIGN TEAM', aliases:['VTB DESIGN TEAM'], chips:['MERCH','ACCESSORIES','PRINTS'], kind:'project', headerBg:'#ff0101', fg:'#050505', aboutHints:['.vtb-project-intro__text','.vtb-project-copy','.vtb-about-copy'], legacy:['.vtb-project-intro'] },
     { slug:'collages-photo-edit', selector:'.collages-modal', title:'COLLAGES PHOTO EDIT', aliases:['COLLAGES PHOTO EDIT','COLLAGES'], chips:['MY OWN EDITS'], kind:'project', aboutHints:['.collages-project-copy','.collages-about-copy','.collages-intro-copy','.pag-copy'] },
   ];
 
@@ -47,11 +48,12 @@
     style.id = STYLE_ID;
     style.dataset.version = VERSION;
     style.textContent = `
-      .portfolio-stable-head{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;z-index:1900000!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;width:auto!important;height:4rem!important;min-height:4rem!important;max-height:4rem!important;margin:0!important;padding:0 clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid var(--psh-border,rgba(5,5,5,.14))!important;background:var(--psh-bg,#fff)!important;color:var(--psh-fg,#050505)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important;translate:none!important;scale:none!important;rotate:none!important;animation:none!important;transition:none!important;will-change:auto!important;contain:layout paint style!important}
+      :where(${ALL_SELECTORS}){transform:none!important;translate:none!important;scale:none!important;rotate:none!important;filter:none!important;perspective:none!important;contain:none!important}
+      .portfolio-stable-head{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;z-index:1900000!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;width:auto!important;height:4rem!important;min-height:4rem!important;max-height:4rem!important;margin:0!important;padding:0 clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid var(--psh-border,rgba(5,5,5,.14))!important;background:var(--psh-bg,#fff)!important;color:var(--psh-fg,#050505)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;transform:none!important;translate:none!important;scale:none!important;rotate:none!important;animation:none!important;transition:none!important;will-change:auto!important}
       .portfolio-stable-head__label,.portfolio-stable-head__close{box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;height:2.35rem!important;min-height:2.35rem!important;max-height:2.35rem!important;margin:0!important;padding:0 1rem!important;border:0!important;border-radius:0!important;background:#050505!important;color:#fff!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.22em!important;text-transform:uppercase!important;white-space:nowrap!important;transform:none!important;translate:none!important;scale:none!important;rotate:none!important;animation:none!important;transition:none!important;will-change:auto!important}
       .portfolio-stable-head__close{width:6.5rem!important;min-width:6.5rem!important;max-width:6.5rem!important;cursor:pointer!important}
       .portfolio-stable-head__close:hover{background:#a6ff00!important;color:#050505!important}
-      .portfolio-stable-intro{position:relative!important;z-index:2!important;box-sizing:border-box!important;display:block!important;width:100vw!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0 0 0 calc(50% - 50vw)!important;padding:clamp(5.8rem,7.5vw,7rem) clamp(1rem,3.2vw,4rem) clamp(2.5rem,3.8vw,3.5rem)!important;background:var(--psi-bg,#fff)!important;color:var(--psi-fg,#050505)!important;border:0!important;opacity:1!important;visibility:visible!important;transform:none!important;animation:none!important;transition:none!important}
+      .portfolio-stable-intro{position:relative!important;z-index:2!important;box-sizing:border-box!important;display:block!important;width:100vw!important;max-width:none!important;min-height:0!important;height:auto!important;margin:0 0 0 calc(50% - 50vw)!important;padding:clamp(5.8rem,7.5vw,7rem) clamp(1rem,3.2vw,4rem) clamp(2.5rem,3.8vw,3.5rem)!important;background:transparent!important;color:var(--psi-fg,#050505)!important;border:0!important;opacity:1!important;visibility:visible!important;transform:none!important;animation:none!important;transition:none!important}
       .portfolio-stable-intro__title{width:100%!important;max-width:none!important;margin:0!important;padding:0!important;color:inherit!important;font:900 clamp(4.6rem,10.6vw,12rem)/.79 Arial,Helvetica,sans-serif!important;letter-spacing:-.075em!important;text-transform:uppercase!important}
       .portfolio-stable-intro__chips{display:flex!important;flex-wrap:wrap!important;gap:.55rem!important;margin:clamp(1.2rem,1.8vw,1.7rem) 0 0!important;padding:0!important}
       .portfolio-stable-intro__chip{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:2rem!important;margin:0!important;padding:.55rem .85rem!important;border:1px solid currentColor!important;background:transparent!important;color:inherit!important;font:900 .62rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;white-space:nowrap!important}
@@ -63,6 +65,7 @@
       .portfolio-stable-copy{position:fixed!important;left:max(1rem,env(safe-area-inset-left))!important;bottom:max(1rem,env(safe-area-inset-bottom))!important;z-index:1900000!important;min-height:2.75rem!important;margin:0!important;padding:.75rem 1rem!important;border:1px solid #fff!important;background:#050505!important;color:#fff!important;font:900 .62rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;cursor:pointer!important}
       .portfolio-stable-copy:hover{background:#a6ff00!important;color:#050505!important;border-color:#050505!important}
       .zny-modal .zny-close,.fable-modal .fable-close,.cr-modal .cr-close,.blandetto-modal .blandetto-close,.blandetto-modal .bf-close,.blandetto-modal .bf-x,.bf .blandetto-close,.bf .bf-close,.bf .bf-x,.bf .bld-close,.project9006-modal .project9006-toolbar__close,.project9006-modal .project9006-close,.project9006-modal .p9006-close,.pcg-modal .pcg-close,.mc-modal .mc-close,.m10-modal .m10-close,.stk-modal .stk-close,.lcg-modal .lcg-close,.album-covers-modal .album-covers-close,.su-modal .su-close,.anka-peresild-modal .anka-peresild-close,.vtb-modal .vtb-close,.collages-modal .pag-close{display:none!important}
+      .su-modal .su-head,.stk-modal .stk-head,.album-covers-modal .album-covers-head,.pcg-modal .pcg-head,.mc-modal .mc-head,.m10-modal .m10-head,.vtb-modal .vtb-head,.cr-modal .cr-head,.anka-peresild-modal .anka-peresild-head,.anka-peresild-modal [class*="toolbar"],.lcg-modal .lcg-head,.pag-modal .pag-head,.collages-modal .pag-head,.project9006-modal .project9006-toolbar{display:none!important}
       ${ALL_SELECTORS}{animation:none!important;transition:none!important}
       @media(max-width:820px){.portfolio-stable-head{padding:0 .75rem!important}.portfolio-stable-intro{padding:5.4rem 1rem 2.5rem!important}.portfolio-stable-intro__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}.portfolio-stable-copy{display:none!important}}
     `;
@@ -81,31 +84,43 @@
     }) || null;
   }
 
-  function textTone(value, fallback = '#050505') {
-    const match = String(value || '').match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
-    if (!match) return fallback;
-    const lum = (Number(match[1])*299 + Number(match[2])*587 + Number(match[3])*114)/1000;
-    return lum > 150 ? '#fff' : '#050505';
+  function rgbParts(value) {
+    const text = String(value || '');
+    const rgb = text.match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+    if (rgb) return [Number(rgb[1]),Number(rgb[2]),Number(rgb[3])];
+    const hex = text.match(/#([0-9a-f]{6}|[0-9a-f]{3})\b/i)?.[1];
+    if (!hex) return null;
+    const full = hex.length === 3 ? hex.split('').map(char => char + char).join('') : hex;
+    return [parseInt(full.slice(0,2),16),parseInt(full.slice(2,4),16),parseInt(full.slice(4,6),16)];
+  }
+
+  function foregroundFor(bg, fallback = '#050505') {
+    const parts = rgbParts(bg);
+    if (!parts) return fallback;
+    const lum = (parts[0]*299 + parts[1]*587 + parts[2]*114)/1000;
+    return lum < 142 ? '#fff' : '#050505';
+  }
+
+  function firstGradientColor(image) {
+    const value = String(image || '');
+    const hex = value.match(/#[0-9a-f]{3,8}\b/i)?.[0];
+    if (hex) return hex;
+    const rgb = value.match(/rgba?\([^)]*\)/i)?.[0];
+    return rgb || null;
   }
 
   function detectTheme(modal, project) {
-    if (project.bg) return { bg:project.bg, fg:project.fg || '#050505' };
+    if (project.headerBg) return { bg:project.headerBg, fg:project.fg || foregroundFor(project.headerBg) };
     const nodes = [modal, ...[...modal.children].slice(0,8)].filter(node => node instanceof HTMLElement);
     for (const node of nodes) {
       const css = getComputedStyle(node);
+      const bg = css.backgroundColor;
+      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return { bg, fg:foregroundFor(bg, css.color || '#050505') };
       const image = css.backgroundImage;
       if (image && image !== 'none' && /gradient\(/i.test(image)) {
-        return { bg:image, fg:textTone(css.color,'#050505') };
+        const first = firstGradientColor(image);
+        if (first) return { bg:first, fg:foregroundFor(first, css.color || '#050505') };
       }
-    }
-    for (const node of nodes) {
-      const css = getComputedStyle(node);
-      const bg = css.backgroundColor;
-      if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)' || bg === 'rgb(255, 255, 255)') continue;
-      const match = bg.match(/rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
-      if (!match) continue;
-      const lum = (Number(match[1])*299 + Number(match[2])*587 + Number(match[3])*114)/1000;
-      return { bg, fg:lum < 142 ? '#fff' : '#050505' };
     }
     return { bg:'#fff', fg:'#050505' };
   }
@@ -264,7 +279,7 @@
       intro.innerHTML = '<h1 class="portfolio-stable-intro__title"></h1><div class="portfolio-stable-intro__chips"></div><div class="portfolio-stable-intro__about"><p class="portfolio-stable-intro__about-label"></p><p class="portfolio-stable-intro__about-text"></p></div>';
       head.after(intro);
     }
-    intro.style.setProperty('--psi-bg',theme.bg);
+    intro.style.removeProperty('--psi-bg');
     intro.style.setProperty('--psi-fg',theme.fg);
     intro.querySelector('.portfolio-stable-intro__title').textContent = project.title;
     const chips = intro.querySelector('.portfolio-stable-intro__chips');
@@ -345,6 +360,8 @@
     modal.dataset.portfolioStableShell = VERSION;
     modal.style.setProperty('animation','none','important');
     modal.style.setProperty('transition','none','important');
+    modal.style.setProperty('transform','none','important');
+    modal.style.setProperty('filter','none','important');
     if (!modal.dataset.portfolioStableScrollReset) {
       modal.dataset.portfolioStableScrollReset = '1';
       try { modal.scrollTop = 0; } catch {}

@@ -1,10 +1,11 @@
 (() => {
-  if (window.__pinkPunkLayoutV6) return;
+  if (window.__pinkPunkLayoutV7) return;
+  window.__pinkPunkLayoutV7 = true;
   window.__pinkPunkLayoutV6 = true;
   window.__pinkPunkLayoutV5 = true;
   window.__pinkPunkLayoutV4 = true;
 
-  const VERSION = 'pink-layout-6';
+  const VERSION = 'pink-layout-7';
   const COPY = {
     ru: {
       aboutLabel: 'О БРЕНДЕ',
@@ -57,6 +58,10 @@
         background-repeat:no-repeat!important;
         background-size:100% 100%!important;
         background-attachment:local!important;
+        transform:none!important;
+        filter:none!important;
+        perspective:none!important;
+        contain:none!important;
       }
       .pink-punk-fullscreen>div{
         box-sizing:border-box!important;
@@ -67,36 +72,70 @@
       }
       .pink-punk-fullscreen>div>.sticky{
         position:fixed!important;
-        inset:0 0 auto 0!important;
+        top:0!important;
+        left:0!important;
+        right:0!important;
+        bottom:auto!important;
         z-index:1900000!important;
         box-sizing:border-box!important;
         display:flex!important;
         align-items:center!important;
         justify-content:space-between!important;
-        width:100vw!important;
+        width:auto!important;
         max-width:none!important;
+        height:4rem!important;
         min-height:4rem!important;
+        max-height:4rem!important;
         margin:0!important;
-        padding:.72rem clamp(1rem,1.8vw,2rem)!important;
+        padding:0 clamp(1rem,1.8vw,2rem)!important;
         background:#9b0014!important;
         color:#fff!important;
         border:0!important;
         border-bottom:1px solid rgba(255,255,255,.28)!important;
         box-shadow:none!important;
         transform:none!important;
+        translate:none!important;
+        scale:none!important;
+        rotate:none!important;
         transition:none!important;
         animation:none!important;
+        will-change:auto!important;
         backdrop-filter:none!important;
         -webkit-backdrop-filter:none!important;
       }
-      .pink-punk-fullscreen>div>.sticky button{
-        background:#050505!important;
-        color:#fff!important;
+      .pink-punk-fullscreen>div>.sticky>p,
+      .pink-punk-fullscreen>div>.sticky>span,
+      .pink-punk-fullscreen>div>.sticky>button{
+        box-sizing:border-box!important;
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
+        height:2.35rem!important;
+        min-height:2.35rem!important;
+        max-height:2.35rem!important;
+        margin:0!important;
+        padding:0 1rem!important;
         border:0!important;
         border-radius:0!important;
+        background:#050505!important;
+        color:#fff!important;
+        font:900 .68rem/1 Arial,Helvetica,sans-serif!important;
+        letter-spacing:.22em!important;
+        text-transform:uppercase!important;
+        white-space:nowrap!important;
         transform:none!important;
+        translate:none!important;
+        scale:none!important;
+        rotate:none!important;
         transition:none!important;
         animation:none!important;
+        will-change:auto!important;
+      }
+      .pink-punk-fullscreen>div>.sticky>button{
+        width:6.5rem!important;
+        min-width:6.5rem!important;
+        max-width:6.5rem!important;
+        cursor:pointer!important;
       }
       .pink-punk-gallery.pink-punk-gallery--grouped{
         display:block!important;
@@ -265,7 +304,7 @@
       @media(max-width:900px){.pink-punk-section__grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
       @media(max-width:820px){
         .pink-punk-fullscreen>div{padding-left:1rem!important;padding-right:1rem!important}
-        .pink-punk-fullscreen>div>.sticky{min-height:3.65rem!important;padding:.62rem .75rem!important}
+        .pink-punk-fullscreen>div>.sticky{height:4rem!important;min-height:4rem!important;max-height:4rem!important;padding:0 .75rem!important}
         .pink-punk-brand{padding-top:5.5rem!important}
         .pink-punk-brand__title{font-size:clamp(5rem,30vw,8rem)!important;line-height:.7!important}
         .pink-punk-brand__copy{font-size:1rem!important;line-height:1.48!important}
