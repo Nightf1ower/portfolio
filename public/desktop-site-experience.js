@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV23) return;
-  window.__desktopSiteExperienceLoaderV23 = true;
+  if (window.__desktopSiteExperienceLoaderV24) return;
+  window.__desktopSiteExperienceLoaderV24 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -18,6 +18,6 @@
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
   load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-1', 'portfolio-stable-project-shell-1');
-  load('/portfolio-shell-theme-pink-fix.js?v=portfolio-shell-theme-pink-fix-1', 'portfolio-shell-theme-pink-fix-1');
+  load('/portfolio-shell-theme-pink-fix.js?v=portfolio-shell-theme-pink-fix-2', 'portfolio-shell-theme-pink-fix-2');
   load('/portfolio-intro-dedupe-final.js?v=portfolio-intro-dedupe-final-1', 'portfolio-intro-dedupe-final-1');
 })();
