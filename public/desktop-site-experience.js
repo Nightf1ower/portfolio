@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV16) return;
-  window.__desktopSiteExperienceLoaderV16 = true;
+  if (window.__desktopSiteExperienceLoaderV17) return;
+  window.__desktopSiteExperienceLoaderV17 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -22,4 +22,5 @@
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
   load('/project9006-standard-intro-fix.js?v=project9006-standard-intro-fix-1', 'project9006-standard-intro-fix-1');
   load('/portfolio-themed-intro-restore.js?v=portfolio-themed-intro-restore-2', 'portfolio-themed-intro-restore-2');
+  load('/project-navigation-final-fix.js?v=project-navigation-final-fix-1', 'project-navigation-final-fix-1');
 })();
