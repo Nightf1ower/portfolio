@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV19) return;
-  window.__desktopSiteExperienceLoaderV19 = true;
+  if (window.__desktopSiteExperienceLoaderV20) return;
+  window.__desktopSiteExperienceLoaderV20 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -19,4 +19,5 @@
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
   load('/project-navigation-final-fix.js?v=project-navigation-final-fix-1', 'project-navigation-final-fix-1');
   load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-1', 'portfolio-stable-project-shell-1');
+  load('/portfolio-shell-theme-pink-fix.js?v=portfolio-shell-theme-pink-fix-1', 'portfolio-shell-theme-pink-fix-1');
 })();
