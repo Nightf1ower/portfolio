@@ -1,13 +1,12 @@
 (() => {
-  if (window.__portfolioStableProjectShellV1) return;
-  window.__portfolioStableProjectShellV1 = true;
+  if (window.__portfolioStableProjectShellV2) return;
+  window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-1';
+  const VERSION = 'portfolio-stable-project-shell-2';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
   const PROJECTS = [
     { slug:'zny', selector:'.zny-modal', title:'ZNY', chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand' },
     { slug:'fable', selector:'.fable-modal', title:'F | ABLE', chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand' },
-    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', chips:['GRAPHICS','POSTERS','PRINTS'], kind:'brand', bg:'#9b0014', fg:'#fff' },
     { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand' },
     { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand' },
     { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff' },
@@ -24,10 +23,9 @@
 
   const ALL_SELECTORS = PROJECTS.map(p => p.selector).join(',');
   const CLOSE_SELECTOR = [
-    '.zny-close','.fable-close','.su-close','.vtb-close','.cr-close','.mc-close','.stk-close',
-    '.pcg-close','.lcg-close','.pag-close','.blandetto-close','.bf-close','.bf-x',
-    '.anka-peresild-close','.album-covers-close','.project9006-toolbar__close','.project9006-close','.p9006-close',
-    '.pink-punk-fullscreen button'
+    '.zny-close','.fable-close','.su-close','.vtb-close','.cr-close','.mc-close','.m10-close','.stk-close',
+    '.pcg-close','.lcg-close','.pag-close','.blandetto-close','.bf-close','.bf-x','.bld-close',
+    '.anka-peresild-close','.album-covers-close','.project9006-toolbar__close','.project9006-close','.p9006-close'
   ].join(',');
 
   const norm = value => String(value || '').toUpperCase().replace(/Ё/g,'Е').replace(/\|/g,' ').replace(/[^A-ZА-Я0-9]+/g,' ').trim().replace(/\s+/g,' ');
@@ -38,6 +36,7 @@
     document.getElementById(STYLE_ID)?.remove();
     const style = document.createElement('style');
     style.id = STYLE_ID;
+    style.dataset.version = VERSION;
     style.textContent = `
       .portfolio-stable-head{position:fixed!important;inset:0 0 auto 0!important;z-index:1900000!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;width:100vw!important;min-height:4rem!important;margin:0!important;padding:.72rem clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid rgba(5,5,5,.12)!important;background:#fff!important;color:#050505!important;transform:none!important;animation:none!important;transition:none!important}
       .portfolio-stable-head__label,.portfolio-stable-head__close{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:2.25rem!important;margin:0!important;padding:.68rem 1rem!important;border:0!important;border-radius:0!important;background:#050505!important;color:#fff!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.24em!important;text-transform:uppercase!important;white-space:nowrap!important}
@@ -54,6 +53,32 @@
       .portfolio-stable-legacy-hidden{display:none!important;width:0!important;height:0!important;min-height:0!important;max-height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important;visibility:hidden!important}
       .portfolio-stable-copy{position:fixed!important;left:max(1rem,env(safe-area-inset-left))!important;bottom:max(1rem,env(safe-area-inset-bottom))!important;z-index:1900000!important;min-height:2.75rem!important;margin:0!important;padding:.75rem 1rem!important;border:1px solid #fff!important;background:#050505!important;color:#fff!important;font:900 .62rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;cursor:pointer!important}
       .portfolio-stable-copy:hover{background:#a6ff00!important;color:#050505!important;border-color:#050505!important}
+
+      /* Exactly one visible close control: the common shell button. Native controls stay in DOM only as click targets. */
+      .zny-modal .zny-close,
+      .fable-modal .fable-close,
+      .cr-modal .cr-close,
+      .blandetto-modal .blandetto-close,
+      .blandetto-modal .bf-close,
+      .blandetto-modal .bf-x,
+      .bf .blandetto-close,
+      .bf .bf-close,
+      .bf .bf-x,
+      .bf .bld-close,
+      .project9006-modal .project9006-toolbar__close,
+      .project9006-modal .project9006-close,
+      .project9006-modal .p9006-close,
+      .pcg-modal .pcg-close,
+      .mc-modal .mc-close,
+      .m10-modal .m10-close,
+      .stk-modal .stk-close,
+      .lcg-modal .lcg-close,
+      .album-covers-modal .album-covers-close,
+      .su-modal .su-close,
+      .anka-peresild-modal .anka-peresild-close,
+      .vtb-modal .vtb-close,
+      .collages-modal .pag-close{display:none!important}
+
       ${ALL_SELECTORS}{animation:none!important;transition:none!important}
       @media(max-width:820px){.portfolio-stable-head{min-height:3.65rem!important;padding:.62rem .75rem!important}.portfolio-stable-head__label,.portfolio-stable-head__close{min-height:2.05rem!important;padding:.62rem .72rem!important;font-size:.58rem!important;letter-spacing:.18em!important}.portfolio-stable-intro{padding:5.4rem 1rem 2.5rem!important}.portfolio-stable-intro__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}.portfolio-stable-intro__about{grid-template-columns:1fr!important;gap:1.25rem!important}.portfolio-stable-copy{display:none!important}}
     `;
@@ -62,11 +87,15 @@
 
   function projectFor(modal) { return PROJECTS.find(project => modal.matches(project.selector)) || null; }
 
-  function findClose(modal) {
-    const explicit = [...modal.querySelectorAll(CLOSE_SELECTOR)].find(node => !node.closest('.portfolio-stable-head') && isVisible(node));
+  function findClose(modal, visibleOnly = true) {
+    const explicit = [...modal.querySelectorAll(CLOSE_SELECTOR)].find(node => {
+      if (node.closest('.portfolio-stable-head,.desktop-unified-lightbox')) return false;
+      return !visibleOnly || isVisible(node);
+    });
     if (explicit) return explicit;
     return [...modal.querySelectorAll('button,[role="button"]')].find(button => {
       if (button.closest('.portfolio-stable-head,.desktop-unified-lightbox')) return false;
+      if (visibleOnly && !isVisible(button)) return false;
       const text = norm([button.textContent,button.getAttribute('aria-label'),button.getAttribute('title')].filter(Boolean).join(' '));
       return text === 'CLOSE' || text === 'ЗАКРЫТЬ' || text.includes('CLOSE PROJECT') || text.includes('ЗАКРЫТЬ ПРОЕКТ');
     }) || null;
@@ -114,7 +143,6 @@
       if (node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-project-navigation,.desktop-unified-lightbox')) return;
       if (!beforeMedia(node) || node.querySelector('img,video,picture,canvas')) return;
       const cls = String(node.className || '');
-      const text = norm(node.textContent);
       const headings = [...node.querySelectorAll('h1,h2,h3,h4')].map(h => norm(h.textContent));
       const hasIdentity = headings.includes(norm(project.title));
       const hasAbout = [...node.querySelectorAll('p,span,h1,h2,h3,h4')].some(child => aboutLabels.has(norm(child.textContent)));
@@ -125,7 +153,7 @@
     });
   }
 
-  function createHead(modal, project, close) {
+  function createHead(modal, project, nativeClose) {
     let head = modal.querySelector(':scope > .portfolio-stable-head');
     if (!head) {
       head = document.createElement('div');
@@ -136,9 +164,10 @@
       button.type = 'button';
       button.className = 'portfolio-stable-head__close';
       button.addEventListener('click', event => {
-        event.preventDefault(); event.stopPropagation();
-        const live = findClose(modal);
-        if (live) live.click();
+        event.preventDefault();
+        event.stopPropagation();
+        const target = nativeClose?.isConnected ? nativeClose : findClose(modal,false);
+        target?.click();
       });
       head.append(label,button);
       modal.prepend(head);
@@ -190,11 +219,11 @@
     if (!(modal instanceof HTMLElement) || modal.dataset.portfolioStableShell === VERSION || !isVisible(modal)) return;
     const project = projectFor(modal);
     if (!project) return;
-    const close = findClose(modal);
+    const nativeClose = findClose(modal,true) || findClose(modal,false);
     const aboutText = firstAboutText(modal);
-    const head = createHead(modal,project,close);
+    const head = createHead(modal,project,nativeClose);
     createIntro(modal,project,head,aboutText);
-    collapseLegacy(modal,project,close);
+    collapseLegacy(modal,project,nativeClose);
     modal.dataset.portfolioStableShell = VERSION;
     modal.style.setProperty('animation','none','important');
     modal.style.setProperty('transition','none','important');
