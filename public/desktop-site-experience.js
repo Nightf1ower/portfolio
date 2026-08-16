@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV26) return;
-  window.__desktopSiteExperienceLoaderV26 = true;
+  if (window.__desktopSiteExperienceLoaderV27) return;
+  window.__desktopSiteExperienceLoaderV27 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -17,7 +17,7 @@
   load('/portfolio-mobile-touchend-guard-v3.js?v=portfolio-mobile-touchend-guard-3', 'portfolio-mobile-touchend-guard-3');
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
-  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-1', 'portfolio-stable-project-shell-1');
+  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-2', 'portfolio-stable-project-shell-2');
   load('/portfolio-shell-theme-pink-fix.js?v=portfolio-shell-theme-pink-fix-2', 'portfolio-shell-theme-pink-fix-2');
   load('/portfolio-intro-dedupe-final.js?v=portfolio-intro-dedupe-final-1', 'portfolio-intro-dedupe-final-1');
 })();
