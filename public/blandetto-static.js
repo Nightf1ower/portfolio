@@ -5,16 +5,12 @@
     .fixed.inset-0.z-\[100\] h3,
     .fixed.inset-0.z-\[100\] p,
     .fixed.inset-0.z-\[100\] button,
-    .pink-punk-section__title,
-    .pink-punk-section__counter,
-    .pink-punk-section__note,
     .bf,
     .bf * {
       font-family: Arial, Helvetica, sans-serif !important;
     }
 
     .fixed.inset-0.z-\[100\] h3,
-    .pink-punk-section__title,
     .bf-t {
       font-weight: 900 !important;
       letter-spacing: -0.085em !important;
@@ -23,7 +19,6 @@
 
     .fixed.inset-0.z-\[100\] button,
     .fixed.inset-0.z-\[100\] p,
-    .pink-punk-section__counter,
     .bf-l,
     .bf-x,
     .bf-c {
@@ -40,37 +35,6 @@
       box-shadow: none !important;
     }
 
-    .pink-punk-fullscreen > div > .sticky,
-    .pink-punk-fullscreen > div > .sticky > *,
-    .pink-punk-fullscreen [class*="sticky"][class*="border"],
-    .pink-punk-modal .sticky,
-    .pink-punk-modal .sticky > * {
-      border: 0 !important;
-      border-top: 0 !important;
-      border-bottom: 0 !important;
-      border-color: transparent !important;
-      box-shadow: none !important;
-      outline: 0 !important;
-    }
-
-    .pink-punk-fullscreen > div > .sticky::before,
-    .pink-punk-fullscreen > div > .sticky::after,
-    .pink-punk-modal .sticky::before,
-    .pink-punk-modal .sticky::after {
-      content: none !important;
-      display: none !important;
-      border: 0 !important;
-      box-shadow: none !important;
-    }
-
-    .pink-punk-fullscreen > div > .sticky + *,
-    .pink-punk-modal .sticky + * {
-      border-top: 0 !important;
-      box-shadow: none !important;
-    }
-
-    /* Minimal logo previews should use their natural horizontal ratio.
-       The old square media box created a large fake blank area above them. */
     .bf .bf-s[data-bf-section="minimalLogo"] .bf-note {
       margin-bottom: 1.25rem !important;
     }

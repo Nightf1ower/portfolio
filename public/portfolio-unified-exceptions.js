@@ -10,71 +10,6 @@
   style.id = 'portfolio-unified-exceptions-style';
   style.dataset.version = VERSION;
   style.textContent = `
-    .pink-punk-fullscreen,
-    .pink-punk-fullscreen * {
-      font-family: Arial, Helvetica, sans-serif !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-gallery,
-    .pink-punk-fullscreen .pink-punk-gallery--grouped {
-      box-sizing: border-box !important;
-      width: 100% !important;
-      max-width: none !important;
-      margin-inline: 0 !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-brand,
-    .pink-punk-fullscreen .pink-punk-section {
-      box-sizing: border-box !important;
-      width: 100% !important;
-      max-width: none !important;
-      padding-top: clamp(4rem, 7vw, 7rem) !important;
-      padding-bottom: clamp(4rem, 7vw, 7rem) !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-section + .pink-punk-section {
-      margin-top: 0 !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-brand__title,
-    .pink-punk-fullscreen .pink-punk-section__title {
-      box-sizing: border-box !important;
-      width: 100% !important;
-      max-width: none !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      line-height: .9 !important;
-      letter-spacing: .03em !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-section__title {
-      margin-bottom: clamp(2rem, 4vw, 3.5rem) !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-brand__copy,
-    .pink-punk-fullscreen .pink-punk-section__note {
-      box-sizing: border-box !important;
-      width: 100% !important;
-      max-width: none !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      color: rgba(255,255,255,.82) !important;
-      font: 500 clamp(1rem, 1.25vw, 1.2rem)/1.45 Arial, Helvetica, sans-serif !important;
-      letter-spacing: 0 !important;
-      text-align: left !important;
-      text-wrap: pretty !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-brand__copy {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    .pink-punk-fullscreen .pink-punk-section__note {
-      margin-top: 0 !important;
-      margin-bottom: clamp(2rem, 4vw, 3.5rem) !important;
-    }
-
     .m10-modal {
       overflow-x: clip !important;
     }
@@ -148,8 +83,6 @@
     }
 
     @media (max-width: 640px) {
-      .pink-punk-fullscreen .pink-punk-brand,
-      .pink-punk-fullscreen .pink-punk-section,
       .m10-modal .m10-dxs-zone > .m10-section,
       .m10-modal .m10-dxs-zone .m10-dxs-materials-intro {
         padding-top: clamp(3rem, 12vw, 5rem) !important;
@@ -160,39 +93,6 @@
 
   function important(element, property, value) {
     if (element instanceof HTMLElement) element.style.setProperty(property, value, 'important');
-  }
-
-  function applyPinkPunk() {
-    const modal = document.querySelector('.pink-punk-fullscreen');
-    const gallery = modal?.querySelector('.pink-punk-gallery');
-    if (!modal || !gallery) return;
-
-    let ancestor = gallery;
-    while (ancestor && ancestor !== modal) {
-      important(ancestor, 'box-sizing', 'border-box');
-      important(ancestor, 'width', '100%');
-      important(ancestor, 'max-width', 'none');
-      important(ancestor, 'margin-left', '0');
-      important(ancestor, 'margin-right', '0');
-      ancestor = ancestor.parentElement;
-    }
-
-    modal.querySelectorAll('.pink-punk-brand__title, .pink-punk-section__title').forEach((title) => {
-      important(title, 'width', '100%');
-      important(title, 'max-width', 'none');
-      important(title, 'line-height', '.9');
-      important(title, 'letter-spacing', '.03em');
-    });
-
-    modal.querySelectorAll('.pink-punk-brand__copy, .pink-punk-section__note').forEach((copy) => {
-      important(copy, 'width', '100%');
-      important(copy, 'max-width', 'none');
-      important(copy, 'font-family', 'Arial, Helvetica, sans-serif');
-      important(copy, 'font-size', 'clamp(1rem, 1.25vw, 1.2rem)');
-      important(copy, 'font-weight', '500');
-      important(copy, 'line-height', '1.45');
-      important(copy, 'letter-spacing', '0');
-    });
   }
 
   function applyDxs() {
@@ -237,7 +137,6 @@
 
   function apply() {
     ensureStyleLast();
-    applyPinkPunk();
     applyDxs();
   }
 

@@ -15,8 +15,6 @@
     '.blandetto-modal',
     '.fable-modal',
     '.zny-modal',
-    '.pink-punk-fullscreen',
-    '.pink-punk-modal',
     '.album-covers-modal',
     '.collages-modal',
     '.project9006-modal',
@@ -28,7 +26,6 @@
     '.fable-section',
     '.zny-section',
     '.bf-s',
-    '.pink-punk-section',
     '.m10-section',
     '.cr-section',
     '.stk-section',
@@ -56,14 +53,12 @@
           --project-copy-media-gap: clamp(2rem, 2.75vw, 2.75rem);
         }
 
-        /* Keep every project start compact: header -> first brand/project content. */
         :where(${ROOTS}) :where(
           .m10-hero,
           .cr-hero,
           .fable-intro,
           .zny-brand,
           .bf-brand,
-          .pink-punk-brand,
           .project9006-brand,
           .m10-project-intro,
           .stk-project-intro,
@@ -84,14 +79,12 @@
           min-height: 0 !important;
         }
 
-        /* Remove extra spacer margins directly below project headers. */
         :where(${ROOTS}) :where(
           .m10-head,
           .cr-head,
           .fable-head,
           .zny-head,
           .bf-bar,
-          .pink-punk-head,
           .project9006-head,
           [class$="-head"],
           [class*="-head "]
@@ -99,12 +92,10 @@
           margin-top: 0 !important;
         }
 
-        /* Brand title -> description stays intact; description -> divider is compact. */
         :where(${ROOTS}) :where(
           .fable-intro,
           .zny-brand,
           .bf-brand,
-          .pink-punk-brand,
           .project9006-brand,
           .m10-project-intro,
           .cr-hero,
@@ -122,7 +113,6 @@
           padding-bottom: var(--project-layout-gap) !important;
         }
 
-        /* Divider -> section title and section content -> next divider use one rhythm. */
         :where(${ROOTS}) :where(${SECTION_SELECTOR}) {
           padding-top: var(--project-layout-gap) !important;
           padding-bottom: var(--project-layout-gap) !important;
@@ -132,12 +122,10 @@
           margin-top: 0 !important;
         }
 
-        /* Title -> description. */
         :where(${ROOTS}) :where(
           .fable-section-head,
           .zny-section-head,
           .bf-head,
-          .pink-punk-section__head,
           .project9006-section-head,
           [class$="-section-head"],
           [class*="-section-head "]
@@ -149,7 +137,6 @@
           .fable-section-head,
           .zny-section-head,
           .bf-head,
-          .pink-punk-section__head,
           .project9006-section-head,
           [class$="-section-head"],
           [class*="-section-head "]
@@ -168,13 +155,11 @@
           margin-bottom: var(--project-title-copy-gap) !important;
         }
 
-        /* Description -> images. */
         :where(${ROOTS}) :where(
           .portfolio-copy-before-media,
           .fable-section-description,
           .zny-section-copy,
           .bf-note,
-          .pink-punk-section__note,
           .project9006-section-copy,
           .m10-section-copy,
           .m10-copy-update,
@@ -190,12 +175,10 @@
           margin-bottom: var(--project-copy-media-gap) !important;
         }
 
-        /* Intro copy uses the parent padding, not an additional oversized margin. */
         :where(${ROOTS}) :where(
           .fable-description,
           .zny-copy,
           .bf-brand-copy,
-          .pink-punk-brand__copy,
           .project9006-brand-copy,
           .m10-project-copy,
           .cr-description,

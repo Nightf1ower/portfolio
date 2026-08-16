@@ -1,10 +1,10 @@
 (() => {
-  if (window.__pinkPunkLayoutV5) return;
+  if (window.__pinkPunkLayoutV6) return;
+  window.__pinkPunkLayoutV6 = true;
   window.__pinkPunkLayoutV5 = true;
-  // Prevent any stale cached V4 copy from running after this canonical layout.
   window.__pinkPunkLayoutV4 = true;
 
-  const VERSION = 'pink-layout-5';
+  const VERSION = 'pink-layout-6';
   const COPY = {
     ru: {
       aboutLabel: 'О БРЕНДЕ',
@@ -116,7 +116,7 @@
         max-width:none!important;
         min-height:0!important;
         margin:0!important;
-        padding:clamp(7rem,9vw,9rem) 0 clamp(3rem,5vw,5rem)!important;
+        padding:clamp(7rem,9vw,9rem) 0 clamp(4rem,7vw,6rem)!important;
       }
       .pink-punk-brand__title{
         width:100%!important;
@@ -124,8 +124,8 @@
         margin:0!important;
         padding:0!important;
         color:#fff!important;
-        font:900 clamp(4.6rem,10.6vw,12rem)/.79 Arial,Helvetica,sans-serif!important;
-        letter-spacing:-.075em!important;
+        font:900 clamp(5.5rem,17vw,14rem)/.7 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.1em!important;
         text-transform:uppercase!important;
         transform:none!important;
         transition:none!important;
@@ -174,16 +174,15 @@
       .pink-punk-brand__copy{
         box-sizing:border-box!important;
         display:block!important;
-        width:100%!important;
-        max-width:none!important;
+        width:min(100%,58rem)!important;
+        max-width:58rem!important;
         margin:0!important;
         padding:0!important;
-        color:#fff!important;
-        font:600 clamp(1.15rem,2vw,2rem)/1.28 Arial,Helvetica,sans-serif!important;
-        letter-spacing:-.025em!important;
+        color:rgba(255,255,255,.78)!important;
+        font:600 clamp(1rem,1.45vw,1.25rem)/1.48 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.018em!important;
         text-align:left!important;
         white-space:pre-line!important;
-        text-wrap:pretty!important;
       }
       .pink-punk-section{
         position:relative!important;
@@ -222,7 +221,6 @@
         letter-spacing:-.075em!important;
         text-transform:uppercase!important;
         white-space:normal!important;
-        text-wrap:wrap!important;
         transform:none!important;
         translate:none!important;
         scale:none!important;
@@ -240,12 +238,11 @@
         max-width:58rem!important;
         margin:1.3rem 0 2.2rem!important;
         padding:0!important;
-        color:rgba(255,255,255,.82)!important;
+        color:rgba(255,255,255,.78)!important;
         font:600 clamp(1rem,1.45vw,1.25rem)/1.48 Arial,Helvetica,sans-serif!important;
         letter-spacing:-.018em!important;
         text-align:left!important;
         white-space:pre-line!important;
-        text-wrap:pretty!important;
         transform:none!important;
         transition:none!important;
         animation:none!important;
@@ -270,8 +267,8 @@
         .pink-punk-fullscreen>div{padding-left:1rem!important;padding-right:1rem!important}
         .pink-punk-fullscreen>div>.sticky{min-height:3.65rem!important;padding:.62rem .75rem!important}
         .pink-punk-brand{padding-top:5.5rem!important}
-        .pink-punk-brand__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}
-        .pink-punk-brand__copy{font-size:clamp(1.05rem,5vw,1.35rem)!important;line-height:1.35!important}
+        .pink-punk-brand__title{font-size:clamp(5rem,30vw,8rem)!important;line-height:.7!important}
+        .pink-punk-brand__copy{font-size:1rem!important;line-height:1.48!important}
         .pink-punk-section__title{font-size:clamp(2.35rem,11vw,4rem)!important;line-height:.86!important}
         .pink-punk-section__grid{grid-template-columns:1fr!important}
         .pink-punk-frame,.pink-punk-frame:hover{transform:none!important;box-shadow:none!important}

@@ -34,7 +34,6 @@
       text-transform:uppercase!important;
       white-space:normal!important;
     }
-    .pink-punk-fullscreen .portfolio-qa-stable-title,.pink-punk-fullscreen .portfolio-qa-stable-title *{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important;backface-visibility:hidden!important;-webkit-font-smoothing:antialiased!important}
     .vtb-head,.portfolio-qa-static-head{position:sticky!important;top:0!important;z-index:900500!important;transform:none!important;will-change:auto!important}
 
     .project9006-modal{position:fixed!important;inset:0!important;box-sizing:border-box!important;width:100vw!important;max-width:none!important;height:100dvh!important;min-height:100dvh!important;margin:0!important;overflow-y:auto!important;overflow-x:hidden!important}
@@ -72,10 +71,9 @@
     if(!brands){brands=document.createElement('span');brands.className='portfolio-hero-brands';profession.append(brands)}
     if(brands.textContent!==PROJECT_NAMES)brands.textContent=PROJECT_NAMES;
   }
-  function fixPinkTitle(){const modal=document.querySelector('.pink-punk-fullscreen');if(!modal)return;[...modal.querySelectorAll('h1,h2,h3,p')].forEach(node=>{if(norm(node.textContent).includes('GRAPHIC T-SHIRT DESIGN'))node.classList.add('portfolio-qa-stable-title')})}
   function fixStaticHeads(){document.querySelectorAll('.vtb-head').forEach(node=>node.classList.add('portfolio-qa-static-head'));const anka=document.querySelector('.anka-peresild-modal');const close=anka?.querySelector('.anka-peresild-close,[class*="close"],button[aria-label*="close" i]');if(close){const head=close.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"]')||close.parentElement;if(head&&head!==anka)head.classList.add('portfolio-qa-static-head')}}
   function fixNav(){const slug=new URLSearchParams(location.search).get('project')||'';document.querySelectorAll('.desktop-project-navigation').forEach(nav=>{if(nav.dataset.qaProject!==slug)nav.dataset.qaProject=slug})}
-  function apply(){fixHero();fixPinkTitle();fixStaticHeads();fixNav()}
+  function apply(){fixHero();fixStaticHeads();fixNav()}
 
   let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;apply()})};
   new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true,characterData:true});

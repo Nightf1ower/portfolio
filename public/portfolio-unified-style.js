@@ -6,7 +6,7 @@
   const STYLE_ID = 'portfolio-unified-style-v4';
   const MODAL_SELECTOR = [
     '.m10-modal','.stk-modal','.posters-modal','.su-modal','.vtb-modal','.bf','.blandetto-modal','.fable-modal','.zny-modal',
-    '.pink-punk-modal','.pink-punk-fullscreen','.album-covers-modal','.collages-modal','.project9006-modal','.pcg-modal','.pag-modal','.cr-modal','.anka-peresild-modal',
+    '.album-covers-modal','.collages-modal','.project9006-modal','.pcg-modal','.pag-modal','.cr-modal','.anka-peresild-modal',
   ].join(',');
 
   ['portfolio-unified-style-v1','portfolio-unified-style-v2','portfolio-unified-style-v3','portfolio-unified-style-v4']
@@ -29,7 +29,7 @@
     html,body,button,input,textarea,select,#works,#works *{font-family:var(--portfolio-font)!important}
     :where(${MODAL_SELECTOR}),:where(${MODAL_SELECTOR}) *{font-family:var(--portfolio-font)!important}
     :where(${MODAL_SELECTOR}) > :where([class$="-inner"],[class*="-inner "]),
-    :where(${MODAL_SELECTOR}) :where(.m10-inner,.stk-inner,.posters-inner,.su-inner,.vtb-inner,.bf-i,.blandetto-inner,.fable-inner,.zny-inner,.pink-punk-inner,.album-covers-inner,.collages-inner,.project9006-inner,.pag-inner,.pcg-inner,.cr-inner,.anka-peresild-inner){
+    :where(${MODAL_SELECTOR}) :where(.m10-inner,.stk-inner,.posters-inner,.su-inner,.vtb-inner,.bf-i,.blandetto-inner,.fable-inner,.zny-inner,.album-covers-inner,.collages-inner,.project9006-inner,.pag-inner,.pcg-inner,.cr-inner,.anka-peresild-inner){
       box-sizing:border-box!important;width:100%!important;max-width:none!important
     }
     :where(${MODAL_SELECTOR}) :where(h1,h2,h3,.portfolio-unified-title){
@@ -99,7 +99,6 @@
     [0,80,220,520,1100].forEach((delay) => window.setTimeout(() => apply(root || document), delay));
   }
 
-  // Only watch direct body children for newly mounted project modals.
   new MutationObserver((mutations) => {
     mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => {
       if (!(node instanceof Element)) return;
