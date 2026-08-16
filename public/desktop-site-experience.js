@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV25) return;
-  window.__desktopSiteExperienceLoaderV25 = true;
+  if (window.__desktopSiteExperienceLoaderV26) return;
+  window.__desktopSiteExperienceLoaderV26 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -12,6 +12,7 @@
     document.head.append(script);
   };
 
+  load('/about-content-update.js?v=about-content-update-4', 'about-content-update-4');
   load('/portfolio-mobile-gestures-v2.js?v=portfolio-mobile-gestures-2', 'portfolio-mobile-gestures-2');
   load('/portfolio-mobile-touchend-guard-v3.js?v=portfolio-mobile-touchend-guard-3', 'portfolio-mobile-touchend-guard-3');
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
