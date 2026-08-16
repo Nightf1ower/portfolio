@@ -9,11 +9,10 @@
     (document.currentScript || document.body).after(script);
   };
 
-  // Prevent the shared gallery handlers from treating an entire Blandetto
-  // section as a clickable image group. Only a direct click on an image may
-  // open the lightbox; headings, copy and empty background remain inert.
-  if (!window.__blandettoImageOnlyClickGuardV1) {
-    window.__blandettoImageOnlyClickGuardV1 = true;
+  // Prevent shared gallery handlers from treating an entire Blandetto section
+  // as a clickable image group. Shell controls/navigation are explicitly allowed.
+  if (!window.__blandettoImageOnlyClickGuardV2) {
+    window.__blandettoImageOnlyClickGuardV2 = true;
 
     document.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
@@ -25,6 +24,11 @@
         '.bf-x',
         '.blandetto-close',
         '.bld-close',
+        '.portfolio-stable-head',
+        '.portfolio-stable-head__close',
+        '.desktop-project-navigation',
+        '.desktop-project-navigation__button',
+        '.portfolio-stable-copy',
         '.bf-light',
         '.blandetto-lightbox',
         '.pul-overlay',
