@@ -1,5 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV34) return;
+  if (window.__desktopSiteExperienceLoaderV35) return;
+  window.__desktopSiteExperienceLoaderV35 = true;
   window.__desktopSiteExperienceLoaderV34 = true;
   window.__desktopSiteExperienceLoaderV33 = true;
   window.__desktopSiteExperienceLoaderV32 = true;
@@ -16,7 +17,7 @@
     document.head.append(script);
   };
 
-  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-6', 'portfolio-stable-project-shell-6');
+  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-7', 'portfolio-stable-project-shell-7');
   load('/about-content-update.js?v=about-content-update-4', 'about-content-update-4');
   load('/portfolio-mobile-gestures-v2.js?v=portfolio-mobile-gestures-2', 'portfolio-mobile-gestures-2');
   load('/portfolio-mobile-touchend-guard-v3.js?v=portfolio-mobile-touchend-guard-3', 'portfolio-mobile-touchend-guard-3');

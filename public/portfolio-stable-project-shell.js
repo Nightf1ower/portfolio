@@ -1,18 +1,19 @@
 (() => {
-  if (window.__portfolioStableProjectShellV6) return;
+  if (window.__portfolioStableProjectShellV7) return;
+  window.__portfolioStableProjectShellV7 = true;
   window.__portfolioStableProjectShellV6 = true;
   window.__portfolioStableProjectShellV5 = true;
   window.__portfolioStableProjectShellV4 = true;
   window.__portfolioStableProjectShellV3 = true;
   window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-6';
+  const VERSION = 'portfolio-stable-project-shell-7';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
 
   const PROJECTS = [
     { slug:'zny', selector:'.zny-modal', title:'ZNY', aliases:['ZNY'], chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand', aboutHints:['.zny-brand-copy','.zny-about-copy','.zny-intro-copy','.zny-copy'] },
     { slug:'fable', selector:'.fable-modal', title:'F | ABLE', aliases:['F | ABLE','FABLE'], chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand', aboutHints:['.fable-brand-copy','.fable-about-copy','.fable-intro-copy','.fable-copy'] },
-    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', aliases:['PINK PUNK','PINKPUNK'], chips:[], kind:'brand', bg:'#9b0014', fg:'#fff', headerOnly:true },
+    { slug:'pink-punk', selector:'.pink-punk-fullscreen', title:'PINK PUNK', aliases:['PINK PUNK','PINKPUNK'], chips:[], kind:'brand', bg:'#9b0014', fg:'#fff', nativeHeader:true },
     { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', aliases:['CARNIVAL RECORDS'], chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand', aboutHints:['.cr-brand-copy','.cr-about-copy','.cr-intro-copy','.cr-lead p','.cr-copy'] },
     { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', aliases:['BLANDETTO'], chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand', aboutHints:['.bf-brand-copy','.blandetto-brand-copy','.bf-about-copy'], legacy:['.bf-brand','.bf-h'] },
     { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', aliases:['NINETY Z S','90.06','90 06'], chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff', aboutHints:['.project9006-brand-copy'], legacy:['.project9006-brand'] },
@@ -154,7 +155,6 @@
     const media = firstMedia(modal);
     const aliases = new Set((project.aliases || [project.title]).map(norm));
     const accepted = new Set([project.title,...(project.aliases || []),...project.chips].map(norm));
-
     const originalHead = nativeHead(nativeClose,modal);
     if (originalHead && originalHead !== modal) hide(originalHead);
 
@@ -237,6 +237,25 @@
     return head;
   }
 
+  function adoptNativeHead(modal, project, nativeClose, theme) {
+    const head = nativeHead(nativeClose,modal);
+    if (!(head instanceof HTMLElement) || !(nativeClose instanceof HTMLElement)) return null;
+    modal.querySelectorAll(':scope > .portfolio-stable-head').forEach(node => node.remove());
+    head.classList.remove('portfolio-stable-legacy-hidden');
+    head.classList.add('portfolio-stable-head','portfolio-stable-native-head');
+    head.style.setProperty('--psh-bg',theme.bg);
+    head.style.setProperty('--psh-fg',theme.fg);
+    head.style.setProperty('--psh-border',theme.fg === '#fff' ? 'rgba(255,255,255,.28)' : 'rgba(5,5,5,.14)');
+    const label = [...head.children].find(node => node !== nativeClose) || head.querySelector('p,span');
+    if (label instanceof HTMLElement) {
+      label.classList.add('portfolio-stable-head__label');
+      label.textContent = project.title;
+    }
+    nativeClose.classList.add('portfolio-stable-head__close');
+    nativeClose.textContent = language() === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
+    return head;
+  }
+
   function createIntro(modal, project, head, theme) {
     let intro = modal.querySelector(':scope > .portfolio-stable-intro');
     if (!intro) {
@@ -304,11 +323,10 @@
     if (!project || modal.children.length === 0) return false;
     const nativeClose = findClose(modal);
     const theme = detectTheme(modal,project);
-    const head = createHead(modal,project,theme);
-    const originalHead = nativeHead(nativeClose,modal);
-    if (originalHead && originalHead !== modal) hide(originalHead);
 
-    if (project.headerOnly) {
+    if (project.nativeHeader) {
+      const head = adoptNativeHead(modal,project,nativeClose,theme);
+      if (!head) return false;
       modal.dataset.portfolioStableShell = VERSION;
       modal.style.setProperty('animation','none','important');
       modal.style.setProperty('transition','none','important');
@@ -316,6 +334,9 @@
       return true;
     }
 
+    const head = createHead(modal,project,theme);
+    const originalHead = nativeHead(nativeClose,modal);
+    if (originalHead && originalHead !== modal) hide(originalHead);
     const intro = createIntro(modal,project,head,theme);
     const about = findAbout(modal,project);
     syncAbout(intro,about);
@@ -347,7 +368,7 @@
         if (parentModal) {
           const headerish = added.matches?.('header,.sticky,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],button,[role="button"]')
             || added.querySelector?.('header,.sticky,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],button,[role="button"]');
-          const missingHead = !parentModal.querySelector(':scope > .portfolio-stable-head');
+          const missingHead = !parentModal.querySelector('.portfolio-stable-head');
           const uninitialized = parentModal.dataset.portfolioStableShell !== VERSION;
           if (headerish || missingHead || uninitialized) candidates.add(parentModal);
         }
@@ -361,7 +382,7 @@
   new MutationObserver(() => {
     document.querySelectorAll(ALL_SELECTORS).forEach(modal => {
       const project = projectFor(modal);
-      const head = modal.querySelector(':scope > .portfolio-stable-head');
+      const head = modal.querySelector('.portfolio-stable-head');
       const intro = modal.querySelector(':scope > .portfolio-stable-intro');
       if (head) head.querySelector('.portfolio-stable-head__close').textContent = language()==='ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
       if (intro && project) intro.querySelector('.portfolio-stable-intro__about-label').textContent = project.kind === 'brand'
