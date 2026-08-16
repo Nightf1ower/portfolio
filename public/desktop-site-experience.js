@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV11) return;
-  window.__desktopSiteExperienceLoaderV11 = true;
+  if (window.__desktopSiteExperienceLoaderV12) return;
+  window.__desktopSiteExperienceLoaderV12 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -18,4 +18,5 @@
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
   load('/portfolio-fixed-project-header.js?v=portfolio-fixed-project-header-2', 'portfolio-fixed-project-header-2');
   load('/desktop-site-experience-v2.js?v=desktop-site-experience-2', 'desktop-site-experience-2');
+  load('/portfolio-unified-project-intro.js?v=portfolio-unified-project-intro-1', 'portfolio-unified-project-intro-1');
 })();
