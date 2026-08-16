@@ -1,8 +1,8 @@
 (() => {
-  if (window.__portfolioIntroDedupeFinalV1) return;
-  window.__portfolioIntroDedupeFinalV1 = true;
+  if (window.__portfolioIntroDedupeFinalV2) return;
+  window.__portfolioIntroDedupeFinalV2 = true;
 
-  const VERSION = 'portfolio-intro-dedupe-final-1';
+  const VERSION = 'portfolio-intro-dedupe-final-2';
   const STYLE_ID = 'portfolio-intro-dedupe-final-style';
   const MODALS = '.zny-modal,.fable-modal,.pink-punk-fullscreen,.cr-modal,.blandetto-modal,.bf,.project9006-modal,.pcg-modal,.mc-modal,.m10-modal,.stk-modal,.lcg-modal,.album-covers-modal,.su-modal,.anka-peresild-modal,.vtb-modal,.collages-modal';
   const ABOUT_LABELS = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
@@ -25,12 +25,43 @@
         width:100%!important;
         max-width:none!important;
       }
-      .portfolio-stable-intro__about-label{
+
+      /* FABLE is the canonical ABOUT badge. Every project uses exactly this visual treatment. */
+      .portfolio-stable-intro__about-label,
+      .pink-punk-fullscreen .pink-punk-brand__label,
+      .project9006-modal .project9006-brand-label,
+      .portfolio-about-label-standard{
+        box-sizing:border-box!important;
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
         align-self:flex-start!important;
         justify-self:start!important;
-        margin-left:0!important;
-        margin-right:0!important;
+        width:max-content!important;
+        max-width:100%!important;
+        min-height:0!important;
+        height:auto!important;
+        margin:0!important;
+        padding:.6rem .8rem!important;
+        border:0!important;
+        border-radius:0!important;
+        background:#050505!important;
+        color:#fff!important;
+        font:900 .64rem/1 Arial,Helvetica,sans-serif!important;
+        letter-spacing:.2em!important;
+        text-align:left!important;
+        text-transform:uppercase!important;
+        white-space:nowrap!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
       }
+
+      .pink-punk-fullscreen .pink-punk-brand__label,
+      .project9006-modal .project9006-brand-label{
+        margin-bottom:1.25rem!important;
+      }
+
       .portfolio-stable-intro__about-text{
         box-sizing:border-box!important;
         display:block!important;
@@ -79,6 +110,14 @@
     node.classList.add('portfolio-intro-duplicate-hidden');
   }
 
+  function standardizeNativeAboutLabels(root = document) {
+    root.querySelectorAll?.('.pink-punk-brand__label,.project9006-brand-label').forEach(node => {
+      if (!(node instanceof HTMLElement)) return;
+      if (!ABOUT_LABELS.has(norm(node.textContent))) return;
+      node.classList.add('portfolio-about-label-standard');
+    });
+  }
+
   function hideDuplicateChipGroups(modal, intro) {
     const wanted = chipSet(intro);
     if (wanted.size < 2) return;
@@ -116,7 +155,6 @@
       if (canonicalText && text === canonicalText) hide(node);
     });
 
-    // If an old intro wrapper now contains only hidden nodes/whitespace, collapse the wrapper too.
     [...modal.querySelectorAll('section,div')].forEach(wrapper => {
       if (!(wrapper instanceof HTMLElement) || wrapper === intro || wrapper.closest('.portfolio-stable-intro')) return;
       if (wrapper.closest('.desktop-project-navigation,.desktop-unified-lightbox')) return;
@@ -136,8 +174,10 @@
 
   function cleanModal(modal) {
     if (!(modal instanceof HTMLElement)) return false;
+    standardizeNativeAboutLabels(modal);
     const intro = modal.querySelector(':scope > .portfolio-stable-intro');
     if (!(intro instanceof HTMLElement)) return false;
+    intro.querySelector('.portfolio-stable-intro__about-label')?.classList.add('portfolio-about-label-standard');
     hideDuplicateChipGroups(modal,intro);
     hideDuplicateAbout(modal,intro);
     modal.dataset.portfolioIntroDedupe = VERSION;
@@ -145,6 +185,7 @@
   }
 
   function cleanAll() {
+    standardizeNativeAboutLabels(document);
     document.querySelectorAll(MODALS).forEach(cleanModal);
   }
 
@@ -162,7 +203,10 @@
     for (const record of records) {
       for (const node of record.addedNodes) {
         if (!(node instanceof Element)) continue;
-        if (node.matches('.portfolio-stable-intro') || node.querySelector('.portfolio-stable-intro')) {
+        if (
+          node.matches('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label') ||
+          node.querySelector('.portfolio-stable-intro,.pink-punk-brand__label,.project9006-brand-label')
+        ) {
           schedule();
           return;
         }
