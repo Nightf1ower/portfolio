@@ -1,26 +1,28 @@
 (() => {
-  if (window.__portfolioStableProjectShellV4) return;
+  if (window.__portfolioStableProjectShellV5) return;
+  window.__portfolioStableProjectShellV5 = true;
   window.__portfolioStableProjectShellV4 = true;
   window.__portfolioStableProjectShellV3 = true;
   window.__portfolioStableProjectShellV2 = true;
 
-  const VERSION = 'portfolio-stable-project-shell-4';
+  const VERSION = 'portfolio-stable-project-shell-5';
   const STYLE_ID = 'portfolio-stable-project-shell-style';
+
   const PROJECTS = [
-    { slug:'zny', selector:'.zny-modal', title:'ZNY', chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand' },
-    { slug:'fable', selector:'.fable-modal', title:'F | ABLE', chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand' },
-    { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand' },
-    { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand' },
-    { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff' },
-    { slug:'posters', selector:'.pcg-modal', title:'POSTERS', chips:['INFOGRAPHICS','PROJECTS','PARTIES'], kind:'project', bg:'#2C3D55', fg:'#fff' },
-    { slug:'merch', selector:'.mc-modal,.m10-modal', title:'MERCH', chips:['POSTERS','PRINTS','AI ILLUSTRATIONS'], kind:'project', bg:'#87CEEB', fg:'#050505' },
-    { slug:'stickers', selector:'.stk-modal', title:'STICKERS', chips:['MNU','NIGHTFLOWER'], kind:'project' },
-    { slug:'logos', selector:'.lcg-modal', title:'LOGOS', chips:['IDENTITY','BRANDING','DEVELOPMENT'], kind:'project' },
-    { slug:'album-covers', selector:'.album-covers-modal', title:'ALBUM COVERS', chips:['COVER ART','GRAPHICS'], kind:'project' },
-    { slug:'stay-ugly', selector:'.su-modal', title:'STAY UGLY', chips:['DEVELOPMENT','LOOKBOOK'], kind:'brand' },
-    { slug:'anka-peresild', selector:'.anka-peresild-modal', title:'ANKA PERESILD', chips:['APPAREL','AI ILLUSTRATIONS','MOCKUPS'], kind:'brand' },
-    { slug:'vtb-design-team', selector:'.vtb-modal', title:'VTB DESIGN TEAM', chips:['MERCH','ACCESSORIES','PRINTS'], kind:'project', bg:'#ff0101', fg:'#050505' },
-    { slug:'collages-photo-edit', selector:'.collages-modal', title:'COLLAGES PHOTO EDIT', chips:['MY OWN EDITS'], kind:'project' },
+    { slug:'zny', selector:'.zny-modal', title:'ZNY', aliases:['ZNY'], chips:['GRAPHIC DESIGN','PRINTS','CAMPAIGN','STICKERS'], kind:'brand', aboutHints:['.zny-brand-copy','.zny-about-copy','.zny-intro-copy','.zny-copy'] },
+    { slug:'fable', selector:'.fable-modal', title:'F | ABLE', aliases:['F | ABLE','FABLE'], chips:['LOGOS','GRAPHICS','APPAREL'], kind:'brand', aboutHints:['.fable-brand-copy','.fable-about-copy','.fable-intro-copy','.fable-copy'] },
+    { slug:'carnival-records', selector:'.cr-modal', title:'CARNIVAL RECORDS', aliases:['CARNIVAL RECORDS'], chips:['ALBUM COVERS','GRAPHICS','MERCH'], kind:'brand', aboutHints:['.cr-brand-copy','.cr-about-copy','.cr-intro-copy','.cr-lead p','.cr-copy'] },
+    { slug:'blandetto', selector:'.blandetto-modal,.bf', title:'BLANDETTO', aliases:['BLANDETTO'], chips:['LOGOS','GRAPHICS','ACCESSORIES'], kind:'brand', aboutHints:['.bf-brand-copy','.blandetto-brand-copy','.bf-about-copy'], legacy:['.bf-brand','.bf-h'] },
+    { slug:'ninety-z-s', selector:'.project9006-modal', title:'NINETY Z S', aliases:['NINETY Z S','90.06','90 06'], chips:['IDENTITY','PENDANT','LOOKBOOK','POSTERS'], kind:'brand', bg:'#050505', fg:'#fff', aboutHints:['.project9006-brand-copy'], legacy:['.project9006-brand'] },
+    { slug:'posters', selector:'.pcg-modal', title:'POSTERS', aliases:['POSTERS'], chips:['INFOGRAPHICS','PROJECTS','PARTIES'], kind:'project', bg:'#2C3D55', fg:'#fff', aboutHints:['.pcg-project-copy','.pcg-about-copy','.pcg-intro-copy','.pcg-copy'] },
+    { slug:'merch', selector:'.mc-modal,.m10-modal', title:'MERCH', aliases:['MERCH'], chips:['POSTERS','PRINTS','AI ILLUSTRATIONS'], kind:'project', bg:'#87CEEB', fg:'#050505', aboutHints:['.m10-project-copy','.mc-project-copy','.m10-intro-copy'] },
+    { slug:'stickers', selector:'.stk-modal', title:'STICKERS', aliases:['STICKERS'], chips:['MNU','NIGHTFLOWER'], kind:'project', aboutHints:['.stk-project-copy','.stk-about-copy','.stk-intro-copy'] },
+    { slug:'logos', selector:'.lcg-modal', title:'LOGOS', aliases:['LOGOS'], chips:['IDENTITY','BRANDING','DEVELOPMENT'], kind:'project', aboutHints:['.lcg-project-copy','.lcg-about-copy','.lcg-intro-copy','.lcg-copy'] },
+    { slug:'album-covers', selector:'.album-covers-modal', title:'ALBUM COVERS', aliases:['ALBUM COVERS'], chips:['COVER ART','GRAPHICS'], kind:'project', aboutHints:['.album-covers-project-copy','.album-covers-about-copy','.album-covers-intro-copy'] },
+    { slug:'stay-ugly', selector:'.su-modal', title:'STAY UGLY', aliases:['STAY UGLY','STAYUGLY'], chips:['DEVELOPMENT','LOOKBOOK'], kind:'brand', aboutHints:['.su-brand-copy','.su-project-copy','.su-about-copy','.su-intro-copy','.su-copy'] },
+    { slug:'anka-peresild', selector:'.anka-peresild-modal', title:'ANKA PERESILD', aliases:['ANKA PERESILD'], chips:['APPAREL','AI ILLUSTRATIONS','MOCKUPS'], kind:'brand', aboutHints:['.anka-peresild-brand-copy','.anka-peresild-about-copy','.anka-peresild-intro-copy','.anka-peresild-copy'] },
+    { slug:'vtb-design-team', selector:'.vtb-modal', title:'VTB DESIGN TEAM', aliases:['VTB DESIGN TEAM'], chips:['MERCH','ACCESSORIES','PRINTS'], kind:'project', bg:'#ff0101', fg:'#050505', aboutHints:['.vtb-project-intro__text','.vtb-project-copy','.vtb-about-copy'], legacy:['.vtb-project-intro'] },
+    { slug:'collages-photo-edit', selector:'.collages-modal', title:'COLLAGES PHOTO EDIT', aliases:['COLLAGES PHOTO EDIT','COLLAGES'], chips:['MY OWN EDITS'], kind:'project', aboutHints:['.collages-project-copy','.collages-about-copy','.collages-intro-copy','.pag-copy'] },
   ];
 
   const ALL_SELECTORS = PROJECTS.map(project => project.selector).join(',');
@@ -29,9 +31,12 @@
     '.pcg-close','.lcg-close','.pag-close','.blandetto-close','.bf-close','.bf-x','.bld-close',
     '.anka-peresild-close','.album-covers-close','.project9006-toolbar__close','.project9006-close','.p9006-close'
   ].join(',');
+  const ABOUT_LABELS = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
 
   const norm = value => String(value || '').toUpperCase().replace(/Ё/g,'Е').replace(/\|/g,' ').replace(/[^A-ZА-Я0-9]+/g,' ').trim().replace(/\s+/g,' ');
   const language = () => document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en';
+  const textOf = node => String(node?.textContent || '').replace(/\s+/g,' ').trim();
+  const hide = node => { if (node instanceof HTMLElement) node.classList.add('portfolio-stable-legacy-hidden'); };
 
   function installStyles() {
     document.getElementById(STYLE_ID)?.remove();
@@ -54,7 +59,6 @@
       .portfolio-stable-copy{position:fixed!important;left:max(1rem,env(safe-area-inset-left))!important;bottom:max(1rem,env(safe-area-inset-bottom))!important;z-index:1900000!important;min-height:2.75rem!important;margin:0!important;padding:.75rem 1rem!important;border:1px solid #fff!important;background:#050505!important;color:#fff!important;font:900 .62rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;cursor:pointer!important}
       .portfolio-stable-copy:hover{background:#a6ff00!important;color:#050505!important;border-color:#050505!important}
       .zny-modal .zny-close,.fable-modal .fable-close,.cr-modal .cr-close,.blandetto-modal .blandetto-close,.blandetto-modal .bf-close,.blandetto-modal .bf-x,.bf .blandetto-close,.bf .bf-close,.bf .bf-x,.bf .bld-close,.project9006-modal .project9006-toolbar__close,.project9006-modal .project9006-close,.project9006-modal .p9006-close,.pcg-modal .pcg-close,.mc-modal .mc-close,.m10-modal .m10-close,.stk-modal .stk-close,.lcg-modal .lcg-close,.album-covers-modal .album-covers-close,.su-modal .su-close,.anka-peresild-modal .anka-peresild-close,.vtb-modal .vtb-close,.collages-modal .pag-close{display:none!important}
-      .bf .bf-h,.blandetto-modal .bf-h{display:none!important;height:0!important;min-height:0!important;max-height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
       ${ALL_SELECTORS}{animation:none!important;transition:none!important}
       @media(max-width:820px){.portfolio-stable-head{min-height:3.65rem!important;padding:.62rem .75rem!important}.portfolio-stable-head__label,.portfolio-stable-head__close{min-height:2.05rem!important;padding:.62rem .72rem!important;font-size:.58rem!important;letter-spacing:.18em!important}.portfolio-stable-intro{padding:5.4rem 1rem 2.5rem!important}.portfolio-stable-intro__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}.portfolio-stable-copy{display:none!important}}
     `;
@@ -75,7 +79,7 @@
 
   function detectTheme(modal, project) {
     if (project.bg) return { bg:project.bg, fg:project.fg || '#050505' };
-    for (const node of [modal, ...[...modal.children].slice(0,5)]) {
+    for (const node of [modal, ...[...modal.children].slice(0,6)]) {
       if (!(node instanceof HTMLElement)) continue;
       const css = getComputedStyle(node);
       const bg = css.backgroundColor;
@@ -88,59 +92,88 @@
     return { bg:'#fff', fg:'#050505' };
   }
 
-  function findAbout(modal, project) {
-    if (project.slug === 'ninety-z-s') {
-      const native = modal.querySelector('.project9006-brand-copy');
-      if (native) return { node:native, text:String(native.textContent || '').replace(/\s+/g,' ').trim() };
-    }
-    const node = [...modal.querySelectorAll('p')].find(candidate => {
-      if (candidate.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-unified-lightbox')) return false;
-      if (candidate.querySelector('img,video,picture,canvas')) return false;
-      const text = String(candidate.textContent || '').replace(/\s+/g,' ').trim();
-      return text.length >= 70 && text.length <= 2200;
-    }) || null;
-    return { node, text:node ? String(node.textContent || '').replace(/\s+/g,' ').trim() : '' };
+  function firstMedia(modal) {
+    return [...modal.querySelectorAll('img,video,picture,canvas')].find(node => !node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-unified-lightbox')) || null;
   }
 
-  function hide(node) { if (node instanceof HTMLElement) node.classList.add('portfolio-stable-legacy-hidden'); }
+  function beforeMedia(node, media) {
+    return !media || Boolean(node.compareDocumentPosition(media) & Node.DOCUMENT_POSITION_FOLLOWING);
+  }
+
+  function candidateAboutNodes(modal, project) {
+    const nodes = [];
+    for (const selector of project.aboutHints || []) modal.querySelectorAll(selector).forEach(node => nodes.push(node));
+    modal.querySelectorAll('p,[class*="brand-copy"],[class*="about-copy"],[class*="intro-copy"],[class*="project-copy"],[class*="description"],[class*="lead-copy"],[class*="summary-copy"]').forEach(node => nodes.push(node));
+    return [...new Set(nodes)];
+  }
+
+  function findAbout(modal, project) {
+    const media = firstMedia(modal);
+    for (const node of candidateAboutNodes(modal,project)) {
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-unified-lightbox,.portfolio-stable-legacy-hidden')) continue;
+      if (node.querySelector('img,video,picture,canvas')) continue;
+      const text = textOf(node);
+      if (text.length < 55 || text.length > 2400) continue;
+      const strongHint = /(brand|about|intro|lead|summary)/i.test(String(node.className || '')) || (project.aboutHints || []).some(selector => node.matches?.(selector));
+      if (!strongHint && !beforeMedia(node,media)) continue;
+      return { node, text };
+    }
+    return { node:null, text:'' };
+  }
+
+  function legacyWrapper(node, modal) {
+    if (!(node instanceof HTMLElement)) return null;
+    const wrapper = node.closest('[class*="brand"],[class*="intro"],[class*="hero"],[class*="overview"],[class*="summary"],[class*="lead"],section');
+    if (!wrapper || wrapper === modal || wrapper.querySelector('img,video,picture,canvas')) return null;
+    return wrapper;
+  }
 
   function collapseLegacy(modal, project, nativeClose, aboutNode) {
-    const accepted = new Set([project.title, ...project.chips].map(norm));
-    const aboutLabels = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
+    const media = firstMedia(modal);
+    const aliases = new Set((project.aliases || [project.title]).map(norm));
+    const accepted = new Set([project.title,...(project.aliases || []),...project.chips].map(norm));
+
     const originalHead = nativeClose?.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"],.sticky,.bf-h');
     if (originalHead && originalHead !== modal) hide(originalHead);
 
-    if (project.slug === 'ninety-z-s') {
-      const nativeBrand = modal.querySelector('.project9006-brand');
-      if (nativeBrand) hide(nativeBrand);
+    for (const selector of project.legacy || []) {
+      modal.querySelectorAll(selector).forEach(node => {
+        if (node.closest('.portfolio-stable-head,.portfolio-stable-intro')) return;
+        if (beforeMedia(node,media)) hide(node);
+      });
     }
-
-    const firstMedia = [...modal.querySelectorAll('img,video,picture,canvas')].find(node => !node.closest('.portfolio-stable-intro,.portfolio-stable-head,.desktop-unified-lightbox')) || null;
-    const beforeMedia = node => !firstMedia || Boolean(node.compareDocumentPosition(firstMedia) & Node.DOCUMENT_POSITION_FOLLOWING);
 
     if (aboutNode) {
-      const wrapper = aboutNode.closest('[class*="intro"],[class*="brand"],[class*="about"],section');
-      if (wrapper && wrapper !== modal && beforeMedia(wrapper) && !wrapper.querySelector('img,video,picture,canvas')) hide(wrapper);
-      else hide(aboutNode);
+      const wrapper = legacyWrapper(aboutNode,modal);
+      if (wrapper && beforeMedia(wrapper,media)) hide(wrapper);
+      else if (beforeMedia(aboutNode,media)) hide(aboutNode);
     }
 
-    [...modal.querySelectorAll('section,div,nav,ul')].forEach(node => {
+    modal.querySelectorAll('h1,h2,h3,h4,[class*="brand-title"],[class*="project-title"]').forEach(node => {
+      if (!(node instanceof HTMLElement)) return;
+      if (node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-project-navigation,.desktop-unified-lightbox,.portfolio-stable-legacy-hidden')) return;
+      if (!beforeMedia(node,media) || !aliases.has(norm(node.textContent))) return;
+      const wrapper = legacyWrapper(node,modal);
+      if (wrapper && beforeMedia(wrapper,media)) hide(wrapper); else hide(node);
+    });
+
+    modal.querySelectorAll('section,div,nav,ul').forEach(node => {
       if (!(node instanceof HTMLElement) || node === modal || node.classList.contains('portfolio-stable-legacy-hidden')) return;
       if (node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-project-navigation,.desktop-unified-lightbox')) return;
-      if (!beforeMedia(node) || node.querySelector('img,video,picture,canvas')) return;
+      if (!beforeMedia(node,media) || node.querySelector('img,video,picture,canvas')) return;
       const cls = String(node.className || '');
-      const headings = [...node.querySelectorAll('h1,h2,h3,h4')].map(heading => norm(heading.textContent));
-      const hasIdentity = headings.includes(norm(project.title));
-      const hasAbout = [...node.querySelectorAll('p,span,h1,h2,h3,h4')].some(child => aboutLabels.has(norm(child.textContent)));
       const direct = [...node.children].map(child => norm(child.textContent)).filter(Boolean);
       const chipMatches = direct.filter(value => accepted.has(value)).length;
-      const topish = /(intro|hero|brand|overview|summary|chip|tag|categor|meta)/i.test(cls);
+      const hasAbout = [...node.querySelectorAll('p,span,h1,h2,h3,h4')].some(child => ABOUT_LABELS.has(norm(child.textContent)));
+      const hasIdentity = [...node.querySelectorAll('h1,h2,h3,h4')].some(child => aliases.has(norm(child.textContent)));
+      const topish = /(intro|hero|brand|overview|summary|chip|tag|categor|meta|lead)/i.test(cls);
       if (hasIdentity || hasAbout || (chipMatches >= 2 && topish)) hide(node);
     });
 
-    [...modal.querySelectorAll('p,span,h1,h2,h3,h4')].forEach(node => {
+    modal.querySelectorAll('p,span,h1,h2,h3,h4').forEach(node => {
       if (node.closest('.portfolio-stable-head,.portfolio-stable-intro,.desktop-project-navigation,.desktop-unified-lightbox,.portfolio-stable-legacy-hidden')) return;
-      if (beforeMedia(node) && aboutLabels.has(norm(node.textContent))) hide(node);
+      if (beforeMedia(node,media) && ABOUT_LABELS.has(norm(node.textContent))) hide(node);
     });
   }
 
@@ -157,7 +190,7 @@
       button.addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
-        const target = nativeClose?.isConnected ? nativeClose : findClose(modal);
+        const target = findClose(modal);
         if (target) target.click();
       });
       head.append(label,button);
@@ -171,7 +204,7 @@
     return head;
   }
 
-  function createIntro(modal, project, head, aboutText, theme) {
+  function createIntro(modal, project, head, theme) {
     let intro = modal.querySelector(':scope > .portfolio-stable-intro');
     if (!intro) {
       intro = document.createElement('section');
@@ -183,17 +216,30 @@
     intro.style.setProperty('--psi-fg',theme.fg);
     intro.querySelector('.portfolio-stable-intro__title').textContent = project.title;
     const chips = intro.querySelector('.portfolio-stable-intro__chips');
-    chips.replaceChildren(...project.chips.map(text => {
-      const chip = document.createElement('span');
-      chip.className = 'portfolio-stable-intro__chip';
-      chip.textContent = text;
-      return chip;
-    }));
+    if (!chips.childElementCount) {
+      chips.replaceChildren(...project.chips.map(text => {
+        const chip = document.createElement('span');
+        chip.className = 'portfolio-stable-intro__chip';
+        chip.textContent = text;
+        return chip;
+      }));
+    }
     intro.querySelector('.portfolio-stable-intro__about-label').textContent = project.kind === 'brand'
       ? (language()==='ru' ? 'О БРЕНДЕ' : 'ABOUT THE BRAND')
       : (language()==='ru' ? 'О ПРОЕКТЕ' : 'ABOUT THE PROJECT');
-    intro.querySelector('.portfolio-stable-intro__about-text').textContent = aboutText;
-    intro.querySelector('.portfolio-stable-intro__about').classList.toggle('is-empty',!aboutText);
+    return intro;
+  }
+
+  function syncAbout(intro, about) {
+    if (!intro) return;
+    const textNode = intro.querySelector('.portfolio-stable-intro__about-text');
+    const aboutBox = intro.querySelector('.portfolio-stable-intro__about');
+    if (!textNode || !aboutBox) return;
+    if (!textNode.dataset.locked && about?.text) {
+      textNode.textContent = about.text;
+      textNode.dataset.locked = '1';
+    }
+    aboutBox.classList.toggle('is-empty',!textOf(textNode));
   }
 
   function syncCopy(project) {
@@ -220,21 +266,26 @@
   }
 
   function processModal(modal) {
-    if (!(modal instanceof HTMLElement) || modal.dataset.portfolioStableShell === VERSION) return false;
+    if (!(modal instanceof HTMLElement)) return false;
     const project = projectFor(modal);
     if (!project || modal.children.length === 0) return false;
-    if (project.slug === 'ninety-z-s' && !modal.querySelector('.project9006-brand')) return false;
     const nativeClose = findClose(modal);
     if (!nativeClose) return false;
-    const about = findAbout(modal,project);
+
     const theme = detectTheme(modal,project);
     const head = createHead(modal,project,nativeClose,theme);
-    createIntro(modal,project,head,about.text,theme);
+    const intro = createIntro(modal,project,head,theme);
+    const about = findAbout(modal,project);
+    syncAbout(intro,about);
     collapseLegacy(modal,project,nativeClose,about.node);
+
     modal.dataset.portfolioStableShell = VERSION;
     modal.style.setProperty('animation','none','important');
     modal.style.setProperty('transition','none','important');
-    try { modal.scrollTop = 0; } catch {}
+    if (!modal.dataset.portfolioStableScrollReset) {
+      modal.dataset.portfolioStableScrollReset = '1';
+      try { modal.scrollTop = 0; } catch {}
+    }
     syncCopy(project);
     return true;
   }
