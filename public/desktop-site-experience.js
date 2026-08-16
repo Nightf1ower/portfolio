@@ -1,6 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV12) return;
-  window.__desktopSiteExperienceLoaderV12 = true;
+  if (window.__desktopSiteExperienceLoaderV13) return;
+  window.__desktopSiteExperienceLoaderV13 = true;
   window.__desktopSiteExperienceV1 = true;
 
   const load = (src, marker) => {
@@ -19,4 +19,5 @@
   load('/portfolio-fixed-project-header.js?v=portfolio-fixed-project-header-2', 'portfolio-fixed-project-header-2');
   load('/desktop-site-experience-v2.js?v=desktop-site-experience-2', 'desktop-site-experience-2');
   load('/portfolio-unified-project-intro.js?v=portfolio-unified-project-intro-1', 'portfolio-unified-project-intro-1');
+  load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
 })();
