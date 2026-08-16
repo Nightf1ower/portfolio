@@ -1,8 +1,10 @@
 (() => {
-  if (window.__pinkPunkLayoutV4) return;
+  if (window.__pinkPunkLayoutV5) return;
+  window.__pinkPunkLayoutV5 = true;
+  // Prevent any stale cached V4 copy from running after this canonical layout.
   window.__pinkPunkLayoutV4 = true;
 
-  const VERSION = 'pink-layout-4';
+  const VERSION = 'pink-layout-5';
   const COPY = {
     ru: {
       aboutLabel: 'О БРЕНДЕ',
@@ -38,199 +40,271 @@
     },
   };
 
-  function injectStyles() {
-    const previous = document.getElementById('pink-punk-layout-style');
-    if (previous?.dataset.version === VERSION) return;
-    previous?.remove();
+  const language = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
+  const chipLabels = () => language() === 'ru'
+    ? ['ГРАФИКА', 'ПОСТЕРЫ', 'ПРИНТЫ']
+    : ['GRAPHICS', 'POSTERS', 'PRINTS'];
 
+  function injectStyles() {
+    document.getElementById('pink-punk-layout-style')?.remove();
     const style = document.createElement('style');
     style.id = 'pink-punk-layout-style';
     style.dataset.version = VERSION;
     style.textContent = `
-      .pink-punk-fullscreen {
-        background-color: #050505 !important;
-        background-image: linear-gradient(
-          180deg,
-          #9b0014 0%,
-          #7d0012 18%,
-          #56000d 35%,
-          #320008 52%,
-          #180004 69%,
-          #090102 84%,
-          #050505 100%
-        ) !important;
-        background-repeat: no-repeat !important;
-        background-size: 100% 100% !important;
-        background-attachment: local !important;
+      .pink-punk-fullscreen{
+        background:#050505!important;
+        background-image:linear-gradient(180deg,#9b0014 0%,#7d0012 18%,#56000d 35%,#320008 52%,#180004 69%,#090102 84%,#050505 100%)!important;
+        background-repeat:no-repeat!important;
+        background-size:100% 100%!important;
+        background-attachment:local!important;
       }
-
-      .pink-punk-fullscreen > div > .sticky {
-        background: transparent !important;
-        border-bottom-color: rgba(255,255,255,.28) !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+      .pink-punk-fullscreen>div{
+        box-sizing:border-box!important;
+        width:100%!important;
+        max-width:none!important;
+        margin:0!important;
+        padding:0 clamp(1rem,3.2vw,4rem) clamp(4rem,8vw,8rem)!important;
       }
-
-      .pink-punk-gallery.pink-punk-gallery--grouped {
-        display: block !important;
-        column-count: 1 !important;
-        column-gap: 0 !important;
-        padding-top: 1.5rem !important;
+      .pink-punk-fullscreen>div>.sticky{
+        position:fixed!important;
+        inset:0 0 auto 0!important;
+        z-index:1900000!important;
+        box-sizing:border-box!important;
+        display:flex!important;
+        align-items:center!important;
+        justify-content:space-between!important;
+        width:100vw!important;
+        max-width:none!important;
+        min-height:4rem!important;
+        margin:0!important;
+        padding:.72rem clamp(1rem,1.8vw,2rem)!important;
+        background:#9b0014!important;
+        color:#fff!important;
+        border:0!important;
+        border-bottom:1px solid rgba(255,255,255,.28)!important;
+        box-shadow:none!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
+        backdrop-filter:none!important;
+        -webkit-backdrop-filter:none!important;
       }
-
-      .pink-punk-brand {
-        padding: clamp(2.5rem, 6vw, 5rem) 0 clamp(5rem, 10vw, 9rem);
+      .pink-punk-fullscreen>div>.sticky button{
+        background:#050505!important;
+        color:#fff!important;
+        border:0!important;
+        border-radius:0!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
       }
-
-      .pink-punk-brand__title {
-        margin: 0;
-        color: #fff;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: clamp(4.8rem, 15vw, 13rem);
-        font-weight: 900;
-        line-height: .72;
-        letter-spacing: -.095em;
-        text-transform: uppercase;
+      .pink-punk-gallery.pink-punk-gallery--grouped{
+        display:block!important;
+        visibility:visible!important;
+        opacity:1!important;
+        width:100%!important;
+        max-width:none!important;
+        margin:0!important;
+        padding:0!important;
+        column-count:1!important;
+        column-gap:0!important;
       }
-
-      .pink-punk-brand__label {
-        margin: clamp(2.4rem, 5vw, 4rem) 0 .9rem;
-        color: #fff;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: .72rem;
-        font-weight: 900;
-        line-height: 1;
-        letter-spacing: .26em;
-        text-transform: uppercase;
+      .pink-punk-brand{
+        box-sizing:border-box!important;
+        display:block!important;
+        width:100%!important;
+        max-width:none!important;
+        min-height:0!important;
+        margin:0!important;
+        padding:clamp(7rem,9vw,9rem) 0 clamp(3rem,5vw,5rem)!important;
       }
-
-      .pink-punk-brand__copy,
-      .pink-punk-section__note {
-        max-width: 58rem;
-        color: rgba(255,255,255,.76);
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: clamp(1rem, 1.45vw, 1.25rem);
-        font-weight: 600;
-        line-height: 1.48;
-        letter-spacing: -.018em;
-        white-space: pre-line;
+      .pink-punk-brand__title{
+        width:100%!important;
+        max-width:none!important;
+        margin:0!important;
+        padding:0!important;
+        color:#fff!important;
+        font:900 clamp(4.6rem,10.6vw,12rem)/.79 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.075em!important;
+        text-transform:uppercase!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
+        will-change:auto!important;
       }
-
-      .pink-punk-brand__copy {
-        margin: 0;
+      .pink-punk-native-chips{
+        display:flex!important;
+        flex-wrap:wrap!important;
+        gap:.55rem!important;
+        margin:clamp(1.2rem,1.8vw,1.7rem) 0 clamp(2rem,3vw,2.8rem)!important;
+        padding:0!important;
       }
-
-      .pink-punk-section {
-        border-top: 1px solid rgba(255,255,255,.32);
-        padding-top: 1.25rem;
+      .pink-punk-native-chip{
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
+        min-height:2rem!important;
+        margin:0!important;
+        padding:.55rem .85rem!important;
+        border:1px solid #fff!important;
+        border-radius:0!important;
+        background:transparent!important;
+        color:#fff!important;
+        font:900 .62rem/1 Arial,Helvetica,sans-serif!important;
+        letter-spacing:.18em!important;
+        text-transform:uppercase!important;
+        white-space:nowrap!important;
       }
-
-      .pink-punk-section + .pink-punk-section {
-        margin-top: clamp(5rem, 10vw, 9rem);
+      .pink-punk-brand__label{
+        display:inline-flex!important;
+        align-items:center!important;
+        justify-content:center!important;
+        width:max-content!important;
+        max-width:100%!important;
+        margin:0 0 1.25rem!important;
+        padding:.6rem .8rem!important;
+        border:0!important;
+        border-radius:0!important;
+        background:#050505!important;
+        color:#fff!important;
+        font:900 .64rem/1 Arial,Helvetica,sans-serif!important;
+        letter-spacing:.2em!important;
+        text-transform:uppercase!important;
       }
-
-      .pink-punk-section__head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-bottom: .9rem;
+      .pink-punk-brand__copy{
+        box-sizing:border-box!important;
+        display:block!important;
+        width:100%!important;
+        max-width:none!important;
+        margin:0!important;
+        padding:0!important;
+        color:#fff!important;
+        font:600 clamp(1.15rem,2vw,2rem)/1.28 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.025em!important;
+        text-align:left!important;
+        white-space:pre-line!important;
+        text-wrap:pretty!important;
       }
-
-      .pink-punk-section__title {
-        width: 100%;
-        margin: 0;
-        color: #fff;
-        font-size: clamp(2.8rem, 6vw, 6.5rem);
-        font-weight: 900;
-        line-height: .82;
-        letter-spacing: -.085em;
-        text-transform: uppercase;
-        text-wrap: balance;
+      .pink-punk-section{
+        position:relative!important;
+        display:block!important;
+        visibility:visible!important;
+        opacity:1!important;
+        width:100%!important;
+        min-height:0!important;
+        border-top:1px solid rgba(255,255,255,.32)!important;
+        padding-top:1.35rem!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
       }
-
-      .pink-punk-section__note {
-        margin: 0 0 2.2rem;
+      .pink-punk-section+.pink-punk-section{margin-top:clamp(5rem,10vw,9rem)!important}
+      .pink-punk-section__head{
+        position:static!important;
+        display:block!important;
+        width:100%!important;
+        margin:0!important;
+        padding:0!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
+        will-change:auto!important;
       }
-
-      .pink-punk-section__grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        align-items: start;
-        gap: 1rem;
+      .pink-punk-section__title{
+        position:static!important;
+        display:block!important;
+        width:100%!important;
+        max-width:none!important;
+        margin:0!important;
+        padding:0!important;
+        color:#fff!important;
+        font:900 clamp(2.8rem,5.2vw,5.9rem)/.86 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.075em!important;
+        text-transform:uppercase!important;
+        white-space:normal!important;
+        text-wrap:wrap!important;
+        transform:none!important;
+        translate:none!important;
+        scale:none!important;
+        rotate:none!important;
+        transition:none!important;
+        animation:none!important;
+        will-change:auto!important;
+        backface-visibility:visible!important;
+        -webkit-font-smoothing:antialiased!important;
       }
-
-      .pink-punk-section__grid .pink-punk-frame {
-        display: block !important;
-        width: 100% !important;
-        margin: 0 !important;
-        break-inside: auto !important;
-        -webkit-column-break-inside: auto !important;
-        page-break-inside: auto !important;
+      .pink-punk-section__note{
+        box-sizing:border-box!important;
+        display:block!important;
+        width:min(100%,58rem)!important;
+        max-width:58rem!important;
+        margin:1.3rem 0 2.2rem!important;
+        padding:0!important;
+        color:rgba(255,255,255,.82)!important;
+        font:600 clamp(1rem,1.45vw,1.25rem)/1.48 Arial,Helvetica,sans-serif!important;
+        letter-spacing:-.018em!important;
+        text-align:left!important;
+        white-space:pre-line!important;
+        text-wrap:pretty!important;
+        transform:none!important;
+        transition:none!important;
+        animation:none!important;
       }
-
-      @media (max-width: 900px) {
-        .pink-punk-section__grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+      .pink-punk-section__grid{
+        display:grid!important;
+        grid-template-columns:repeat(3,minmax(0,1fr))!important;
+        align-items:start!important;
+        gap:1rem!important;
+        width:100%!important;
       }
-
-      @media (hover: none), (pointer: coarse), (max-width: 768px) {
-        .pink-punk-brand__title {
-          font-size: clamp(4.4rem, 24vw, 8rem);
-        }
-
-        .pink-punk-section__title {
-          font-size: clamp(2.35rem, 10.5vw, 4rem);
-        }
-
-        .pink-punk-section__grid {
-          grid-template-columns: 1fr;
-        }
-
-        .pink-punk-frame,
-        .pink-punk-frame:hover {
-          transform: none !important;
-          box-shadow: none !important;
-        }
-
-        .pink-punk-frame--hover .pink-punk-image--base,
-        .pink-punk-frame--hover:hover .pink-punk-image--base,
-        .pink-punk-lightbox-frame--hover .pink-punk-lightbox-image--base,
-        .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--base {
-          opacity: 1 !important;
-        }
-
-        .pink-punk-frame--hover .pink-punk-image--worn,
-        .pink-punk-frame--hover:hover .pink-punk-image--worn,
-        .pink-punk-lightbox-frame--hover .pink-punk-lightbox-image--worn,
-        .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn {
-          opacity: 0 !important;
-          pointer-events: none !important;
-        }
+      .pink-punk-section__grid .pink-punk-frame{
+        display:block!important;
+        width:100%!important;
+        margin:0!important;
+        break-inside:auto!important;
+        -webkit-column-break-inside:auto!important;
+        page-break-inside:auto!important;
+      }
+      @media(max-width:900px){.pink-punk-section__grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+      @media(max-width:820px){
+        .pink-punk-fullscreen>div{padding-left:1rem!important;padding-right:1rem!important}
+        .pink-punk-fullscreen>div>.sticky{min-height:3.65rem!important;padding:.62rem .75rem!important}
+        .pink-punk-brand{padding-top:5.5rem!important}
+        .pink-punk-brand__title{font-size:clamp(3.25rem,16vw,6.2rem)!important;line-height:.82!important}
+        .pink-punk-brand__copy{font-size:clamp(1.05rem,5vw,1.35rem)!important;line-height:1.35!important}
+        .pink-punk-section__title{font-size:clamp(2.35rem,11vw,4rem)!important;line-height:.86!important}
+        .pink-punk-section__grid{grid-template-columns:1fr!important}
+        .pink-punk-frame,.pink-punk-frame:hover{transform:none!important;box-shadow:none!important}
+        .pink-punk-frame--hover .pink-punk-image--base,.pink-punk-frame--hover:hover .pink-punk-image--base,.pink-punk-lightbox-frame--hover .pink-punk-lightbox-image--base,.pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--base{opacity:1!important}
+        .pink-punk-frame--hover .pink-punk-image--worn,.pink-punk-frame--hover:hover .pink-punk-image--worn,.pink-punk-lightbox-frame--hover .pink-punk-lightbox-image--worn,.pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn{opacity:0!important;pointer-events:none!important}
       }
     `;
     document.head.append(style);
   }
 
-  const language = () => document.documentElement.lang === 'ru' ? 'ru' : 'en';
+  function buildChips() {
+    const chips = document.createElement('div');
+    chips.className = 'pink-punk-native-chips';
+    chipLabels().forEach(text => {
+      const chip = document.createElement('span');
+      chip.className = 'pink-punk-native-chip';
+      chip.textContent = text;
+      chips.append(chip);
+    });
+    return chips;
+  }
 
   function buildBrand() {
     const brand = document.createElement('section');
     brand.className = 'pink-punk-brand';
-
     const title = document.createElement('h1');
     title.className = 'pink-punk-brand__title';
     title.textContent = 'PINKPUNK';
-
     const label = document.createElement('p');
     label.className = 'pink-punk-brand__label';
-
     const copy = document.createElement('p');
     copy.className = 'pink-punk-brand__copy';
-
-    brand.append(title, label, copy);
+    brand.append(title, buildChips(), label, copy);
     return brand;
   }
 
@@ -238,22 +312,17 @@
     const section = document.createElement('section');
     section.className = `pink-punk-section pink-punk-section--${key}`;
     section.dataset.section = key;
-
     const head = document.createElement('div');
     head.className = 'pink-punk-section__head';
-
     const title = document.createElement('h3');
     title.className = 'pink-punk-section__title';
     head.append(title);
-
     const note = document.createElement('p');
     note.className = 'pink-punk-section__note';
-
     const grid = document.createElement('div');
     grid.className = `pink-punk-section__grid pink-punk-section__grid--${key}`;
-    cards.forEach((card) => grid.append(card));
-
-    section.append(head, note, grid);
+    cards.forEach(card => grid.append(card));
+    section.append(head,note,grid);
     return section;
   }
 
@@ -263,8 +332,12 @@
     const brandCopy = gallery.querySelector('.pink-punk-brand__copy');
     if (brandLabel) brandLabel.textContent = copy.aboutLabel;
     if (brandCopy) brandCopy.textContent = copy.about;
-
-    gallery.querySelectorAll('.pink-punk-section').forEach((section) => {
+    const chips = gallery.querySelector('.pink-punk-native-chips');
+    if (chips) {
+      const labels = chipLabels();
+      [...chips.children].forEach((chip,index) => { if (labels[index]) chip.textContent = labels[index]; });
+    }
+    gallery.querySelectorAll('.pink-punk-section').forEach(section => {
       const sectionCopy = copy[section.dataset.section];
       if (!sectionCopy) return;
       const title = section.querySelector('.pink-punk-section__title');
@@ -276,57 +349,47 @@
 
   function enhance() {
     injectStyles();
-
     const gallery = document.querySelector('.pink-punk-gallery');
     if (!gallery) return false;
-
-    const modal = gallery.closest('.fixed.inset-0');
+    const modal = gallery.closest('.fixed.inset-0,[role="dialog"]');
     modal?.classList.add('pink-punk-fullscreen');
 
     if (gallery.dataset.pinkLayout !== VERSION) {
       const cards = Array.from(gallery.querySelectorAll('.pink-punk-frame'));
       if (cards.length < 7) return false;
-
-      cards.forEach((card) => card.remove());
+      cards.forEach(card => card.remove());
       gallery.replaceChildren(
         buildBrand(),
-        buildSection('tees', cards.slice(0, 3)),
-        buildSection('posters', cards.slice(3, 6)),
-        buildSection('prints', cards.slice(6)),
+        buildSection('tees',cards.slice(0,3)),
+        buildSection('posters',cards.slice(3,6)),
+        buildSection('prints',cards.slice(6)),
       );
       gallery.classList.add('pink-punk-gallery--grouped');
       gallery.dataset.pinkLayout = VERSION;
     }
-
     updateCopy(gallery);
     return true;
   }
 
-  function retry(attempts = 24, delay = 120) {
-    let count = 0;
-    const run = () => {
-      count += 1;
-      if (enhance() || count >= attempts) return;
-      window.setTimeout(run, delay);
-    };
-    window.setTimeout(run, 0);
+  function retry(attempts=24,delay=120) {
+    let count=0;
+    const run=()=>{count+=1;if(enhance()||count>=attempts)return;window.setTimeout(run,delay)};
+    window.setTimeout(run,0);
   }
 
-  document.addEventListener('click', (event) => {
-    const card = event.target.closest('#works article, #works button');
-    const title = card?.querySelector('h3')?.textContent?.trim().toUpperCase();
-    if (title === 'PINK PUNK') retry();
+  document.addEventListener('click',event=>{
+    const card=event.target.closest('#works article,#works button');
+    const title=card?.querySelector('h3')?.textContent?.trim().toUpperCase();
+    if(title==='PINK PUNK') retry();
+    if(event.target.closest('button[aria-label*="рус" i],button[aria-label*="english" i],button[aria-label*="switch" i]')) window.setTimeout(enhance,0);
+  },true);
 
-    if (event.target.closest('button[aria-label*="рус" i], button[aria-label*="english" i], button[aria-label*="switch" i]')) {
-      window.setTimeout(enhance, 0);
-      window.setTimeout(enhance, 120);
-    }
-  }, true);
+  new MutationObserver(()=>{
+    const gallery=document.querySelector('.pink-punk-gallery');
+    if(gallery) updateCopy(gallery);
+  }).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 
-  new MutationObserver(() => {
-    const gallery = document.querySelector('.pink-punk-gallery');
-    if (gallery) updateCopy(gallery);
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
-
-  window.addEventListener('load', enhance);
+  injectStyles();
+  window.addEventListener('load',enhance,{once:true});
+  enhance();
 })();
