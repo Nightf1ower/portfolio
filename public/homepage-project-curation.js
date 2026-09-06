@@ -1,8 +1,8 @@
 (() => {
-  if (window.__homepageProjectCurationV1) return;
-  window.__homepageProjectCurationV1 = true;
+  if (window.__homepageProjectCurationV2) return;
+  window.__homepageProjectCurationV2 = true;
 
-  const VERSION = 'homepage-project-curation-1';
+  const VERSION = 'homepage-project-curation-2';
   const STYLE_ID = 'homepage-project-curation-style';
   const FEATURED_COUNT = 8;
 
@@ -25,8 +25,8 @@
   ];
 
   const COPY = {
-    en: 'VIEW ALL PROJECTS',
-    ru: 'ПОКАЗАТЬ ВСЕ ПРОЕКТЫ',
+    en: { expand: 'VIEW ALL PROJECTS', collapse: 'COLLAPSE' },
+    ru: { expand: 'ПОКАЗАТЬ ВСЕ ПРОЕКТЫ', collapse: 'СВЕРНУТЬ' },
   };
 
   let expanded = false;
@@ -151,7 +151,7 @@
       button.type = 'button';
       button.className = 'homepage-project-curation-toggle';
       button.addEventListener('click', () => {
-        expanded = true;
+        expanded = !expanded;
         scheduleApply();
       });
 
@@ -161,12 +161,13 @@
 
     const button = controls.querySelector('.homepage-project-curation-toggle');
     if (button) {
-      button.textContent = COPY[language()];
+      const copy = COPY[language()];
+      button.textContent = expanded ? copy.collapse : copy.expand;
       button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
       button.setAttribute('aria-controls', 'works');
     }
 
-    controls.hidden = expanded || visibleProjectCount <= FEATURED_COUNT;
+    controls.hidden = visibleProjectCount <= FEATURED_COUNT;
   }
 
   function applyOrderAndVisibility() {
