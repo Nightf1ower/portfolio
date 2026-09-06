@@ -25,4 +25,5 @@
   load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
   load('/homepage-project-curation.js?v=homepage-project-curation-2', 'homepage-project-curation-2');
+  load('/portfolio-project-consistency.js?v=portfolio-project-consistency-1', 'portfolio-project-consistency-1');
 })();
