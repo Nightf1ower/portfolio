@@ -271,7 +271,7 @@
 
   function ensureMasterHeader() {
     const active = activeProject();
-    let head = document.querySelector(':scope > body > .portfolio-master-project-head');
+    let head = document.body.querySelector(':scope > .portfolio-master-project-head');
 
     if (!active) {
       head?.remove();
