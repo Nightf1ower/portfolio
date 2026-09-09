@@ -300,13 +300,21 @@
       document.body.append(head);
     }
 
-    head.dataset.project = project.slug;
-    head.classList.toggle('is-dark', Boolean(project.dark));
-    head.querySelector('.portfolio-master-project-head__label').textContent = project.title;
-    head.querySelector('.portfolio-master-project-head__close').textContent =
-      document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
+    if (head.dataset.project !== project.slug) head.dataset.project = project.slug;
+    if (head.classList.contains('is-dark') !== Boolean(project.dark)) {
+      head.classList.toggle('is-dark', Boolean(project.dark));
+    }
 
-    modal.dataset.masterProjectHeader = VERSION;
+    const label = head.querySelector('.portfolio-master-project-head__label');
+    if (label && label.textContent !== project.title) label.textContent = project.title;
+
+    const closeLabel = document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru'
+      ? 'ЗАКРЫТЬ'
+      : 'CLOSE';
+    const close = head.querySelector('.portfolio-master-project-head__close');
+    if (close && close.textContent !== closeLabel) close.textContent = closeLabel;
+
+    if (modal.dataset.masterProjectHeader !== VERSION) modal.dataset.masterProjectHeader = VERSION;
   }
 
   window.addEventListener('keydown', (event) => {
