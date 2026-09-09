@@ -1,5 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV36) return;
+  if (window.__desktopSiteExperienceLoaderV37) return;
+  window.__desktopSiteExperienceLoaderV37 = true;
   window.__desktopSiteExperienceLoaderV36 = true;
   window.__desktopSiteExperienceLoaderV35 = true;
   window.__desktopSiteExperienceLoaderV34 = true;
@@ -27,4 +28,5 @@
   load('/homepage-project-curation.js?v=homepage-project-curation-2', 'homepage-project-curation-2');
   load('/portfolio-project-consistency.js?v=portfolio-project-consistency-1', 'portfolio-project-consistency-1');
   load('/visual-noise-mobile-v2.js?v=visual-noise-mobile-3', 'visual-noise-mobile-3');
+  load('/portfolio-folder-final-fixes.js?v=portfolio-folder-final-fixes-1', 'portfolio-folder-final-fixes-1');
 })();
