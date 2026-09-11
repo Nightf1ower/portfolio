@@ -1,7 +1,5 @@
 (() => {
-  if (window.__portfolioHeaderNormalFlowV5) return;
-  window.__portfolioHeaderNormalFlowV5 = true;
-  window.__portfolioHeaderNormalFlowV4 = true;
+  if (window.__portfolioHeaderNormalFlowV3) return;
   window.__portfolioHeaderNormalFlowV3 = true;
 
   const STYLE_ID = 'portfolio-header-top-layer-style';
@@ -20,6 +18,7 @@
     { modal: '.stk-modal', native: '.stk-head' },
     { modal: '.lcg-modal', native: '.lcg-head' },
     { modal: '.su-modal', native: '.su-head' },
+    { modal: '.project9006-modal', native: '.project9006-toolbar' },
     { modal: '.anka-peresild-modal', native: '.anka-peresild-head' },
   ];
 
@@ -30,28 +29,36 @@
     '.portfolio-qa-static-head',
   ];
 
-  const ALL_MODALS = [
-    '.cr-modal', '.zny-modal', '.vtb-modal', '.pcg-modal', '.fable-modal', '.blandetto-modal', '.bf',
-    '.album-covers-modal', '.mc-modal', '.m10-modal', '.stk-modal', '.lcg-modal', '.su-modal',
-    '.project9006-modal', '.anka-peresild-modal',
-  ].join(',');
-
   function installStyles() {
     document.getElementById(STYLE_ID)?.remove();
 
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      /* Old viewport-level/master headers are retired completely. */
+      /* The old viewport-level replacement header is no longer used. */
       .portfolio-master-project-head,
       .portfolio-master-project-head__label,
-      .portfolio-master-project-head__close,
-      .project9006-flow-head {
+      .portfolio-master-project-head__close {
         display: none !important;
+        position: static !important;
       }
 
-      /* One real header lives inside each project and scrolls away with the project content. */
-      ${ALL_MODALS} .${FLOW_CLASS} {
+      /* Exactly one real project header stays inside the scrollable project. */
+      .cr-modal .${FLOW_CLASS},
+      .zny-modal .${FLOW_CLASS},
+      .vtb-modal .${FLOW_CLASS},
+      .pcg-modal .${FLOW_CLASS},
+      .fable-modal .${FLOW_CLASS},
+      .blandetto-modal .${FLOW_CLASS},
+      .bf .${FLOW_CLASS},
+      .album-covers-modal .${FLOW_CLASS},
+      .mc-modal .${FLOW_CLASS},
+      .m10-modal .${FLOW_CLASS},
+      .stk-modal .${FLOW_CLASS},
+      .lcg-modal .${FLOW_CLASS},
+      .su-modal .${FLOW_CLASS},
+      .project9006-modal .${FLOW_CLASS},
+      .anka-peresild-modal .${FLOW_CLASS} {
         display: flex !important;
         position: static !important;
         inset: auto !important;
@@ -59,13 +66,10 @@
         right: auto !important;
         bottom: auto !important;
         left: auto !important;
-        box-sizing: border-box !important;
         width: 100% !important;
         max-width: none !important;
-        height: 4rem !important;
-        min-height: 4rem !important;
-        max-height: 4rem !important;
-        margin: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
         transform: none !important;
         translate: none !important;
         scale: none !important;
@@ -73,74 +77,25 @@
         will-change: auto !important;
       }
 
-      ${ALL_MODALS} .${HIDDEN_CLASS} {
+      .cr-modal .${HIDDEN_CLASS},
+      .zny-modal .${HIDDEN_CLASS},
+      .vtb-modal .${HIDDEN_CLASS},
+      .pcg-modal .${HIDDEN_CLASS},
+      .fable-modal .${HIDDEN_CLASS},
+      .blandetto-modal .${HIDDEN_CLASS},
+      .bf .${HIDDEN_CLASS},
+      .album-covers-modal .${HIDDEN_CLASS},
+      .mc-modal .${HIDDEN_CLASS},
+      .m10-modal .${HIDDEN_CLASS},
+      .stk-modal .${HIDDEN_CLASS},
+      .lcg-modal .${HIDDEN_CLASS},
+      .su-modal .${HIDDEN_CLASS},
+      .project9006-modal .${HIDDEN_CLASS},
+      .anka-peresild-modal .${HIDDEN_CLASS} {
         display: none !important;
       }
 
-      /* NINETY Z S: throw away every old custom toolbar and use only the shared stable header. */
-      .project9006-modal .project9006-toolbar,
-      .project9006-modal .project9006-native-toolbar,
-      .project9006-modal .portfolio-standard-head,
-      .project9006-modal .portfolio-fixed-project-head,
-      .project9006-modal .portfolio-qa-static-head,
-      .project9006-modal .project9006-flow-head {
-        display: none !important;
-        position: static !important;
-        inset: auto !important;
-        width: auto !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        transform: none !important;
-      }
-
-      .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} {
-        display: flex !important;
-        position: static !important;
-        inset: auto !important;
-        width: 100% !important;
-        height: 4rem !important;
-        min-height: 4rem !important;
-        max-height: 4rem !important;
-        margin: 0 !important;
-        padding: 0 clamp(1rem,1.8vw,2rem) !important;
-        background: #050505 !important;
-        color: #fff !important;
-        border: 0 !important;
-        border-bottom: 1px solid rgba(255,255,255,.18) !important;
-        transform: none !important;
-      }
-
-      .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} .portfolio-stable-head__label,
-      .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} .portfolio-stable-head__close {
-        display: inline-flex !important;
-        position: static !important;
-        inset: auto !important;
-        width: auto !important;
-        min-width: 0 !important;
-        max-width: max-content !important;
-        height: 2.35rem !important;
-        min-height: 2.35rem !important;
-        max-height: 2.35rem !important;
-        margin: 0 !important;
-        padding: 0 1rem !important;
-        transform: none !important;
-      }
-
-      .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} .portfolio-stable-head__close {
-        width: 6.5rem !important;
-        min-width: 6.5rem !important;
-        max-width: 6.5rem !important;
-      }
-
-      /* The old rescue script adds extra top space for a fixed toolbar. Remove it. */
-      .project9006-modal .project9006-brand {
-        padding-top: clamp(3rem,7vw,6rem) !important;
-      }
-
-      /* ANKA native close can remain usable when its native head is selected. */
+      /* ANKA's native CLOSE was hidden by the previous fixed-header workaround. */
       .anka-peresild-modal .${FLOW_CLASS} .anka-peresild-close {
         display: inline-flex !important;
         position: static !important;
@@ -151,42 +106,12 @@
         max-width: max-content !important;
         transform: none !important;
       }
-
-      @media (max-width: 820px) {
-        ${ALL_MODALS} .${FLOW_CLASS},
-        .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} {
-          height: 3.65rem !important;
-          min-height: 3.65rem !important;
-          max-height: 3.65rem !important;
-        }
-
-        .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} {
-          padding: 0 .75rem !important;
-        }
-
-        .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} .portfolio-stable-head__label,
-        .project9006-modal > .portfolio-stable-head.${FLOW_CLASS} .portfolio-stable-head__close {
-          height: 2.05rem !important;
-          min-height: 2.05rem !important;
-          max-height: 2.05rem !important;
-          padding: 0 .72rem !important;
-        }
-      }
     `;
 
     document.head.append(style);
   }
 
-  function cleanMasterHeader() {
-    document.querySelectorAll('.portfolio-master-project-head').forEach((head) => {
-      if (head instanceof HTMLElement && head.matches(':popover-open') && typeof head.hidePopover === 'function') {
-        try { head.hidePopover(); } catch (_) {}
-      }
-      head.remove();
-    });
-  }
-
-  function normalizeRegularModal(modal, nativeSelector) {
+  function normalizeModal(modal, nativeSelector) {
     if (!(modal instanceof HTMLElement)) return;
 
     const candidates = [];
@@ -201,54 +126,27 @@
 
     if (!candidates.length) return;
 
-    const chosen = candidates.find((node) => node.classList.contains('portfolio-stable-head')) || candidates[0];
-
+    const chosen = candidates[0];
     candidates.forEach((node) => {
-      const use = node === chosen;
-      node.classList.toggle(FLOW_CLASS, use);
-      node.classList.toggle(HIDDEN_CLASS, !use);
-      if (use) node.removeAttribute('popover');
-    });
-
-    if (chosen.parentElement === modal && modal.firstElementChild !== chosen) {
-      modal.prepend(chosen);
-    }
-  }
-
-  function normalizeNinety() {
-    document.querySelectorAll('.project9006-modal').forEach((modal) => {
-      if (!(modal instanceof HTMLElement)) return;
-
-      modal.querySelectorAll('.project9006-flow-head').forEach((node) => node.remove());
-
-      const stableHeads = [...modal.querySelectorAll('.portfolio-stable-head')];
-      const chosen = stableHeads[0];
-      if (!(chosen instanceof HTMLElement)) return;
-
-      stableHeads.slice(1).forEach((node) => node.remove());
-
-      chosen.classList.add(FLOW_CLASS);
-      chosen.classList.remove(HIDDEN_CLASS, 'portfolio-stable-legacy-hidden');
-      chosen.removeAttribute('popover');
-
-      modal.querySelectorAll(
-        '.project9006-toolbar,.project9006-native-toolbar,.portfolio-standard-head,.portfolio-fixed-project-head,.portfolio-qa-static-head'
-      ).forEach((node) => {
-        if (node === chosen) return;
-        node.classList.remove(FLOW_CLASS);
-        node.classList.add(HIDDEN_CLASS);
-      });
-
-      if (modal.firstElementChild !== chosen) modal.prepend(chosen);
+      node.classList.toggle(FLOW_CLASS, node === chosen);
+      node.classList.toggle(HIDDEN_CLASS, node !== chosen);
+      if (node === chosen) {
+        node.removeAttribute('popover');
+      }
     });
   }
 
   function normalize() {
-    cleanMasterHeader();
-    normalizeNinety();
+    const master = document.querySelector('.portfolio-master-project-head');
+    if (master instanceof HTMLElement) {
+      if (master.matches(':popover-open') && typeof master.hidePopover === 'function') {
+        try { master.hidePopover(); } catch (_) {}
+      }
+      master.removeAttribute('popover');
+    }
 
     for (const project of PROJECTS) {
-      document.querySelectorAll(project.modal).forEach((modal) => normalizeRegularModal(modal, project.native));
+      document.querySelectorAll(project.modal).forEach((modal) => normalizeModal(modal, project.native));
     }
   }
 
