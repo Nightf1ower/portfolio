@@ -127,8 +127,8 @@
     <script src="/portfolio-header-top-layer.js?v=portfolio-header-top-layer-7"></script>
     <script>
       (() => {
-        if (window.__ninetyHeaderFlowFixV1) return;
-        window.__ninetyHeaderFlowFixV1 = true;
+        if (window.__ninetyHeaderFlowFixV2) return;
+        window.__ninetyHeaderFlowFixV2 = true;
 
         const force = (node, property, value) => {
           if (!(node instanceof HTMLElement)) return;
@@ -147,21 +147,98 @@
           force(node, 'overflow', 'hidden');
         };
 
+        const lang = () => document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru' ? 'ru' : 'en';
+        const copy = {
+          ru: 'NINETY Z S — независимый творческий бренд, объединяющий одежду, графический дизайн и визуальные эксперименты.',
+          en: 'NINETY Z S is an independent creative brand that brings together clothing, graphic design, and visual experimentation.',
+        };
+
+        const makeMetaItem = (label, value) => {
+          const item = document.createElement('div');
+          item.className = 'portfolio-project-metadata__item';
+          const key = document.createElement('p');
+          key.className = 'portfolio-project-metadata__label';
+          key.textContent = label;
+          const text = document.createElement('p');
+          text.className = 'portfolio-project-metadata__value';
+          text.textContent = value;
+          item.append(key, text);
+          return item;
+        };
+
+        const ensureMetadata = (modal, intro) => {
+          let meta = modal.querySelector('.portfolio-project-metadata[data-project-metadata="ninety-z-s"]') || modal.querySelector('.portfolio-project-metadata');
+          if (!(meta instanceof HTMLElement)) {
+            meta = document.createElement('section');
+            meta.className = 'portfolio-project-metadata';
+            meta.dataset.projectMetadata = 'ninety-z-s';
+            meta.append(
+              makeMetaItem('YEAR', '2024-2025'),
+              makeMetaItem('ROLE', 'Graphic Designer'),
+              makeMetaItem('WHAT I DID', 'Identity, Merch, Posters, Photo Editing'),
+            );
+          }
+          force(meta, 'display', 'grid');
+          force(meta, 'position', 'static');
+          force(meta, 'width', '100%');
+          force(meta, 'height', 'auto');
+          force(meta, 'min-height', '0px');
+          force(meta, 'max-height', 'none');
+          force(meta, 'margin', '2rem 0 0');
+          force(meta, 'padding', '0px');
+          force(meta, 'overflow', 'visible');
+
+          const about = intro.querySelector('.portfolio-stable-intro__about');
+          if (about instanceof HTMLElement) about.before(meta);
+          else intro.append(meta);
+          return meta;
+        };
+
+        const ensureClose = (toolbar, modal) => {
+          let label = toolbar.querySelector('.project9006-toolbar__label');
+          if (!(label instanceof HTMLElement)) {
+            label = document.createElement('span');
+            label.className = 'project9006-toolbar__label';
+            toolbar.prepend(label);
+          }
+          label.textContent = 'NINETY Z S';
+
+          let close = toolbar.querySelector('.project9006-toolbar__close');
+          if (!(close instanceof HTMLButtonElement)) {
+            close = document.createElement('button');
+            close.type = 'button';
+            close.className = 'project9006-toolbar__close';
+            toolbar.append(close);
+            close.addEventListener('click', (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              document.dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'Escape', code: 'Escape', bubbles: true, cancelable: true,
+              }));
+            });
+          }
+          close.textContent = lang() === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
+          return { label, close };
+        };
+
         const fix = () => {
           document.querySelectorAll('.project9006-modal').forEach((modal) => {
-            modal.querySelectorAll(':scope > .project9006-normal-head').forEach(hide);
-            modal.querySelectorAll(':scope > .portfolio-stable-head, :scope > .portfolio-stable-intro, .project9006-brand').forEach(hide);
+            modal.querySelectorAll(':scope > .project9006-normal-head, :scope > .portfolio-stable-head, .project9006-brand').forEach(hide);
 
-            const toolbar = modal.querySelector(':scope > .project9006-toolbar');
-            if (!(toolbar instanceof HTMLElement)) return;
-            if (modal.firstElementChild !== toolbar) modal.prepend(toolbar);
+            let toolbar = modal.querySelector(':scope > .project9006-toolbar');
+            if (!(toolbar instanceof HTMLElement)) {
+              toolbar = document.createElement('div');
+              toolbar.className = 'project9006-toolbar';
+              modal.prepend(toolbar);
+            } else if (modal.firstElementChild !== toolbar) {
+              modal.prepend(toolbar);
+            }
+
+            const { label, close } = ensureClose(toolbar, modal);
 
             force(toolbar, 'display', 'flex');
             force(toolbar, 'position', 'static');
-            force(toolbar, 'top', 'auto');
-            force(toolbar, 'right', 'auto');
-            force(toolbar, 'bottom', 'auto');
-            force(toolbar, 'left', 'auto');
+            force(toolbar, 'inset', 'auto');
             force(toolbar, 'z-index', 'auto');
             force(toolbar, 'box-sizing', 'border-box');
             force(toolbar, 'align-items', 'center');
@@ -179,12 +256,12 @@
             force(toolbar, 'transform', 'none');
             force(toolbar, 'translate', 'none');
             force(toolbar, 'flex', '0 0 4rem');
+            force(toolbar, 'overflow', 'hidden');
 
-            const label = toolbar.querySelector('.project9006-toolbar__label');
-            const close = toolbar.querySelector('.project9006-toolbar__close');
             [label, close].forEach((button) => {
               force(button, 'display', 'inline-flex');
               force(button, 'position', 'static');
+              force(button, 'inset', 'auto');
               force(button, 'align-items', 'center');
               force(button, 'justify-content', 'center');
               force(button, 'width', 'auto');
@@ -198,8 +275,83 @@
               force(button, 'color', '#050505');
               force(button, 'transform', 'none');
               force(button, 'flex', '0 0 auto');
+              force(button, 'opacity', '1');
+              force(button, 'visibility', 'visible');
             });
             force(close, 'min-width', '6.5rem');
+            force(close, 'cursor', 'pointer');
+
+            let intro = modal.querySelector(':scope > .portfolio-stable-intro');
+            if (!(intro instanceof HTMLElement)) {
+              intro = document.createElement('section');
+              intro.className = 'portfolio-stable-intro';
+              intro.innerHTML = '<h1 class="portfolio-stable-intro__title">NINETY Z S</h1><div class="portfolio-stable-intro__chips"><span class="portfolio-stable-intro__chip">IDENTITY</span><span class="portfolio-stable-intro__chip">PENDANT</span><span class="portfolio-stable-intro__chip">LOOKBOOK</span><span class="portfolio-stable-intro__chip">POSTERS</span></div><div class="portfolio-stable-intro__about"><p class="portfolio-stable-intro__about-label"></p><p class="portfolio-stable-intro__about-text"></p></div>';
+              toolbar.after(intro);
+            } else if (toolbar.nextElementSibling !== intro) {
+              toolbar.after(intro);
+            }
+
+            force(intro, 'display', 'block');
+            force(intro, 'position', 'static');
+            force(intro, 'inset', 'auto');
+            force(intro, 'box-sizing', 'border-box');
+            force(intro, 'width', '100%');
+            force(intro, 'max-width', 'none');
+            force(intro, 'height', 'auto');
+            force(intro, 'min-height', '0px');
+            force(intro, 'max-height', 'none');
+            force(intro, 'margin', '0px');
+            force(intro, 'padding', 'clamp(2.5rem, 5vw, 5rem) clamp(1rem, 3.2vw, 4rem) clamp(2.5rem, 4vw, 4rem)');
+            force(intro, 'overflow', 'visible');
+            force(intro, 'background', 'transparent');
+            force(intro, 'transform', 'none');
+            force(intro, 'translate', 'none');
+            force(intro, 'opacity', '1');
+            force(intro, 'visibility', 'visible');
+
+            const title = intro.querySelector('.portfolio-stable-intro__title');
+            if (title instanceof HTMLElement) {
+              title.textContent = 'NINETY Z S';
+              force(title, 'display', 'block');
+              force(title, 'width', '100%');
+              force(title, 'height', 'auto');
+              force(title, 'min-height', '0px');
+              force(title, 'margin', '0px');
+              force(title, 'padding', '0px');
+              force(title, 'font-size', 'clamp(3.8rem, 9vw, 9rem)');
+              force(title, 'line-height', '.82');
+            }
+
+            const chips = intro.querySelector('.portfolio-stable-intro__chips');
+            if (chips instanceof HTMLElement) {
+              force(chips, 'display', 'flex');
+              force(chips, 'height', 'auto');
+              force(chips, 'min-height', '0px');
+              force(chips, 'margin', '1.5rem 0 0');
+            }
+
+            ensureMetadata(modal, intro);
+
+            const about = intro.querySelector('.portfolio-stable-intro__about');
+            const aboutLabel = intro.querySelector('.portfolio-stable-intro__about-label');
+            const aboutText = intro.querySelector('.portfolio-stable-intro__about-text');
+            if (about instanceof HTMLElement) {
+              about.classList.remove('is-empty');
+              force(about, 'display', 'flex');
+              force(about, 'height', 'auto');
+              force(about, 'min-height', '0px');
+              force(about, 'margin', '2rem 0 0');
+              force(about, 'padding', '1.25rem 0 0');
+              force(about, 'overflow', 'visible');
+            }
+            if (aboutLabel instanceof HTMLElement) aboutLabel.textContent = lang() === 'ru' ? 'О БРЕНДЕ' : 'ABOUT THE BRAND';
+            if (aboutText instanceof HTMLElement) {
+              aboutText.textContent = copy[lang()];
+              force(aboutText, 'display', 'block');
+              force(aboutText, 'height', 'auto');
+              force(aboutText, 'min-height', '0px');
+              force(aboutText, 'max-width', 'none');
+            }
           });
         };
 
@@ -218,6 +370,10 @@
           subtree: true,
           attributes: true,
           attributeFilter: ['class', 'style'],
+        });
+        new MutationObserver(schedule).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['lang'],
         });
 
         document.addEventListener('click', (event) => {
