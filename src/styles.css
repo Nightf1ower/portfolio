@@ -304,9 +304,23 @@
 }
 
 /* Final project header behavior: visible only at the top of a project, then scrolls away. */
-html body .portfolio-master-project-head,
-html body .project9006-normal-head {
+html body .portfolio-master-project-head {
   display: none !important;
+}
+
+/* The temporary NINETY replacement head can be forced visible inline by legacy JS.
+   Collapse it completely so the real shared project head sits at the top. */
+html body .project9006-normal-head {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  flex: 0 0 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 html body :is(
