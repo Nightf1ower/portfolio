@@ -222,11 +222,11 @@
     @apply absolute inset-0 h-full w-full opacity-0;
   }
 
-  .pink-punk-lightbox-frame--hover:hover .pink-punk-image--base {
+  .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--base {
     @apply opacity-0;
   }
 
-  .pink-punk-lightbox-frame--hover:hover .pink-punk-image--worn {
+  .pink-punk-lightbox-frame--hover:hover .pink-punk-lightbox-image--worn {
     @apply opacity-100;
   }
 }
