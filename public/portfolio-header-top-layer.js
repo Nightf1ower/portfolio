@@ -1,5 +1,6 @@
 (() => {
-  if (window.__portfolioHeaderNormalFlowV6) return;
+  if (window.__portfolioHeaderNormalFlowV7) return;
+  window.__portfolioHeaderNormalFlowV7 = true;
   window.__portfolioHeaderNormalFlowV6 = true;
   window.__portfolioHeaderNormalFlowV3 = true;
 
@@ -285,6 +286,10 @@
       } else if (modal.firstElementChild !== head) {
         modal.prepend(head);
       }
+
+      /* Main stylesheet intentionally hides legacy NINETY heads; this is the one real replacement head. */
+      head.style.setProperty('display', 'flex', 'important');
+      head.style.setProperty('position', 'static', 'important');
 
       const close = head.querySelector(`.${NINETY_HEAD_CLASS}__close`);
       if (close) {
