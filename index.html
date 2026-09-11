@@ -125,5 +125,112 @@
     <script src="/project-metadata.js?v=project-metadata-1"></script>
     <script src="/desktop-site-experience.js?v=desktop-site-experience-40"></script>
     <script src="/portfolio-header-top-layer.js?v=portfolio-header-top-layer-7"></script>
+    <script>
+      (() => {
+        if (window.__ninetyHeaderFlowFixV1) return;
+        window.__ninetyHeaderFlowFixV1 = true;
+
+        const force = (node, property, value) => {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.style.getPropertyValue(property) === value && node.style.getPropertyPriority(property) === 'important') return;
+          node.style.setProperty(property, value, 'important');
+        };
+
+        const hide = (node) => {
+          if (!(node instanceof HTMLElement)) return;
+          force(node, 'display', 'none');
+          force(node, 'height', '0px');
+          force(node, 'min-height', '0px');
+          force(node, 'max-height', '0px');
+          force(node, 'margin', '0px');
+          force(node, 'padding', '0px');
+          force(node, 'overflow', 'hidden');
+        };
+
+        const fix = () => {
+          document.querySelectorAll('.project9006-modal').forEach((modal) => {
+            modal.querySelectorAll(':scope > .project9006-normal-head').forEach(hide);
+            modal.querySelectorAll(':scope > .portfolio-stable-head, :scope > .portfolio-stable-intro, .project9006-brand').forEach(hide);
+
+            const toolbar = modal.querySelector(':scope > .project9006-toolbar');
+            if (!(toolbar instanceof HTMLElement)) return;
+            if (modal.firstElementChild !== toolbar) modal.prepend(toolbar);
+
+            force(toolbar, 'display', 'flex');
+            force(toolbar, 'position', 'static');
+            force(toolbar, 'top', 'auto');
+            force(toolbar, 'right', 'auto');
+            force(toolbar, 'bottom', 'auto');
+            force(toolbar, 'left', 'auto');
+            force(toolbar, 'z-index', 'auto');
+            force(toolbar, 'box-sizing', 'border-box');
+            force(toolbar, 'align-items', 'center');
+            force(toolbar, 'justify-content', 'space-between');
+            force(toolbar, 'width', '100%');
+            force(toolbar, 'max-width', 'none');
+            force(toolbar, 'height', '4rem');
+            force(toolbar, 'min-height', '4rem');
+            force(toolbar, 'max-height', '4rem');
+            force(toolbar, 'margin', '0px');
+            force(toolbar, 'padding', '0 clamp(1rem, 1.8vw, 2rem)');
+            force(toolbar, 'border', '0px');
+            force(toolbar, 'border-bottom', '1px solid rgba(255,255,255,.18)');
+            force(toolbar, 'background', '#050505');
+            force(toolbar, 'transform', 'none');
+            force(toolbar, 'translate', 'none');
+            force(toolbar, 'flex', '0 0 4rem');
+
+            const label = toolbar.querySelector('.project9006-toolbar__label');
+            const close = toolbar.querySelector('.project9006-toolbar__close');
+            [label, close].forEach((button) => {
+              force(button, 'display', 'inline-flex');
+              force(button, 'position', 'static');
+              force(button, 'align-items', 'center');
+              force(button, 'justify-content', 'center');
+              force(button, 'width', 'auto');
+              force(button, 'height', '2.35rem');
+              force(button, 'min-height', '2.35rem');
+              force(button, 'max-height', '2.35rem');
+              force(button, 'margin', '0px');
+              force(button, 'padding', '0 1rem');
+              force(button, 'border', '0px');
+              force(button, 'background', '#ffffff');
+              force(button, 'color', '#050505');
+              force(button, 'transform', 'none');
+              force(button, 'flex', '0 0 auto');
+            });
+            force(close, 'min-width', '6.5rem');
+          });
+        };
+
+        let queued = false;
+        const schedule = () => {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(() => {
+            queued = false;
+            fix();
+          });
+        };
+
+        new MutationObserver(schedule).observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class', 'style'],
+        });
+
+        document.addEventListener('click', (event) => {
+          const card = event.target instanceof Element ? event.target.closest('#works article,#works button') : null;
+          const title = card?.querySelector('h3')?.textContent?.trim().toUpperCase();
+          if (title !== 'NINETY Z S' && title !== '90.06') return;
+          [0, 80, 180, 460, 800].forEach((delay) => setTimeout(schedule, delay));
+        }, true);
+
+        window.addEventListener('load', schedule, { once: true });
+        schedule();
+        [80, 180, 460, 800].forEach((delay) => setTimeout(schedule, delay));
+      })();
+    </script>
   </body>
 </html>
