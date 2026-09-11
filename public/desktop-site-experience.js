@@ -1,5 +1,6 @@
 (() => {
-  if (window.__desktopSiteExperienceLoaderV38) return;
+  if (window.__desktopSiteExperienceLoaderV39) return;
+  window.__desktopSiteExperienceLoaderV39 = true;
   window.__desktopSiteExperienceLoaderV38 = true;
   window.__desktopSiteExperienceLoaderV37 = true;
   window.__desktopSiteExperienceLoaderV36 = true;
@@ -31,4 +32,27 @@
   load('/visual-noise-mobile-v2.js?v=visual-noise-mobile-3', 'visual-noise-mobile-3');
   load('/portfolio-folder-final-fixes.js?v=portfolio-folder-final-fixes-1', 'portfolio-folder-final-fixes-1');
   load('/portfolio-header-top-layer.js?v=portfolio-header-top-layer-1', 'portfolio-header-top-layer-1');
+
+  const ankaStyleId = 'anka-peresild-gradient-background';
+  document.getElementById(ankaStyleId)?.remove();
+  const ankaStyle = document.createElement('style');
+  ankaStyle.id = ankaStyleId;
+  ankaStyle.textContent = `
+    .anka-peresild-modal {
+      background: linear-gradient(180deg, #ffffff 0%, #3A5DAE 100%) !important;
+      background-color: #3A5DAE !important;
+    }
+
+    .anka-peresild-modal .portfolio-standard-intro,
+    .anka-peresild-modal .portfolio-stable-intro,
+    .anka-peresild-modal .portfolio-standard-intro__inner,
+    .anka-peresild-modal .portfolio-stable-intro__inner,
+    .anka-peresild-modal .portfolio-project-metadata,
+    .anka-peresild-modal .anka-peresild-inner,
+    .anka-peresild-modal .anka-peresild-hero,
+    .anka-peresild-modal .anka-peresild-grid {
+      background: transparent !important;
+    }
+  `;
+  document.head.append(ankaStyle);
 })();
