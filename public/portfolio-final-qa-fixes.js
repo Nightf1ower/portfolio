@@ -71,7 +71,7 @@
     if(!brands){brands=document.createElement('span');brands.className='portfolio-hero-brands';profession.append(brands)}
     if(brands.textContent!==PROJECT_NAMES)brands.textContent=PROJECT_NAMES;
   }
-  function fixStaticHeads(){document.querySelectorAll('.vtb-head').forEach(node=>node.classList.add('portfolio-qa-static-head'));const anka=document.querySelector('.anka-peresild-modal');const close=anka?.querySelector('.anka-peresild-close,[class*="close"],button[aria-label*="close" i]');if(close){const head=close.closest('header,[class*="head"],[class*="toolbar"],[class*="topbar"],[class*="top-bar"]')||close.parentElement;if(head&&head!==anka)head.classList.add('portfolio-qa-static-head')}}
+  function fixStaticHeads(){document.querySelectorAll('.vtb-head').forEach(node=>node.classList.add('portfolio-qa-static-head'))}
   function fixNav(){const slug=new URLSearchParams(location.search).get('project')||'';document.querySelectorAll('.desktop-project-navigation').forEach(nav=>{if(nav.dataset.qaProject!==slug)nav.dataset.qaProject=slug})}
   function apply(){fixHero();fixStaticHeads();fixNav()}
 

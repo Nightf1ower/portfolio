@@ -18,20 +18,19 @@
     { slug: 'logos', selector: '.lcg-modal', title: 'LOGOS' },
     { slug: 'stay-ugly', selector: '.su-modal', title: 'STAY UGLY' },
     { slug: 'ninety-z-s', selector: '.project9006-modal', title: 'NINETY Z S', dark: true },
-    { slug: 'anka-peresild', selector: '.anka-peresild-modal', title: 'ANKA PERESILD' },
   ];
 
   const HEADER_MODAL_SELECTORS = [
     '.cr-modal', '.zny-modal', '.vtb-modal', '.pcg-modal', '.fable-modal', '.blandetto-modal', '.bf',
     '.album-covers-modal', '.mc-modal', '.m10-modal', '.stk-modal', '.lcg-modal', '.su-modal',
-    '.project9006-modal', '.anka-peresild-modal',
+    '.project9006-modal',
   ];
 
   const NATIVE_CLOSE_SELECTOR = [
     '.cr-close', '.zny-close', '.vtb-close', '.pcg-close', '.fable-close',
     '.blandetto-close', '.bf-x', '.bf-close', '.bld-close',
     '.album-covers-close', '.mc-close', '.m10-close', '.stk-close', '.lcg-close', '.su-close',
-    '.project9006-toolbar__close', '.project9006-close', '.p9006-close', '.anka-peresild-close',
+    '.project9006-toolbar__close', '.project9006-close', '.p9006-close',
     '.portfolio-standard-head__close', '.portfolio-stable-head__close',
   ].join(',');
 
@@ -163,37 +162,6 @@
       .portfolio-master-project-head__close:hover {
         background: #a6ff00 !important;
         color: #050505 !important;
-      }
-
-      /* ANKA: keep the top brand plaque white and always show CLOSE. */
-      .portfolio-master-project-head[data-project="anka-peresild"] {
-        background: #fff !important;
-        color: #050505 !important;
-      }
-      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__label {
-        background: #fff !important;
-        color: #050505 !important;
-      }
-      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__close {
-        display: inline-flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        background: #050505 !important;
-        color: #fff !important;
-      }
-      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__close:hover {
-        background: #a6ff00 !important;
-        color: #050505 !important;
-      }
-
-      /* Keep ANKA's old close controls from becoming giant through legacy head rules. */
-      .anka-peresild-modal .anka-peresild-close,
-      .anka-peresild-modal [class*="close"].portfolio-qa-static-head {
-        display: none !important;
-        position: static !important;
-        inset: auto !important;
-        width: auto !important;
-        height: auto !important;
       }
 
       /* Extend the homepage brand list without fighting the older QA text observer. */

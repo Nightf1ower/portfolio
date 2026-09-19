@@ -24,7 +24,6 @@
     { modal: '.stk-modal', native: '.stk-head' },
     { modal: '.lcg-modal', native: '.lcg-head' },
     { modal: '.su-modal', native: '.su-head' },
-    { modal: '.anka-peresild-modal', native: '.anka-peresild-head' },
   ];
 
   const SHARED = [
@@ -68,8 +67,7 @@
       .m10-modal .${FLOW_CLASS},
       .stk-modal .${FLOW_CLASS},
       .lcg-modal .${FLOW_CLASS},
-      .su-modal .${FLOW_CLASS},
-      .anka-peresild-modal .${FLOW_CLASS} {
+      .su-modal .${FLOW_CLASS} {
         display: flex !important;
         position: static !important;
         inset: auto !important;
@@ -96,8 +94,7 @@
       .m10-modal .${HIDDEN_CLASS},
       .stk-modal .${HIDDEN_CLASS},
       .lcg-modal .${HIDDEN_CLASS},
-      .su-modal .${HIDDEN_CLASS},
-      .anka-peresild-modal .${HIDDEN_CLASS} {
+      .su-modal .${HIDDEN_CLASS} {
         display: none !important;
       }
 
@@ -187,34 +184,6 @@
         translate: none !important;
         opacity: 1 !important;
         visibility: visible !important;
-      }
-
-      .anka-peresild-modal .${FLOW_CLASS} {
-        background: #fff !important;
-        color: #050505 !important;
-      }
-
-      .anka-peresild-modal .${FLOW_CLASS} .anka-peresild-label {
-        display: inline-flex !important;
-        align-items: center !important;
-        background: #fff !important;
-        color: #050505 !important;
-      }
-
-      .anka-peresild-modal .${FLOW_CLASS} .anka-peresild-close {
-        display: inline-flex !important;
-        position: static !important;
-        inset: auto !important;
-        width: auto !important;
-        height: auto !important;
-        min-width: 0 !important;
-        max-width: max-content !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        background: #050505 !important;
-        color: #fff !important;
-        transform: none !important;
-        cursor: pointer !important;
       }
 
       @media (max-width:820px) {

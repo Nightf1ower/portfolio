@@ -24,7 +24,6 @@
     { slug:'logos', selector:'.lcg-modal', title:'LOGOS', aliases:['LOGOS'], chips:['IDENTITY','BRANDING','DEVELOPMENT'], kind:'project', aboutHints:['.lcg-project-copy','.lcg-about-copy','.lcg-intro-copy','.lcg-copy'] },
     { slug:'album-covers', selector:'.album-covers-modal', title:'ALBUM COVERS', aliases:['ALBUM COVERS'], chips:['COVER ART','GRAPHICS'], kind:'project', headerBg:'#f4f4f2', fg:'#050505', aboutHints:['.album-covers-project-copy','.album-covers-about-copy','.album-covers-intro-copy'] },
     { slug:'stay-ugly', selector:'.su-modal', title:'STAY UGLY', aliases:['STAY UGLY','STAYUGLY'], chips:['DEVELOPMENT','LOOKBOOK'], kind:'brand', headerBg:'#ffffff', fg:'#050505', aboutHints:['.su-brand-copy','.su-project-copy','.su-about-copy','.su-intro-copy','.su-copy'] },
-    { slug:'anka-peresild', selector:'.anka-peresild-modal', title:'ANKA PERESILD', aliases:['ANKA PERESILD'], chips:['APPAREL','AI ILLUSTRATIONS','MOCKUPS'], kind:'brand', aboutHints:['.anka-peresild-brand-copy','.anka-peresild-about-copy','.anka-peresild-intro-copy','.anka-peresild-copy'] },
     { slug:'vtb-design-team', selector:'.vtb-modal', title:'VTB DESIGN TEAM', aliases:['VTB DESIGN TEAM'], chips:['MERCH','ACCESSORIES','PRINTS'], kind:'project', headerBg:'#ff0101', fg:'#050505', aboutHints:['.vtb-project-intro__text','.vtb-project-copy','.vtb-about-copy'], legacy:['.vtb-project-intro'] },
     { slug:'collages-photo-edit', selector:'.collages-modal', title:'COLLAGES PHOTO EDIT', aliases:['COLLAGES PHOTO EDIT','COLLAGES'], chips:['MY OWN EDITS'], kind:'project', aboutHints:['.collages-project-copy','.collages-about-copy','.collages-intro-copy','.pag-copy'] },
   ];
@@ -33,7 +32,7 @@
   const CLOSE_SELECTOR = [
     '.zny-close','.fable-close','.su-close','.vtb-close','.cr-close','.mc-close','.m10-close','.stk-close',
     '.pcg-close','.lcg-close','.pag-close','.blandetto-close','.bf-close','.bf-x','.bld-close',
-    '.anka-peresild-close','.album-covers-close','.project9006-toolbar__close','.project9006-close','.p9006-close'
+    '.album-covers-close','.project9006-toolbar__close','.project9006-close','.p9006-close'
   ].join(',');
   const ABOUT_LABELS = new Set(['ABOUT THE BRAND','ABOUT THE PROJECT','О БРЕНДЕ','О ПРОЕКТЕ']);
 

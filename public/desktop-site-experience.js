@@ -22,17 +22,17 @@
     document.head.append(script);
   };
 
-  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-8', 'portfolio-stable-project-shell-8');
+  load('/portfolio-stable-project-shell.js?v=portfolio-stable-project-shell-9', 'portfolio-stable-project-shell-9');
   load('/about-content-update.js?v=about-content-update-4', 'about-content-update-4');
   load('/portfolio-mobile-gestures-v2.js?v=portfolio-mobile-gestures-2', 'portfolio-mobile-gestures-2');
   load('/portfolio-mobile-touchend-guard-v3.js?v=portfolio-mobile-touchend-guard-3', 'portfolio-mobile-touchend-guard-3');
-  load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-5', 'portfolio-final-qa-fixes-5');
+  load('/portfolio-final-qa-fixes.js?v=portfolio-final-qa-fixes-6', 'portfolio-final-qa-fixes-6');
   load('/blandetto-print-layout-restore.js?v=blandetto-print-layout-restore-1', 'blandetto-print-layout-restore-1');
   load('/homepage-project-curation.js?v=homepage-project-curation-2', 'homepage-project-curation-2');
-  load('/portfolio-project-consistency.js?v=portfolio-project-consistency-1', 'portfolio-project-consistency-1');
+  load('/portfolio-project-consistency.js?v=portfolio-project-consistency-2', 'portfolio-project-consistency-2');
   load('/visual-noise-mobile-v2.js?v=visual-noise-mobile-3', 'visual-noise-mobile-3');
-  load('/portfolio-folder-final-fixes.js?v=portfolio-folder-final-fixes-1', 'portfolio-folder-final-fixes-1');
-  load('/portfolio-header-top-layer.js?v=portfolio-header-top-layer-9', 'portfolio-header-top-layer-9');
+  load('/portfolio-folder-final-fixes.js?v=portfolio-folder-final-fixes-2', 'portfolio-folder-final-fixes-2');
+  load('/portfolio-header-top-layer.js?v=portfolio-header-top-layer-10', 'portfolio-header-top-layer-10');
 
   const S = document.createElement('style');
   S.id = 'anka-peresild-gradient-background';
@@ -40,6 +40,9 @@
   S.textContent = `
     .anka-peresild-modal{background:linear-gradient(180deg,#fff 0%,#fff 55%,#3A5DAE 100%)!important;background-color:#3A5DAE!important;background-attachment:local!important;background-repeat:no-repeat!important;background-size:100% 100%!important}
     .anka-peresild-modal .portfolio-standard-intro,.anka-peresild-modal .portfolio-stable-intro,.anka-peresild-modal .portfolio-standard-intro__inner,.anka-peresild-modal .portfolio-stable-intro__inner,.anka-peresild-modal .portfolio-project-metadata,.anka-peresild-modal .anka-peresild-inner,.anka-peresild-modal .anka-peresild-hero,.anka-peresild-modal .anka-peresild-grid{background:transparent!important}
+    .anka-peresild-modal .anka-peresild-head{box-sizing:border-box!important;display:flex!important;position:sticky!important;top:0!important;z-index:2300000!important;align-items:center!important;justify-content:space-between!important;width:100%!important;height:4rem!important;min-height:4rem!important;max-height:4rem!important;margin:0!important;padding:0 clamp(1rem,1.8vw,2rem)!important;border:0!important;border-bottom:1px solid rgba(5,5,5,.12)!important;background:#fff!important;color:#050505!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1!important;visibility:visible!important;transform:none!important}
+    .anka-peresild-modal .anka-peresild-label{display:inline-flex!important;align-items:center!important;height:2.35rem!important;margin:0!important;padding:0!important;border:0!important;background:#fff!important;color:#050505!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.22em!important;text-transform:uppercase!important;opacity:1!important;visibility:visible!important}
+    .anka-peresild-modal .anka-peresild-close{display:inline-flex!important;position:static!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:6.5rem!important;height:2.35rem!important;min-height:2.35rem!important;max-height:2.35rem!important;margin:0!important;padding:0 1rem!important;border:0!important;background:#050505!important;color:#fff!important;font:900 .68rem/1 Arial,Helvetica,sans-serif!important;letter-spacing:.22em!important;text-transform:uppercase!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;cursor:pointer!important;transform:none!important}
     .anka-peresild-grid.anka-v40{display:block!important;width:100%!important;padding:0 0 clamp(5rem,9vw,9rem)!important;border:0!important;background:transparent!important}
     .anka-v40-section{padding:clamp(3.5rem,7vw,7rem) 0 0;background:transparent}
     .anka-v40-title{margin:0 0 clamp(1.5rem,3vw,2.75rem);font:900 clamp(2rem,5.2vw,5.5rem)/.9 Arial Black,Arial,sans-serif;letter-spacing:-.055em;text-transform:uppercase;color:#050505}
@@ -136,10 +139,58 @@
     });
   }
 
+  function ensureAnkaHeader(modal){
+    const inner=modal.querySelector('.anka-peresild-inner')||modal;
+    let head=modal.querySelector('.anka-peresild-head');
+    if(!(head instanceof HTMLElement)){
+      head=document.createElement('div');
+      head.className='anka-peresild-head';
+      inner.prepend(head);
+    }else if(head.parentElement!==inner||inner.firstElementChild!==head){
+      inner.prepend(head);
+    }
+
+    head.classList.remove('portfolio-flow-project-head-hidden','portfolio-stable-legacy-hidden','portfolio-qa-static-head');
+
+    let label=head.querySelector('.anka-peresild-label');
+    if(!(label instanceof HTMLElement)){
+      label=document.createElement('p');
+      label.className='anka-peresild-label';
+      head.prepend(label);
+    }
+    label.textContent='ANKA PERESILD';
+
+    let close=head.querySelector('.anka-peresild-close');
+    if(!(close instanceof HTMLButtonElement)){
+      close=document.createElement('button');
+      close.type='button';
+      close.className='anka-peresild-close';
+      head.append(close);
+    }
+    close.textContent=document.documentElement.lang==='ru'||localStorage.getItem('site-language')==='ru'?'ЗАКРЫТЬ':'CLOSE';
+
+    if(close.dataset.ankaOwnedClose!=='1'){
+      close.dataset.ankaOwnedClose='1';
+      close.addEventListener('click',()=>{
+        document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true}));
+        setTimeout(()=>{
+          if(!modal.isConnected)return;
+          modal.remove();
+          document.body.style.removeProperty('overflow');
+          document.documentElement.style.removeProperty('overflow');
+          const url=new URL(location.href);
+          url.searchParams.delete('project');
+          history.replaceState(history.state,'',url.pathname+(url.search?'?'+url.searchParams.toString():'')+url.hash);
+        },120);
+      });
+    }
+  }
+
   let queued=false;
   function apply(){
     const modal=document.querySelector('.anka-peresild-modal');
     if(!modal){closeLight();return}
+    ensureAnkaHeader(modal);
     const grid=modal.querySelector('.anka-peresild-grid');
     if(grid)build(grid);
   }

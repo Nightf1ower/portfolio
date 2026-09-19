@@ -44,7 +44,6 @@
       .lcg-modal .lcg-head,
       .album-covers-modal .album-covers-head,
       .su-modal .su-head,
-      .anka-peresild-modal .anka-peresild-head,
       .vtb-modal .vtb-head,
       .collages-modal .pag-head {
         position: fixed !important;
