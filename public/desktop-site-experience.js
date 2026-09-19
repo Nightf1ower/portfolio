@@ -32,7 +32,7 @@
   load('/portfolio-project-consistency.js?v=portfolio-project-consistency-1', 'portfolio-project-consistency-1');
   load('/visual-noise-mobile-v2.js?v=visual-noise-mobile-3', 'visual-noise-mobile-3');
   load('/portfolio-folder-final-fixes.js?v=portfolio-folder-final-fixes-1', 'portfolio-folder-final-fixes-1');
-  load('/portfolio-header-top-layer.js?v=portfolio-header-top-layer-1', 'portfolio-header-top-layer-1');
+  load('/portfolio-header-top-layer.js?v=portfolio-header-top-layer-9', 'portfolio-header-top-layer-9');
 
   const S = document.createElement('style');
   S.id = 'anka-peresild-gradient-background';
