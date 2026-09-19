@@ -38,7 +38,7 @@
   S.id = 'anka-peresild-gradient-background';
   document.getElementById(S.id)?.remove();
   S.textContent = `
-    .anka-peresild-modal{background:linear-gradient(180deg,#fff 0%,#3A5DAE 100%)!important;background-color:#3A5DAE!important}
+    .anka-peresild-modal{background:linear-gradient(180deg,#fff 0%,#fff 46%,#3A5DAE 56%,#3A5DAE 100%)!important;background-color:#3A5DAE!important}
     .anka-peresild-modal .portfolio-standard-intro,.anka-peresild-modal .portfolio-stable-intro,.anka-peresild-modal .portfolio-standard-intro__inner,.anka-peresild-modal .portfolio-stable-intro__inner,.anka-peresild-modal .portfolio-project-metadata,.anka-peresild-modal .anka-peresild-inner,.anka-peresild-modal .anka-peresild-hero,.anka-peresild-modal .anka-peresild-grid{background:transparent!important}
     .anka-peresild-grid.anka-v40{display:block!important;width:100%!important;padding:0 0 clamp(5rem,9vw,9rem)!important;border:0!important;background:transparent!important}
     .anka-v40-section{padding:clamp(3.5rem,7vw,7rem) 0 0;background:transparent}
@@ -48,11 +48,11 @@
     .anka-v40-arrow{display:flex;align-items:center;justify-content:center;width:clamp(1.8rem,2.6vw,2.7rem);height:clamp(1.8rem,2.6vw,2.7rem);font:400 clamp(1.4rem,2.2vw,2.25rem)/1 Arial,sans-serif;color:#050505;pointer-events:none}
     .anka-v40-row{display:grid;gap:clamp(.8rem,1.6vw,1.45rem);margin:0 0 clamp(1rem,2vw,1.7rem)}
     .anka-v40-row.c2{grid-template-columns:repeat(2,minmax(0,1fr))}.anka-v40-row.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .anka-v40-card{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;aspect-ratio:4/5;margin:0;padding:0;overflow:hidden;border:0;background:rgba(255,255,255,.34);cursor:zoom-in}
+    .anka-v40-card{position:relative;display:flex;align-items:center;justify-content:center;width:100%;min-width:0;aspect-ratio:4/5;margin:0;padding:0;overflow:hidden;border:0;background:transparent!important;cursor:zoom-in}
     .anka-v40-card.transparent{background:transparent!important}
     .anka-v40-card img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;user-select:none;-webkit-user-drag:none}
     .anka-v40-main{position:relative;z-index:1;transition:opacity .25s ease,transform .3s ease}
-    .anka-v40-hover{position:absolute;inset:0;z-index:2;display:grid;grid-template-columns:repeat(var(--cols,1),minmax(0,1fr));gap:.4rem;padding:.4rem;opacity:0;background:rgba(255,255,255,.92);transition:opacity .25s ease;pointer-events:none}
+    .anka-v40-hover{position:absolute;inset:0;z-index:2;display:grid;grid-template-columns:repeat(var(--cols,1),minmax(0,1fr));gap:.4rem;padding:0;opacity:0;background:transparent!important;transition:opacity .25s ease;pointer-events:none}
     .anka-v40-card.is-alt .anka-v40-main{opacity:0;transform:scale(.985)}.anka-v40-card.is-alt .anka-v40-hover{opacity:1}
     @media (hover:hover) and (pointer:fine){.anka-v40-card.has-hover:hover .anka-v40-main{opacity:0;transform:scale(.985)}.anka-v40-card.has-hover:hover .anka-v40-hover{opacity:1}}
     .anka-v40-results .anka-v40-card,.anka-v40-art .anka-v40-card,.anka-v40-logo .anka-v40-card{aspect-ratio:auto;min-height:clamp(15rem,28vw,32rem)}
