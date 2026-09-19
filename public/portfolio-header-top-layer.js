@@ -266,7 +266,7 @@
   function findRealNinetyClose(modal, visibleClose) {
     return [...modal.querySelectorAll('button,[role="button"]')].find((button) => {
       if (!(button instanceof HTMLElement) || button === visibleClose) return false;
-      if (button.closest('.project9006-toolbar,.project9006-normal-head,.portfolio-stable-head,.desktop-unified-lightbox')) return false;
+      if (button.closest('.project9006-toolbar,.desktop-unified-lightbox')) return false;
       const text = normalizeCloseText([
         button.textContent,
         button.getAttribute('aria-label'),
