@@ -38,7 +38,7 @@
   S.id = 'anka-peresild-gradient-background';
   document.getElementById(S.id)?.remove();
   S.textContent = `
-    .anka-peresild-modal{background:linear-gradient(180deg,#fff 0%,#fff 46%,#3A5DAE 56%,#3A5DAE 100%)!important;background-color:#3A5DAE!important}
+    .anka-peresild-modal{background:linear-gradient(180deg,#fff 0%,#3A5DAE 100%)!important;background-color:#3A5DAE!important}
     .anka-peresild-modal .portfolio-standard-intro,.anka-peresild-modal .portfolio-stable-intro,.anka-peresild-modal .portfolio-standard-intro__inner,.anka-peresild-modal .portfolio-stable-intro__inner,.anka-peresild-modal .portfolio-project-metadata,.anka-peresild-modal .anka-peresild-inner,.anka-peresild-modal .anka-peresild-hero,.anka-peresild-modal .anka-peresild-grid{background:transparent!important}
     .anka-peresild-grid.anka-v40{display:block!important;width:100%!important;padding:0 0 clamp(5rem,9vw,9rem)!important;border:0!important;background:transparent!important}
     .anka-v40-section{padding:clamp(3.5rem,7vw,7rem) 0 0;background:transparent}
