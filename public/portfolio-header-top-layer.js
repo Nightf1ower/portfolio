@@ -189,6 +189,18 @@
         visibility: visible !important;
       }
 
+      .anka-peresild-modal .${FLOW_CLASS} {
+        background: #fff !important;
+        color: #050505 !important;
+      }
+
+      .anka-peresild-modal .${FLOW_CLASS} .anka-peresild-label {
+        display: inline-flex !important;
+        align-items: center !important;
+        background: #fff !important;
+        color: #050505 !important;
+      }
+
       .anka-peresild-modal .${FLOW_CLASS} .anka-peresild-close {
         display: inline-flex !important;
         position: static !important;
@@ -197,7 +209,12 @@
         height: auto !important;
         min-width: 0 !important;
         max-width: max-content !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        background: #050505 !important;
+        color: #fff !important;
         transform: none !important;
+        cursor: pointer !important;
       }
 
       @media (max-width:820px) {
@@ -239,15 +256,33 @@
   function normalizeModal(modal, nativeSelector) {
     if (!(modal instanceof HTMLElement)) return;
 
+    const isAnka = modal.matches('.anka-peresild-modal');
     const candidates = [];
+
+    if (isAnka) {
+      modal.querySelectorAll(nativeSelector).forEach((node) => {
+        if (!candidates.includes(node)) candidates.push(node);
+      });
+    }
+
     for (const selector of SHARED) {
       modal.querySelectorAll(selector).forEach((node) => {
         if (!candidates.includes(node)) candidates.push(node);
       });
     }
-    modal.querySelectorAll(nativeSelector).forEach((node) => {
-      if (!candidates.includes(node)) candidates.push(node);
-    });
+
+    if (!isAnka) {
+      modal.querySelectorAll(nativeSelector).forEach((node) => {
+        if (!candidates.includes(node)) candidates.push(node);
+      });
+    }
+
+    if (!candidates.length && isAnka) {
+      const head = document.createElement('div');
+      head.className = 'anka-peresild-head';
+      modal.prepend(head);
+      candidates.push(head);
+    }
 
     if (!candidates.length) return;
 
@@ -257,6 +292,39 @@
       node.classList.toggle(HIDDEN_CLASS, node !== chosen);
       if (node === chosen) node.removeAttribute('popover');
     });
+
+    if (isAnka && chosen instanceof HTMLElement) {
+      let label = chosen.querySelector('.anka-peresild-label');
+      if (!(label instanceof HTMLElement)) {
+        label = document.createElement('p');
+        label.className = 'anka-peresild-label';
+        chosen.prepend(label);
+      }
+      label.textContent = 'ANKA PERESILD';
+
+      let close = chosen.querySelector('.anka-peresild-close');
+      if (!(close instanceof HTMLButtonElement)) {
+        close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'anka-peresild-close';
+        chosen.append(close);
+      }
+      close.textContent = language() === 'ru' ? 'ЗАКРЫТЬ' : 'CLOSE';
+
+      if (!close.onclick && close.dataset.ankaHeaderClose !== '1') {
+        close.dataset.ankaHeaderClose = '1';
+        close.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          document.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'Escape',
+            code: 'Escape',
+            bubbles: true,
+            cancelable: true,
+          }));
+        });
+      }
+    }
   }
 
   function normalizeCloseText(value) {
