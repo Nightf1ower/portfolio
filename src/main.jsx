@@ -210,7 +210,16 @@ function PinkPunkModal({ onClose, t }) { const [selectedImage, setSelectedImage]
 function ProjectModalShell({ title, onClose, children, t, theme = 'light' }) { const themed = { pink: { wrapper: 'bg-[#9b0014] text-white', header: 'border-black/40 bg-[#9b0014]/95', label: 'bg-black text-white', button: 'border-black bg-black text-white hover:bg-white hover:text-black' }, dark: { wrapper: 'bg-[#050505] text-white', header: 'border-white/20 bg-[#050505]/95', label: 'bg-white text-black', button: 'border-white bg-white text-black hover:bg-acid hover:text-black' }, light: { wrapper: 'bg-white text-ink', header: 'border-ink bg-white/95', label: 'bg-acid text-ink', button: 'border-ink bg-white text-ink hover:bg-ink hover:text-white' } }[theme]; return <div className={`fixed inset-0 z-[100] overflow-y-auto overscroll-contain px-4 py-6 transition-colors duration-500 md:px-8 md:py-8 ${themed.wrapper}`}><div className="mx-auto max-w-7xl"><div className={`sticky top-0 z-20 mb-6 flex items-center justify-between gap-4 border-b pb-4 pt-1 backdrop-blur ${themed.header}`}><p className={`px-3 py-1 text-xs font-black uppercase tracking-[0.35em] ${themed.label}`}>{title}</p><button type="button" onClick={onClose} className={`border px-4 py-2 text-xs font-black uppercase tracking-[0.25em] transition-all duration-300 ${themed.button}`}>{t.close}</button></div>{children}</div></div>; }
 function PinkPunkImage({ image, onSelect, t }) { const hasHover = Boolean(image.flat && image.worn); return <button type="button" className={`pink-punk-frame ${hasHover ? 'pink-punk-frame--hover' : ''}`} onClick={() => onSelect(image)} aria-label={t.openImageLabel}><img className="pink-punk-image pink-punk-image--base" src={hasHover ? image.flat : image.src} alt={image.alt} loading="lazy" />{hasHover && <img className="pink-punk-image pink-punk-image--worn" src={image.worn} alt={`${image.alt} on body`} loading="lazy" />}</button>; }
 
-function Project9006Modal({ onClose, t, language }) { const [selectedImage, setSelectedImage] = useState(null); return <ProjectModalShell title="90.06" onClose={onClose} t={t} theme="dark"><div className="space-y-20 pb-10">{project9006Sections.map((section) => <Project9006Section key={section.id} section={section} onSelect={setSelectedImage} t={t} language={language} />)}</div>{selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}</ProjectModalShell>; }
+function Project9006Modal({ onClose, t, language }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  useEffect(() => {
+    const handleExternalClose = () => onClose();
+    window.addEventListener('portfolio:ninety-close', handleExternalClose);
+    return () => window.removeEventListener('portfolio:ninety-close', handleExternalClose);
+  }, [onClose]);
+
+  return <ProjectModalShell title="90.06" onClose={onClose} t={t} theme="dark"><div className="space-y-20 pb-10">{project9006Sections.map((section) => <Project9006Section key={section.id} section={section} onSelect={setSelectedImage} t={t} language={language} />)}</div>{selectedImage && <ImageLightbox image={selectedImage} onClose={() => setSelectedImage(null)} t={t} />}</ProjectModalShell>;
+}
 
 function Project9006Section({ section, onSelect, t, language }) {
   const [activeIndex, setActiveIndex] = useState(0);
