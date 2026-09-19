@@ -2,7 +2,7 @@
   if (window.__portfolioFolderFinalFixesV1) return;
   window.__portfolioFolderFinalFixesV1 = true;
 
-  const VERSION = 'portfolio-folder-final-fixes-1';
+  const VERSION = 'portfolio-folder-final-fixes-2';
   const STYLE_ID = 'portfolio-folder-final-fixes-style';
 
   const PROJECTS = [
@@ -165,6 +165,27 @@
         color: #050505 !important;
       }
 
+      /* ANKA: keep the top brand plaque white and always show CLOSE. */
+      .portfolio-master-project-head[data-project="anka-peresild"] {
+        background: #fff !important;
+        color: #050505 !important;
+      }
+      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__label {
+        background: #fff !important;
+        color: #050505 !important;
+      }
+      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__close {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: #050505 !important;
+        color: #fff !important;
+      }
+      .portfolio-master-project-head[data-project="anka-peresild"] .portfolio-master-project-head__close:hover {
+        background: #a6ff00 !important;
+        color: #050505 !important;
+      }
+
       /* Keep ANKA's old close controls from becoming giant through legacy head rules. */
       .anka-peresild-modal .anka-peresild-close,
       .anka-peresild-modal [class*="close"].portfolio-qa-static-head {
@@ -305,14 +326,31 @@
       head.classList.toggle('is-dark', Boolean(project.dark));
     }
 
-    const label = head.querySelector('.portfolio-master-project-head__label');
-    if (label && label.textContent !== project.title) label.textContent = project.title;
+    let label = head.querySelector('.portfolio-master-project-head__label');
+    if (!label) {
+      label = document.createElement('span');
+      label.className = 'portfolio-master-project-head__label';
+      head.prepend(label);
+    }
+    if (label.textContent !== project.title) label.textContent = project.title;
 
     const closeLabel = document.documentElement.lang === 'ru' || localStorage.getItem('site-language') === 'ru'
       ? 'ЗАКРЫТЬ'
       : 'CLOSE';
-    const close = head.querySelector('.portfolio-master-project-head__close');
-    if (close && close.textContent !== closeLabel) close.textContent = closeLabel;
+    let close = head.querySelector('.portfolio-master-project-head__close');
+    if (!close) {
+      close = document.createElement('button');
+      close.type = 'button';
+      close.className = 'portfolio-master-project-head__close';
+      close.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const current = activeProject();
+        if (current) closeProject(current.modal);
+      });
+      head.append(close);
+    }
+    if (close.textContent !== closeLabel) close.textContent = closeLabel;
 
     if (modal.dataset.masterProjectHeader !== VERSION) modal.dataset.masterProjectHeader = VERSION;
   }
