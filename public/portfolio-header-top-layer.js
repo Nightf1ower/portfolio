@@ -284,18 +284,13 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
 
-      const realClose = findRealNinetyClose(modal, close);
-      if (realClose instanceof HTMLElement) {
-        realClose.click();
-        return;
-      }
+      window.dispatchEvent(new Event('portfolio:ninety-close'));
 
-      document.dispatchEvent(new KeyboardEvent('keydown', {
-        key: 'Escape',
-        code: 'Escape',
-        bubbles: true,
-        cancelable: true,
-      }));
+      window.setTimeout(() => {
+        if (!modal.isConnected) return;
+        const realClose = findRealNinetyClose(modal, close);
+        if (realClose instanceof HTMLElement) realClose.click();
+      }, 80);
     }, true);
   }
 
